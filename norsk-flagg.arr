@@ -17,6 +17,7 @@ dash =overlay-align("right", "top", tr, lash)
 br = rectangle(180, 60, "solid", "red")
 gash =overlay-align("right", "bottom", br, dash)
 
+#neste steg startet jeg med blå fargen
 
 re = rectangle(300, 10, "solid", "blue")
 toge =overlay-xy(re, 0, -70,
@@ -26,4 +27,4 @@ te = rectangle(40, 150, "solid", "blue")
 final =overlay-xy(te, -70, -0, toge)
 final
 
-#jeg lagde flere variabler hele veien, re og te variablene gjorde jeg litt forskjellig å få tilpasse flagget
+#jeg lagde flere variabler hele veien, re og te variablene gjorde jeg litt forskjellig å få tilpasse det endelig flagget med blå fargen
