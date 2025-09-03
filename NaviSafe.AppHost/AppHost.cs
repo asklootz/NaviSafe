@@ -1,11 +1,11 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
 var mariaContainer = builder.AddMySql("mariaContainer", null, 3307)
-    //.WithLifetime(ContainerLifetime.Persistent)
+    .WithLifetime(ContainerLifetime.Persistent)
     .WithImage("mariadb:11.8")
-    .WithContainerName("mariaContainer");
+    .WithContainerName("mariaContainer")
     //.WithDataBindMount(source: @"C:\'path'") //Code to create a bind mount to a local folder
-    //.WithPhpMyAdmin() //Creates a phpMyAdmin container linked to the database container for easy management
+    .WithPhpMyAdmin(); //Creates a phpMyAdmin container linked to the database container for easy management
 
 var mariaDatabase = mariaContainer.AddDatabase("mariaDatabase");
 

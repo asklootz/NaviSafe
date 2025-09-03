@@ -220,3 +220,4 @@ C:\Users\asklo\repo\NaviSafe\NaviSafe\obj\Debug\net9.0\refint\NaviSafe.dll
 C:\Users\asklo\repo\NaviSafe\NaviSafe\obj\Debug\net9.0\NaviSafe.pdb
 C:\Users\asklo\repo\NaviSafe\NaviSafe\obj\Debug\net9.0\NaviSafe.genruntimeconfig.cache
 C:\Users\asklo\repo\NaviSafe\NaviSafe\obj\Debug\net9.0\ref\NaviSafe.dll
+C:\Users\asklo\repo\NaviSafe\NaviSafe\obj\Debug\net9.0\NaviSafe.sourcelink.json
