@@ -1,6 +1,31 @@
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+
+// Configure OpenTelemetry
+builder.Services.AddOpenTelemetry()
+    .ConfigureResource(res => res.AddService("NaviSafe"))
+    .WithMetrics(m =>
+    {
+        m.AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation();
+    })
+    .WithTracing(t =>
+    {
+        t.AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation();
+    });
+
+builder.Logging.AddOpenTelemetry(options =>
+{
+    options.AddConsoleExporter()
+        .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("NaviSafe"));
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -25,8 +50,8 @@ app.UseAuthorization();
 app.MapStaticAssets();
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 

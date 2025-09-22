@@ -1577,6 +1577,22 @@
           }
         }
       },
+      "OpenTelemetry.Exporter.Console/1.12.0": {
+        "type": "package",
+        "dependencies": {
+          "OpenTelemetry": "1.12.0"
+        },
+        "compile": {
+          "lib/net9.0/OpenTelemetry.Exporter.Console.dll": {
+            "related": ".dll-keyless.pem;.dll-keyless.sig;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/OpenTelemetry.Exporter.Console.dll": {
+            "related": ".dll-keyless.pem;.dll-keyless.sig;.xml"
+          }
+        }
+      },
       "OpenTelemetry.Exporter.OpenTelemetryProtocol/1.12.0": {
         "type": "package",
         "dependencies": {
@@ -1907,6 +1923,7 @@
           "Aspire.MySqlConnector": "9.4.1",
           "Microsoft.Extensions.Http.Resilience": "9.8.0",
           "Microsoft.Extensions.ServiceDiscovery": "9.4.1",
+          "OpenTelemetry.Exporter.Console": "1.12.0",
           "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.12.0",
           "OpenTelemetry.Extensions.Hosting": "1.12.0",
           "OpenTelemetry.Instrumentation.AspNetCore": "1.12.0",
@@ -4041,6 +4058,37 @@
         "opentelemetry.api.providerbuilderextensions.nuspec"
       ]
     },
+    "OpenTelemetry.Exporter.Console/1.12.0": {
+      "sha512": "0sxyasnQ1B4YzvVbu9onZZ0WXGEQsuKqkaebsSlSMHHxMXCFvr6Ce2ABvU8p28AcEWPyu5k56fWYBa3fPvQFSQ==",
+      "type": "package",
+      "path": "opentelemetry.exporter.console/1.12.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.TXT",
+        "README.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net462/OpenTelemetry.Exporter.Console.dll",
+        "lib/net462/OpenTelemetry.Exporter.Console.dll-keyless.pem",
+        "lib/net462/OpenTelemetry.Exporter.Console.dll-keyless.sig",
+        "lib/net462/OpenTelemetry.Exporter.Console.xml",
+        "lib/net8.0/OpenTelemetry.Exporter.Console.dll",
+        "lib/net8.0/OpenTelemetry.Exporter.Console.dll-keyless.pem",
+        "lib/net8.0/OpenTelemetry.Exporter.Console.dll-keyless.sig",
+        "lib/net8.0/OpenTelemetry.Exporter.Console.xml",
+        "lib/net9.0/OpenTelemetry.Exporter.Console.dll",
+        "lib/net9.0/OpenTelemetry.Exporter.Console.dll-keyless.pem",
+        "lib/net9.0/OpenTelemetry.Exporter.Console.dll-keyless.sig",
+        "lib/net9.0/OpenTelemetry.Exporter.Console.xml",
+        "lib/netstandard2.0/OpenTelemetry.Exporter.Console.dll",
+        "lib/netstandard2.0/OpenTelemetry.Exporter.Console.dll-keyless.pem",
+        "lib/netstandard2.0/OpenTelemetry.Exporter.Console.dll-keyless.sig",
+        "lib/netstandard2.0/OpenTelemetry.Exporter.Console.xml",
+        "opentelemetry-icon-color.png",
+        "opentelemetry.exporter.console.1.12.0.nupkg.sha512",
+        "opentelemetry.exporter.console.nuspec"
+      ]
+    },
     "OpenTelemetry.Exporter.OpenTelemetryProtocol/1.12.0": {
       "sha512": "7LzQSPhz5pNaL4xZgT3wkZODA1NLrEq3bet8KDHgtaJ9q+VNP7wmiZky8gQfMkB4FXuI/pevT8ZurL4p5997WA==",
       "type": "package",
@@ -4517,7 +4565,8 @@
       "Aspire.Hosting.MySql >= 9.4.1",
       "Aspire.MySqlConnector >= 9.4.1",
       "Microsoft.VisualStudio.Azure.Containers.Tools.Targets >= 1.22.1",
-      "NaviSafe.ServiceDefaults >= 1.0.0"
+      "NaviSafe.ServiceDefaults >= 1.0.0",
+      "OpenTelemetry.Exporter.Console >= 1.12.0"
     ]
   },
   "packageFolders": {
@@ -4586,6 +4635,10 @@
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
             "target": "Package",
             "version": "[1.22.1, )"
+          },
+          "OpenTelemetry.Exporter.Console": {
+            "target": "Package",
+            "version": "[1.12.0, )"
           }
         },
         "imports": [
