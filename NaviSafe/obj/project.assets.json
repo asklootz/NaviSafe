@@ -2773,7 +2773,6 @@
         "dependencies": {
           "Aspire.Hosting.MySql": "9.4.1",
           "Aspire.MySqlConnector": "9.4.1",
-          "Microsoft.AspNetCore.Mvc.Core": "2.3.0",
           "Microsoft.Extensions.Http.Resilience": "9.8.0",
           "Microsoft.Extensions.ServiceDiscovery": "9.4.1",
           "OpenTelemetry.Exporter.Console": "1.12.0",

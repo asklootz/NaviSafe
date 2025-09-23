@@ -73,10 +73,6 @@
               "target": "Package",
               "version": "[9.4.1, )"
             },
-            "Microsoft.AspNetCore.Mvc.Core": {
-              "target": "Package",
-              "version": "[2.3.0, )"
-            },
             "OpenTelemetry.Exporter.Console": {
               "target": "Package",
               "version": "[1.12.0, )"

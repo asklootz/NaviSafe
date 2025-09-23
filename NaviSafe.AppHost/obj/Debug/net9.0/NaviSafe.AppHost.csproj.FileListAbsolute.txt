@@ -138,6 +138,3 @@ C:\Users\asklo\repo\NaviSafe\NaviSafe.AppHost\obj\Debug\net9.0\NaviSafe.AppHost.
 C:\Users\asklo\repo\NaviSafe\NaviSafe.AppHost\obj\Debug\net9.0\NaviSafe.AppHost.genruntimeconfig.cache
 C:\Users\asklo\repo\NaviSafe\NaviSafe.AppHost\obj\Debug\net9.0\ref\NaviSafe.AppHost.dll
 C:\Users\asklo\repo\NaviSafe\NaviSafe.AppHost\obj\Debug\net9.0\NaviSafe.AppHost.sourcelink.json
-C:\Users\asklo\repo\NaviSafe\NaviSafe.AppHost\bin\Debug\net9.0\Microsoft.DotNet.PlatformAbstractions.dll
-C:\Users\asklo\repo\NaviSafe\NaviSafe.AppHost\bin\Debug\net9.0\Microsoft.Extensions.DependencyModel.dll
-C:\Users\asklo\repo\NaviSafe\NaviSafe.AppHost\bin\Debug\net9.0\OpenTelemetry.Exporter.Console.dll
