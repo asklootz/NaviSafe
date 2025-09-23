@@ -7,7 +7,18 @@
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/NaviSafe.styles.css" asp-append-version="true" />
+    <!--<link rel="stylesheet" href="~/NaviSafe.styles.css" asp-append-version="true" />-->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Optionally extend Tailwind (example keeps it minimal)
+        tailwind.config = {
+          theme: {
+            extend: {
+              container: { center: true, padding: { DEFAULT: '1rem', md: '1.5rem' } }
+            }
+          }
+        }
+    </script>
 </head>
 <body>
     <header>
