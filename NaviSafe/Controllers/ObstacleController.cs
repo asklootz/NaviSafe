@@ -14,11 +14,7 @@ public class ObstacleController : Controller
     [HttpPost]
     public ActionResult DataForm(ObstacleData obstacleData)
     {
-        bool isDraft = false;
-        if (obstacleData.ObstacleDescription == null)
-        {
-            isDraft = true;
-        }
+        // Removed unused isDraft variable and logic
         return View("Overview", obstacleData);
     }
 }
