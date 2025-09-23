@@ -28,6 +28,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/asklo/repo/NaviSafe/NaviSafe/Views/Obstacle/DataForm.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT2JzdGFjbGVcRGF0YUZvcm0uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/asklo/repo/NaviSafe/NaviSafe/Views/Obstacle/Overview.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT2JzdGFjbGVcT3ZlcnZpZXcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/asklo/repo/NaviSafe/NaviSafe/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
