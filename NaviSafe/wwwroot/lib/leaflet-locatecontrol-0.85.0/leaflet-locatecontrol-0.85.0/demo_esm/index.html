@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Leaflet Locate Control ES Module Example</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+    <!--  the module needs to resolve "leaflet" to the es module version of leaflet 1.9.4
+     use import maps, see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules#importing_modules_using_import_maps -->
+    <script type="importmap">
+      {
+        "imports": {
+          "leaflet": "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet-src.esm.js"
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="../dist/L.Control.Locate.min.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="script.js"></script>
+  </head>
+  <body>
+    <div id="map" style="width: 100%; height: 100vh"></div>
+  </body>
+</html>
