@@ -12,6 +12,7 @@
           "Aspire.MySqlConnector": "9.4.1",
           "Microsoft.Extensions.Http.Resilience": "9.8.0",
           "Microsoft.Extensions.ServiceDiscovery": "9.4.1",
+          "OpenTelemetry.Exporter.Console": "1.12.0",
           "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.12.0",
           "OpenTelemetry.Extensions.Hosting": "1.12.0",
           "OpenTelemetry.Instrumentation.AspNetCore": "1.12.0",
@@ -1001,6 +1002,17 @@
           }
         }
       },
+      "OpenTelemetry.Exporter.Console/1.12.0": {
+        "dependencies": {
+          "OpenTelemetry": "1.12.0"
+        },
+        "runtime": {
+          "lib/net9.0/OpenTelemetry.Exporter.Console.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.12.0.1644"
+          }
+        }
+      },
       "OpenTelemetry.Exporter.OpenTelemetryProtocol/1.12.0": {
         "dependencies": {
           "OpenTelemetry": "1.12.0"
@@ -1712,6 +1724,13 @@
       "sha512": "sha512-t6Vk1143BfiisCWYbRcyzkAuN6Aq5RkYtfOSMoqCIRMvtN9p1e1xzc0nWQ+fccNGOVgHn3aMK5xFn2+iWMcr8A==",
       "path": "opentelemetry.api.providerbuilderextensions/1.12.0",
       "hashPath": "opentelemetry.api.providerbuilderextensions.1.12.0.nupkg.sha512"
+    },
+    "OpenTelemetry.Exporter.Console/1.12.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0sxyasnQ1B4YzvVbu9onZZ0WXGEQsuKqkaebsSlSMHHxMXCFvr6Ce2ABvU8p28AcEWPyu5k56fWYBa3fPvQFSQ==",
+      "path": "opentelemetry.exporter.console/1.12.0",
+      "hashPath": "opentelemetry.exporter.console.1.12.0.nupkg.sha512"
     },
     "OpenTelemetry.Exporter.OpenTelemetryProtocol/1.12.0": {
       "type": "package",
