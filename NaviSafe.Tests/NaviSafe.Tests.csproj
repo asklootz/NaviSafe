@@ -18,4 +18,8 @@
         <Using Include="Xunit"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\NaviSafe\NaviSafe.csproj" />
+    </ItemGroup>
+
 </Project>
