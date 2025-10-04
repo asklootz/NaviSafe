@@ -17,7 +17,7 @@ public class HomeControllerTests
     [Fact]
     public void Privacy_Return_ViewResult()
     {
-        var controller = new HomeController(null!, null!);
+        var controller = new HomeController(logger: null!, config: null!);
         var result = controller.Privacy();
         Assert.IsType<ViewResult>(result);
     }
