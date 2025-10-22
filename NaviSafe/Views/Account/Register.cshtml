@@ -1,0 +1,173 @@
+@model NaviSafe.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - NaviSafe</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="~/css/login.css" />
+    <style>
+        /* Make card scrollable for longer form */
+        .login-card {
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        @@media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="map-background"></div>
+
+    <div class="login-overlay">
+        <div class="login-card">
+            <div class="login-header">
+                <h1 class="login-title">NaviSafe</h1>
+                <p class="login-subtitle">Create your account</p>
+            </div>
+
+            <form asp-action="Register" method="post" class="login-form">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                
+                <div class="form-group">
+                    <label asp-for="FullName" class="form-label">Full Name</label>
+                    <input asp-for="FullName" class="form-control" placeholder="Enter your full name" />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Email" class="form-label">Email Address</label>
+                    <input asp-for="Email" class="form-control" placeholder="Enter your email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+                    <input asp-for="PhoneNumber" class="form-control" placeholder="+47 123 45 678" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="StreetAddress" class="form-label">Street Address</label>
+                    <input asp-for="StreetAddress" class="form-control" placeholder="Enter your street address" />
+                    <span asp-validation-for="StreetAddress" class="text-danger"></span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label asp-for="PostalCode" class="form-label">Postal Code</label>
+                        <input asp-for="PostalCode" class="form-control" placeholder="0001" />
+                        <span asp-validation-for="PostalCode" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="City" class="form-label">City</label>
+                        <input asp-for="City" class="form-control" placeholder="Oslo" />
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Country" class="form-label">Country</label>
+                    <input asp-for="Country" class="form-control" placeholder="Norway" />
+                    <span asp-validation-for="Country" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm your password" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-login">Register</button>
+
+                <div class="login-footer">
+                    <span>Already have an account?</span>
+                    <a asp-action="Login" class="login-link">Login here</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        var map = L.map('map-background', {
+            center: [59.9139, 10.7522],
+            zoom: 13,
+            zoomControl: false,
+            attributionControl: false,
+            dragging: false,
+            scrollWheelZoom: false,
+            doubleClickZoom: false,
+            boxZoom: false,
+            keyboard: false,
+            touchZoom: false
+        });
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(map);
+
+        var angle = 0;
+        var radius = 0.008;
+        var center = map.getCenter();
+        var zoomDirection = 1;
+        var currentZoom = 13;
+
+        function animateMap() {
+            angle += 0.003;
+            var newLat = center.lat + Math.sin(angle) * radius;
+            var newLng = center.lng + Math.cos(angle) * radius;
+            
+            if (Math.random() < 0.01) {
+                if (currentZoom >= 14) zoomDirection = -1;
+                if (currentZoom <= 12) zoomDirection = 1;
+                currentZoom += zoomDirection * 0.02;
+                map.setZoom(currentZoom, { animate: true });
+            }
+            
+            map.panTo([newLat, newLng], {
+                animate: true,
+                duration: 1,
+                easeLinearity: 0.1
+            });
+            
+            requestAnimationFrame(animateMap);
+        }
+
+        setTimeout(function() {
+            animateMap();
+        }, 1000);
+    </script>
+</body>
+</html>

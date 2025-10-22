@@ -11,21 +11,22 @@ using System;
 using System.Reflection;
 
 [assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("bc7eb59c-667e-4e0b-bed4-53a68416512f")]
-[assembly: System.Reflection.AssemblyMetadata("dcpclipath", ("C:\\Users\\asklo\\.nuget\\packages\\aspire.hosting.orchestration.win-x64\\9.4.1\\tools\\d" +
-    "cp.exe"))]
-[assembly: System.Reflection.AssemblyMetadata("dcpextensionpaths", ("C:\\Users\\asklo\\.nuget\\packages\\aspire.hosting.orchestration.win-x64\\9.4.1\\tools\\e" +
-    "xt\\"))]
-[assembly: System.Reflection.AssemblyMetadata("dcpbinpath", ("C:\\Users\\asklo\\.nuget\\packages\\aspire.hosting.orchestration.win-x64\\9.4.1\\tools\\e" +
-    "xt\\bin\\"))]
-[assembly: System.Reflection.AssemblyMetadata("apphostprojectpath", "C:\\Users\\asklo\\repo\\NaviSafe\\NaviSafe.AppHost")]
+[assembly: System.Reflection.AssemblyMetadata("dcpclipath", ("/Users/jimmyhtrinh/.nuget/packages/aspire.hosting.orchestration.osx-arm64/9.4.1/t" +
+    "ools/dcp"))]
+[assembly: System.Reflection.AssemblyMetadata("dcpextensionpaths", ("/Users/jimmyhtrinh/.nuget/packages/aspire.hosting.orchestration.osx-arm64/9.4.1/t" +
+    "ools/ext/"))]
+[assembly: System.Reflection.AssemblyMetadata("dcpbinpath", ("/Users/jimmyhtrinh/.nuget/packages/aspire.hosting.orchestration.osx-arm64/9.4.1/t" +
+    "ools/ext/bin/"))]
+[assembly: System.Reflection.AssemblyMetadata("apphostprojectpath", "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.AppHost")]
 [assembly: System.Reflection.AssemblyMetadata("apphostprojectname", "NaviSafe.AppHost.csproj")]
-[assembly: System.Reflection.AssemblyMetadata("aspiredashboardpath", ("C:\\Users\\asklo\\.nuget\\packages\\aspire.dashboard.sdk.win-x64\\9.4.1\\tools\\Aspire.Da" +
-    "shboard.exe"))]
-[assembly: System.Reflection.AssemblyMetadataAttribute("apphostprojectbaseintermediateoutputpath", "C:\\Users\\asklo\\repo\\NaviSafe\\NaviSafe.AppHost\\obj\\")]
+[assembly: System.Reflection.AssemblyMetadata("aspiredashboardpath", ("/Users/jimmyhtrinh/.nuget/packages/aspire.dashboard.sdk.osx-arm64/9.4.1/tools/Asp" +
+    "ire.Dashboard.dll"))]
+[assembly: System.Reflection.AssemblyMetadataAttribute("apphostprojectbaseintermediateoutputpath", ("/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.AppHost/obj" +
+    "/"))]
 [assembly: System.Reflection.AssemblyCompanyAttribute("NaviSafe.AppHost")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+41312c15be9871e6c587077f10f54ccd7a808d40")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+21fb578b8f956c26923e2e7c15061e44b92adceb")]
 [assembly: System.Reflection.AssemblyProductAttribute("NaviSafe.AppHost")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NaviSafe.AppHost")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

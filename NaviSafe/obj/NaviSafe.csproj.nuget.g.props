@@ -4,22 +4,26 @@
     <RestoreSuccess Condition=" '$(RestoreSuccess)' == '' ">True</RestoreSuccess>
     <RestoreTool Condition=" '$(RestoreTool)' == '' ">NuGet</RestoreTool>
     <ProjectAssetsFile Condition=" '$(ProjectAssetsFile)' == '' ">$(MSBuildThisFileDirectory)project.assets.json</ProjectAssetsFile>
-    <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">$(UserProfile)\.nuget\packages\</NuGetPackageRoot>
-    <NuGetPackageFolders Condition=" '$(NuGetPackageFolders)' == '' ">C:\Users\asklo\.nuget\packages\;C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages</NuGetPackageFolders>
+    <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">/Users/jimmyhtrinh/.nuget/packages/</NuGetPackageRoot>
+    <NuGetPackageFolders Condition=" '$(NuGetPackageFolders)' == '' ">/Users/jimmyhtrinh/.nuget/packages/</NuGetPackageFolders>
     <NuGetProjectStyle Condition=" '$(NuGetProjectStyle)' == '' ">PackageReference</NuGetProjectStyle>
     <NuGetToolVersion Condition=" '$(NuGetToolVersion)' == '' ">6.14.0</NuGetToolVersion>
   </PropertyGroup>
   <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <SourceRoot Include="C:\Users\asklo\.nuget\packages\" />
-    <SourceRoot Include="C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages\" />
+    <SourceRoot Include="/Users/jimmyhtrinh/.nuget/packages/" />
   </ItemGroup>
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <Import Project="$(NuGetPackageRoot)microsoft.extensions.telemetry.abstractions\9.8.0\buildTransitive\net8.0\Microsoft.Extensions.Telemetry.Abstractions.props" Condition="Exists('$(NuGetPackageRoot)microsoft.extensions.telemetry.abstractions\9.8.0\buildTransitive\net8.0\Microsoft.Extensions.Telemetry.Abstractions.props')" />
-    <Import Project="$(NuGetPackageRoot)microsoft.extensions.configuration.usersecrets\8.0.1\buildTransitive\net6.0\Microsoft.Extensions.Configuration.UserSecrets.props" Condition="Exists('$(NuGetPackageRoot)microsoft.extensions.configuration.usersecrets\8.0.1\buildTransitive\net6.0\Microsoft.Extensions.Configuration.UserSecrets.props')" />
-    <Import Project="$(NuGetPackageRoot)microsoft.visualstudio.azure.containers.tools.targets\1.22.1\build\Microsoft.VisualStudio.Azure.Containers.Tools.Targets.props" Condition="Exists('$(NuGetPackageRoot)microsoft.visualstudio.azure.containers.tools.targets\1.22.1\build\Microsoft.VisualStudio.Azure.Containers.Tools.Targets.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.entityframeworkcore/9.0.10/buildTransitive/net8.0/Microsoft.EntityFrameworkCore.props" Condition="Exists('$(NuGetPackageRoot)microsoft.entityframeworkcore/9.0.10/buildTransitive/net8.0/Microsoft.EntityFrameworkCore.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.extensions.telemetry.abstractions/9.8.0/buildTransitive/net8.0/Microsoft.Extensions.Telemetry.Abstractions.props" Condition="Exists('$(NuGetPackageRoot)microsoft.extensions.telemetry.abstractions/9.8.0/buildTransitive/net8.0/Microsoft.Extensions.Telemetry.Abstractions.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.extensions.configuration.usersecrets/8.0.1/buildTransitive/net6.0/Microsoft.Extensions.Configuration.UserSecrets.props" Condition="Exists('$(NuGetPackageRoot)microsoft.extensions.configuration.usersecrets/8.0.1/buildTransitive/net6.0/Microsoft.Extensions.Configuration.UserSecrets.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.visualstudio.azure.containers.tools.targets/1.22.1/build/Microsoft.VisualStudio.Azure.Containers.Tools.Targets.props" Condition="Exists('$(NuGetPackageRoot)microsoft.visualstudio.azure.containers.tools.targets/1.22.1/build/Microsoft.VisualStudio.Azure.Containers.Tools.Targets.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.codeanalysis.analyzers/3.3.4/buildTransitive/Microsoft.CodeAnalysis.Analyzers.props" Condition="Exists('$(NuGetPackageRoot)microsoft.codeanalysis.analyzers/3.3.4/buildTransitive/Microsoft.CodeAnalysis.Analyzers.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.entityframeworkcore.design/9.0.10/build/net8.0/Microsoft.EntityFrameworkCore.Design.props" Condition="Exists('$(NuGetPackageRoot)microsoft.entityframeworkcore.design/9.0.10/build/net8.0/Microsoft.EntityFrameworkCore.Design.props')" />
   </ImportGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <PkgGrpc_Tools Condition=" '$(PkgGrpc_Tools)' == '' ">C:\Users\asklo\.nuget\packages\grpc.tools\2.72.0</PkgGrpc_Tools>
-    <PkgMicrosoft_VisualStudio_Azure_Containers_Tools_Targets Condition=" '$(PkgMicrosoft_VisualStudio_Azure_Containers_Tools_Targets)' == '' ">C:\Users\asklo\.nuget\packages\microsoft.visualstudio.azure.containers.tools.targets\1.22.1</PkgMicrosoft_VisualStudio_Azure_Containers_Tools_Targets>
+    <PkgGrpc_Tools Condition=" '$(PkgGrpc_Tools)' == '' ">/Users/jimmyhtrinh/.nuget/packages/grpc.tools/2.72.0</PkgGrpc_Tools>
+    <PkgMicrosoft_VisualStudio_Azure_Containers_Tools_Targets Condition=" '$(PkgMicrosoft_VisualStudio_Azure_Containers_Tools_Targets)' == '' ">/Users/jimmyhtrinh/.nuget/packages/microsoft.visualstudio.azure.containers.tools.targets/1.22.1</PkgMicrosoft_VisualStudio_Azure_Containers_Tools_Targets>
+    <PkgMicrosoft_CodeAnalysis_Analyzers Condition=" '$(PkgMicrosoft_CodeAnalysis_Analyzers)' == '' ">/Users/jimmyhtrinh/.nuget/packages/microsoft.codeanalysis.analyzers/3.3.4</PkgMicrosoft_CodeAnalysis_Analyzers>
+    <PkgMicrosoft_EntityFrameworkCore_Tools Condition=" '$(PkgMicrosoft_EntityFrameworkCore_Tools)' == '' ">/Users/jimmyhtrinh/.nuget/packages/microsoft.entityframeworkcore.tools/9.0.10</PkgMicrosoft_EntityFrameworkCore_Tools>
   </PropertyGroup>
 </Project>

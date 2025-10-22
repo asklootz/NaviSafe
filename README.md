@@ -2,7 +2,7 @@
 
 # NaviSafe
 
-![Logo](docs/NaviSafe_Icon.png)
+![Logo](Documents/NaviSafe_Icon.png)
 
 **NaviSafe** is a web-based solution app developed for **Kartverket** to assist pilots and administrators with safe navigation, flight and coordination.  
 It connects tablet users in the field with a central orchestration layer, API services, and a containerized database backend.
@@ -30,7 +30,7 @@ NaviSafe was developed as part of a collaboration with **Kartverket** to support
 ---
 
 ## Architecture
-![NaviSafe Architecture](docs/NaviSafesysdiagram.png)
+![NaviSafe Architecture](Documents/NaviSafesysdiagram.png)
 
 **Workflow:**
 1. **Tablet & Admin Clients** send `POST`/`GET` requests.

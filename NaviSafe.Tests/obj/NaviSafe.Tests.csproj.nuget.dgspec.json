@@ -1,0 +1,295 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.Tests/NaviSafe.Tests.csproj": {}
+  },
+  "projects": {
+    "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj",
+        "projectName": "NaviSafe.ServiceDefaults",
+        "projectPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj",
+        "packagesPath": "/Users/jimmyhtrinh/.nuget/packages/",
+        "outputPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/jimmyhtrinh/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Aspire.Hosting.MySql": {
+              "target": "Package",
+              "version": "[9.4.1, )"
+            },
+            "Aspire.MySqlConnector": {
+              "target": "Package",
+              "version": "[9.4.1, )"
+            },
+            "Microsoft.Extensions.Http.Resilience": {
+              "target": "Package",
+              "version": "[9.8.0, )"
+            },
+            "Microsoft.Extensions.ServiceDiscovery": {
+              "target": "Package",
+              "version": "[9.4.1, )"
+            },
+            "OpenTelemetry.Exporter.Console": {
+              "target": "Package",
+              "version": "[1.12.0, )"
+            },
+            "OpenTelemetry.Exporter.OpenTelemetryProtocol": {
+              "target": "Package",
+              "version": "[1.12.0, )"
+            },
+            "OpenTelemetry.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[1.12.0, )"
+            },
+            "OpenTelemetry.Instrumentation.AspNetCore": {
+              "target": "Package",
+              "version": "[1.12.0, )"
+            },
+            "OpenTelemetry.Instrumentation.Http": {
+              "target": "Package",
+              "version": "[1.12.0, )"
+            },
+            "OpenTelemetry.Instrumentation.Runtime": {
+              "target": "Package",
+              "version": "[1.12.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.304/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.Tests/NaviSafe.Tests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.Tests/NaviSafe.Tests.csproj",
+        "projectName": "NaviSafe.Tests",
+        "projectPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.Tests/NaviSafe.Tests.csproj",
+        "packagesPath": "/Users/jimmyhtrinh/.nuget/packages/",
+        "outputPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.Tests/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/jimmyhtrinh/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/NaviSafe.csproj": {
+                "projectPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/NaviSafe.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[17.12.0, )"
+            },
+            "coverlet.collector": {
+              "target": "Package",
+              "version": "[6.0.2, )"
+            },
+            "xunit": {
+              "target": "Package",
+              "version": "[2.9.2, )"
+            },
+            "xunit.runner.visualstudio": {
+              "target": "Package",
+              "version": "[2.8.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.304/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/NaviSafe.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/NaviSafe.csproj",
+        "projectName": "NaviSafe",
+        "projectPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/NaviSafe.csproj",
+        "packagesPath": "/Users/jimmyhtrinh/.nuget/packages/",
+        "outputPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/jimmyhtrinh/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj": {
+                "projectPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Aspire.Hosting.MySql": {
+              "target": "Package",
+              "version": "[9.4.1, )"
+            },
+            "Aspire.MySqlConnector": {
+              "target": "Package",
+              "version": "[9.4.1, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Microsoft.AspNetCore.Mvc.Core": {
+              "target": "Package",
+              "version": "[2.3.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
+              "target": "Package",
+              "version": "[1.22.1, )"
+            },
+            "OpenTelemetry.Exporter.Console": {
+              "target": "Package",
+              "version": "[1.12.0, )"
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.304/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
