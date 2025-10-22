@@ -1,32 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\asklo\\repo\\NaviSafe\\NaviSafe\\NaviSafe.csproj": {}
+    "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/NaviSafe.csproj": {}
   },
   "projects": {
-    "C:\\Users\\asklo\\repo\\NaviSafe\\NaviSafe.ServiceDefaults\\NaviSafe.ServiceDefaults.csproj": {
+    "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\asklo\\repo\\NaviSafe\\NaviSafe.ServiceDefaults\\NaviSafe.ServiceDefaults.csproj",
+        "projectUniqueName": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj",
         "projectName": "NaviSafe.ServiceDefaults",
-        "projectPath": "C:\\Users\\asklo\\repo\\NaviSafe\\NaviSafe.ServiceDefaults\\NaviSafe.ServiceDefaults.csproj",
-        "packagesPath": "C:\\Users\\asklo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\asklo\\repo\\NaviSafe\\NaviSafe.ServiceDefaults\\obj\\",
+        "projectPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj",
+        "packagesPath": "/Users/jimmyhtrinh/.nuget/packages/",
+        "outputPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\asklo\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/jimmyhtrinh/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -111,41 +104,34 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.304/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\asklo\\repo\\NaviSafe\\NaviSafe\\NaviSafe.csproj": {
+    "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/NaviSafe.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\asklo\\repo\\NaviSafe\\NaviSafe\\NaviSafe.csproj",
+        "projectUniqueName": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/NaviSafe.csproj",
         "projectName": "NaviSafe",
-        "projectPath": "C:\\Users\\asklo\\repo\\NaviSafe\\NaviSafe\\NaviSafe.csproj",
-        "packagesPath": "C:\\Users\\asklo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\asklo\\repo\\NaviSafe\\NaviSafe\\obj\\",
+        "projectPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/NaviSafe.csproj",
+        "packagesPath": "/Users/jimmyhtrinh/.nuget/packages/",
+        "outputPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\asklo\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/jimmyhtrinh/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\asklo\\repo\\NaviSafe\\NaviSafe.ServiceDefaults\\NaviSafe.ServiceDefaults.csproj": {
-                "projectPath": "C:\\Users\\asklo\\repo\\NaviSafe\\NaviSafe.ServiceDefaults\\NaviSafe.ServiceDefaults.csproj"
+              "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj": {
+                "projectPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj"
               }
             }
           }
@@ -174,9 +160,19 @@
               "target": "Package",
               "version": "[9.4.1, )"
             },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
             "Microsoft.AspNetCore.Mvc.Core": {
               "target": "Package",
               "version": "[2.3.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.10, )"
             },
             "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
               "target": "Package",
@@ -185,6 +181,10 @@
             "OpenTelemetry.Exporter.Console": {
               "target": "Package",
               "version": "[1.12.0, )"
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[9.0.0, )"
             }
           },
           "imports": [
@@ -206,7 +206,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.304/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

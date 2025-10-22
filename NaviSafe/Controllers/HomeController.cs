@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using NaviSafe.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NaviSafe.Controllers;
 

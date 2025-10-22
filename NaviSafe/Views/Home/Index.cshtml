@@ -4,7 +4,15 @@
 
 <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="text-center space-y-4">
-        <h1 class="text-3xl sm:text4xl font-bold tracking-light">Welcome</h1>
+        <!-- Logout Button at the top -->
+        <div style="text-align: right; margin-bottom: 20px;">
+            <form asp-controller="Account" asp-action="Logout" method="post" style="display: inline;">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
+            </form>
+        </div>
+        
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-light">Welcome</h1>
         <p class ="text-base sm:text-lg text-gray-700">
             Learn about
             <a class ="text-indigo-700 hover:underline"
