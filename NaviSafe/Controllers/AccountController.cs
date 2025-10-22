@@ -96,9 +96,6 @@ public class AccountController : Controller
         if (userInfo == null) return;
 
         HttpContext.Session.SetString("UserId", userInfo.UserId);
-        HttpContext.Session.SetString("UserEmail", email);
-        HttpContext.Session.SetString("UserFullName", userInfo.FullName);
-        HttpContext.Session.SetString("UserPhoneNumber", userInfo.PhoneNumber);
         HttpContext.Session.SetString("IsAuthenticated", "true");
     }
 
