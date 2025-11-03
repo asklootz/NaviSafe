@@ -10,5 +10,5 @@ public class NaviSafe_AppHost
 #pragma warning restore CS8981
 {
     private NaviSafe_AppHost() { }
-    public static string ProjectPath => """/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.AppHost""";
+    public static string ProjectPath => """C:\Users\asklo\repo\NaviSafe\NaviSafe.AppHost""";
 }

@@ -9,5 +9,5 @@ namespace Projects;
 public class NaviSafe : global::Aspire.Hosting.IProjectMetadata
 #pragma warning restore CS8981
 {
-    public string ProjectPath => """/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/NaviSafe.csproj""";
+    public string ProjectPath => """C:\Users\asklo\repo\NaviSafe\NaviSafe\NaviSafe.csproj""";
 }

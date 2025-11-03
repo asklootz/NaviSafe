@@ -2,7 +2,9 @@
 <project version="4">
   <component name="UserContentModel">
     <attachedFolders />
-    <explicitIncludes />
+    <explicitIncludes>
+      <Path>NaviSafe/wwwroot/lib/leaflet-locatecontrol-0.85.0/leaflet-locatecontrol-0.85.0/dist</Path>
+    </explicitIncludes>
     <explicitExcludes />
   </component>
 </project>
