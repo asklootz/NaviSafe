@@ -86,22 +86,23 @@
 @section Scripts{
 <partial name="_ValidationScriptsPartial"/>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"
-          crossorigin=""/>
+    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"
+          crossorigin=""/>-->
+    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.85.0/dist/L.Control.Locate.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.85.0/dist/L.Control.Locate.min.js" charset="utf-8"></script>-->
+    <!--<<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"
+                 crossorigin=""></script>-->
+    
+    <link rel="stylesheet" href="~/lib/leaflet/dist/leaflet.css" crossorigin=""/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
-
-    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"
-            crossorigin=""></script>
-    <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script> 
     
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.85.0/dist/L.Control.Locate.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.85.0/dist/L.Control.Locate.min.js" charset="utf-8"></script>
+    <script src="~/lib/leaflet/dist/leaflet.js" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
     
-    <!--<link rel="stylesheet" href="../lib/leaflet-locatecontrol-0.85.0/dist/L.Control.Locate.mapbox.min.css"/>
-    <script src="../lib/leaflet-locatecontrol-0.85.0/dist/L.Control.Locate.min.js"></script>-->
+    <<link rel="stylesheet" href="~/lib/leaflet-locatecontrol-0.85.0/leaflet-locatecontrol-0.85.0/dist/L.Control.Locate.mapbox.min.css"/>
+    <script src="~/lib/leaflet-locatecontrol-0.85.0/leaflet-locatecontrol-0.85.0/dist/L.Control.Locate.min.js"></script>
 
     <script>
-        
 
         let map = L.map('map').setView([58.163137,8.002106], 13);
     
