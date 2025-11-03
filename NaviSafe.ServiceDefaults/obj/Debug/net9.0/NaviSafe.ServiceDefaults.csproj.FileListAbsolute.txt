@@ -5,12 +5,10 @@ C:/Users/asklo/repo/NaviSafe/NaviSafe.ServiceDefaults/obj/Debug/net9.0/NaviSafe.
 C:/Users/asklo/repo/NaviSafe/NaviSafe.ServiceDefaults/obj/Debug/net9.0/NaviSafe.ServiceDefaults.GeneratedMSBuildEditorConfig.editorconfig
 C:/Users/asklo/repo/NaviSafe/NaviSafe.ServiceDefaults/obj/Debug/net9.0/NaviSafe.ServiceDefaults.AssemblyInfoInputs.cache
 C:/Users/asklo/repo/NaviSafe/NaviSafe.ServiceDefaults/obj/Debug/net9.0/NaviSafe.ServiceDefaults.AssemblyInfo.cs
-C:/Users/asklo/repo/NaviSafe/NaviSafe.ServiceDefaults/obj/Debug/net9.0/NaviSafe.ServiceDefaults.csproj.CoreCompileInputs.cache
 C:/Users/asklo/repo/NaviSafe/NaviSafe.ServiceDefaults/obj/Debug/net9.0/NaviSafe.ServiceDefaults.dll
 C:/Users/asklo/repo/NaviSafe/NaviSafe.ServiceDefaults/obj/Debug/net9.0/refint/NaviSafe.ServiceDefaults.dll
 C:/Users/asklo/repo/NaviSafe/NaviSafe.ServiceDefaults/obj/Debug/net9.0/NaviSafe.ServiceDefaults.pdb
 C:/Users/asklo/repo/NaviSafe/NaviSafe.ServiceDefaults/obj/Debug/net9.0/ref/NaviSafe.ServiceDefaults.dll
-C:/Users/asklo/repo/NaviSafe/NaviSafe.ServiceDefaults/obj/Debug/net9.0/NaviSafe.ServiceDefaults.sourcelink.json
 /Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/bin/Debug/net9.0/NaviSafe.ServiceDefaults.deps.json
 /Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/bin/Debug/net9.0/NaviSafe.ServiceDefaults.dll
 /Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/bin/Debug/net9.0/NaviSafe.ServiceDefaults.pdb
@@ -37,3 +35,14 @@ C:/Users/asklo/repo/NaviSafe/NaviSafe.ServiceDefaults/obj/Debug/net9.0/NaviSafe.
 /Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafeProject/NaviSafe/NaviSafe.ServiceDefaults/obj/Debug/net9.0/refint/NaviSafe.ServiceDefaults.dll
 /Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafeProject/NaviSafe/NaviSafe.ServiceDefaults/obj/Debug/net9.0/NaviSafe.ServiceDefaults.pdb
 /Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafeProject/NaviSafe/NaviSafe.ServiceDefaults/obj/Debug/net9.0/ref/NaviSafe.ServiceDefaults.dll
+C:\Users\asklo\repo\NaviSafe\NaviSafe.ServiceDefaults\bin\Debug\net9.0\NaviSafe.ServiceDefaults.deps.json
+C:\Users\asklo\repo\NaviSafe\NaviSafe.ServiceDefaults\bin\Debug\net9.0\NaviSafe.ServiceDefaults.dll
+C:\Users\asklo\repo\NaviSafe\NaviSafe.ServiceDefaults\bin\Debug\net9.0\NaviSafe.ServiceDefaults.pdb
+C:\Users\asklo\repo\NaviSafe\NaviSafe.ServiceDefaults\obj\Debug\net9.0\NaviSafe.ServiceDefaults.csproj.AssemblyReference.cache
+C:\Users\asklo\repo\NaviSafe\NaviSafe.ServiceDefaults\obj\Debug\net9.0\NaviSafe.ServiceDefaults.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\asklo\repo\NaviSafe\NaviSafe.ServiceDefaults\obj\Debug\net9.0\NaviSafe.ServiceDefaults.AssemblyInfoInputs.cache
+C:\Users\asklo\repo\NaviSafe\NaviSafe.ServiceDefaults\obj\Debug\net9.0\NaviSafe.ServiceDefaults.AssemblyInfo.cs
+C:\Users\asklo\repo\NaviSafe\NaviSafe.ServiceDefaults\obj\Debug\net9.0\NaviSafe.ServiceDefaults.dll
+C:\Users\asklo\repo\NaviSafe\NaviSafe.ServiceDefaults\obj\Debug\net9.0\refint\NaviSafe.ServiceDefaults.dll
+C:\Users\asklo\repo\NaviSafe\NaviSafe.ServiceDefaults\obj\Debug\net9.0\NaviSafe.ServiceDefaults.pdb
+C:\Users\asklo\repo\NaviSafe\NaviSafe.ServiceDefaults\obj\Debug\net9.0\ref\NaviSafe.ServiceDefaults.dll

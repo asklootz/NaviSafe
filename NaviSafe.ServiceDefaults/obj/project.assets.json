@@ -4458,24 +4458,32 @@
     ]
   },
   "packageFolders": {
-    "/Users/jimmyhtrinh/.nuget/packages/": {}
+    "C:\\Users\\asklo\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj",
+      "projectUniqueName": "C:\\Users\\asklo\\repo\\NaviSafe\\NaviSafe.ServiceDefaults\\NaviSafe.ServiceDefaults.csproj",
       "projectName": "NaviSafe.ServiceDefaults",
-      "projectPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj",
-      "packagesPath": "/Users/jimmyhtrinh/.nuget/packages/",
-      "outputPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/obj/",
+      "projectPath": "C:\\Users\\asklo\\repo\\NaviSafe\\NaviSafe.ServiceDefaults\\NaviSafe.ServiceDefaults.csproj",
+      "packagesPath": "C:\\Users\\asklo\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\asklo\\repo\\NaviSafe\\NaviSafe.ServiceDefaults\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/Users/jimmyhtrinh/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\asklo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -4560,7 +4568,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.304/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
