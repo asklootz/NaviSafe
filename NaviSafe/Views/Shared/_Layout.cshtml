@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - NaviSafe</title>
+    <title>@ViewData["Title"]</title>
+    <link rel="icon" href="~/NaviSafe_Logo.svg">
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -20,28 +21,34 @@
         }
     </script>
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">NaviSafe</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+<body class="bg-cyan-50">
+<header>
+    <!-- From Uiverse.io by Shubh0408 --> 
+    <label>
+        <div class="w-9 h-10 cursor-pointer flex flex-col items-center justify-center">
+            <input class="hidden peer" type="checkbox" />
+            <div
+                class="w-[50%] h-[2px] bg-black rounded-sm transition-all duration-300 origin-left translate-y-[0.45rem] peer-checked:rotate-[-45deg]"
+            ></div>
+            <div
+                class="w-[50%] h-[2px] bg-black rounded-md transition-all duration-300 origin-center peer-checked:hidden"
+            ></div>
+            <div
+                class="w-[50%] h-[2px] bg-black rounded-md transition-all duration-300 origin-left -translate-y-[0.45rem] peer-checked:rotate-[45deg]"
+            ></div>
+            
+            
+        </div>
+        
+        <ul class="menu dropdown-content bg-base-100 rounded-box z1 w-52 p-2 shadow-sm">
+            <li><a>Test1</a></li>
+            <li><a>Test2</a></li>
+            <li><a>Test3</a></li>
+
+        </ul>
+    </label>
+    
+</header>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
