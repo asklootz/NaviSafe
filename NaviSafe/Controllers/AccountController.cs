@@ -1,109 +1,89 @@
 using Microsoft.AspNetCore.Mvc;
+using NaviSafe.Data;
 using NaviSafe.Models;
-using NaviSafe.Services;
 
-namespace NaviSafe.Controllers;
-
-public class AccountController : Controller
+namespace NaviSafe.Controllers
 {
-    private readonly UserStorage _userStorage;
-
-    public AccountController(UserStorage userStorage)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AccountController : ControllerBase
     {
-        _userStorage = userStorage;
-    }
+        private readonly IUserStorage _userStorage;
 
-    [HttpGet]
-    public IActionResult Login(string? returnUrl = null)
-    {
-        ViewData["ReturnUrl"] = returnUrl;
-        return View();
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Login(LoginViewModel model, string? returnUrl = null)
-    {
-        if (!ModelState.IsValid)
-            return View(model);
-
-        if (!_userStorage.ValidateUser(model.Email, model.Password))
+        public AccountController(IUserStorage userStorage)
         {
-            ModelState.AddModelError(string.Empty, "Invalid email or password.");
-            return View(model);
+            _userStorage = userStorage;
         }
 
-        // Login successful - store user in session
-        StoreUserInSession(model.Email);
-        
-        return RedirectToReturnUrl(returnUrl);
-    }
-
-    [HttpGet]
-    public IActionResult Register()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Register(RegisterViewModel model)
-    {
-        if (!ModelState.IsValid)
-            return View(model);
-
-        if (_userStorage.UserExists(model.Email))
+        // ---- LOGIN ----
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] LoginViewModel model)
         {
-            ModelState.AddModelError(string.Empty, "An account with this email already exists.");
-            return View(model);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_userStorage.ValidateUser(model.Email, model.Password))
+                return Unauthorized(new { message = "Invalid email or password." });
+
+            StoreUserInSession(model.Email);
+
+            return Ok(new
+            {
+                message = "Login successful",
+                email = model.Email
+            });
         }
 
-        var userId = _userStorage.RegisterUser(
-            model.Email, 
-            model.Password, 
-            model.FullName, 
-            model.PhoneNumber,
-            model.StreetAddress,
-            model.City,
-            model.PostalCode,
-            model.Country
-        );
-
-        if (string.IsNullOrEmpty(userId))
+        // ---- REGISTER ----
+        [HttpPost("register")]
+        public IActionResult Register([FromBody] RegisterViewModel model)
         {
-            ModelState.AddModelError(string.Empty, "Registration failed. Please try again.");
-            return View(model);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (_userStorage.UserExists(model.Email))
+                return Conflict(new { message = "An account with this email already exists." });
+
+            var userId = _userStorage.RegisterUser(
+                model.Email,
+                model.Password,
+                model.FullName,
+                model.PhoneNumber,
+                model.StreetAddress,
+                model.City,
+                model.PostalCode,
+                model.Country
+            );
+
+            if (string.IsNullOrEmpty(userId))
+                return StatusCode(500, new { message = "Registration failed. Please try again." });
+
+            StoreUserInSession(model.Email);
+
+            return Ok(new
+            {
+                message = "Registration successful",
+                userId,
+                email = model.Email
+            });
         }
 
-        // Auto-login after successful registration
-        StoreUserInSession(model.Email);
-        
-        return RedirectToAction("Index", "Home");
-    }
+        // ---- LOGOUT ----
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return Ok(new { message = "Logged out successfully" });
+        }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Logout()
-    {
-        HttpContext.Session.Clear();
-        return RedirectToAction("Login");
-    }
+        // ---- HELPER ----
+        private void StoreUserInSession(string email)
+        {
+            var userInfo = _userStorage.GetUserInfo(email);
+            if (userInfo == null) return;
 
-    // Helper methods
-    private void StoreUserInSession(string email)
-    {
-        var userInfo = _userStorage.GetUserInfo(email);
-        if (userInfo == null) return;
-
-        HttpContext.Session.SetString("UserId", userInfo.UserId);
-        HttpContext.Session.SetString("IsAuthenticated", "true");
-    }
-
-    private IActionResult RedirectToReturnUrl(string? returnUrl)
-    {
-        if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-            return Redirect(returnUrl);
-        
-        return RedirectToAction("Index", "Home");
+            HttpContext.Session.SetString("UserId", userInfo.UserId);
+            HttpContext.Session.SetString("IsAuthenticated", "true");
+        }
     }
 }

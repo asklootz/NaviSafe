@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/NaviSafe.csproj": {}
+    "/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/NaviSafe.csproj": {}
   },
   "projects": {
-    "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj": {
+    "/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj",
+        "projectUniqueName": "/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj",
         "projectName": "NaviSafe.ServiceDefaults",
-        "projectPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj",
-        "packagesPath": "/Users/jimmyhtrinh/.nuget/packages/",
-        "outputPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/obj/",
+        "projectPath": "/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj",
+        "packagesPath": "/Users/synnekyrkjebo/.nuget/packages/",
+        "outputPath": "/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe.ServiceDefaults/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/jimmyhtrinh/.nuget/NuGet/NuGet.Config"
+          "/Users/synnekyrkjebo/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -108,17 +108,17 @@
         }
       }
     },
-    "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/NaviSafe.csproj": {
+    "/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/NaviSafe.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/NaviSafe.csproj",
+        "projectUniqueName": "/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/NaviSafe.csproj",
         "projectName": "NaviSafe",
-        "projectPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/NaviSafe.csproj",
-        "packagesPath": "/Users/jimmyhtrinh/.nuget/packages/",
-        "outputPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/obj/",
+        "projectPath": "/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/NaviSafe.csproj",
+        "packagesPath": "/Users/synnekyrkjebo/.nuget/packages/",
+        "outputPath": "/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/jimmyhtrinh/.nuget/NuGet/NuGet.Config"
+          "/Users/synnekyrkjebo/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -130,8 +130,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj": {
-                "projectPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj"
+              "/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj": {
+                "projectPath": "/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj"
               }
             }
           }
@@ -167,6 +167,14 @@
             "Microsoft.AspNetCore.Mvc.Core": {
               "target": "Package",
               "version": "[2.3.0, )"
+            },
+            "Microsoft.AspNetCore.SpaProxy": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Microsoft.AspNetCore.SpaServices.Extensions": {
+              "target": "Package",
+              "version": "[9.0.10, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",

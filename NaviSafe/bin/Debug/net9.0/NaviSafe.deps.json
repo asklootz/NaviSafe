@@ -12,6 +12,8 @@
           "Aspire.MySqlConnector": "9.4.1",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "9.0.10",
           "Microsoft.AspNetCore.Mvc.Core": "2.3.0",
+          "Microsoft.AspNetCore.SpaProxy": "9.0.10",
+          "Microsoft.AspNetCore.SpaServices.Extensions": "9.0.10",
           "Microsoft.EntityFrameworkCore.Tools": "9.0.10",
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.22.1",
           "NaviSafe.ServiceDefaults": "1.0.0",
@@ -413,7 +415,7 @@
       "Microsoft.AspNetCore.Http.Extensions/2.3.0": {
         "dependencies": {
           "Microsoft.AspNetCore.Http.Abstractions": "2.3.0",
-          "Microsoft.Extensions.FileProviders.Abstractions": "9.0.8",
+          "Microsoft.Extensions.FileProviders.Abstractions": "9.0.10",
           "Microsoft.Net.Http.Headers": "2.3.0",
           "System.Buffers": "4.6.0"
         }
@@ -453,7 +455,7 @@
           "Microsoft.AspNetCore.Routing": "2.3.0",
           "Microsoft.Extensions.DependencyInjection": "9.0.10",
           "Microsoft.Extensions.DependencyModel": "9.0.10",
-          "Microsoft.Extensions.FileProviders.Abstractions": "9.0.8",
+          "Microsoft.Extensions.FileProviders.Abstractions": "9.0.10",
           "Microsoft.Extensions.Logging.Abstractions": "9.0.10",
           "System.Diagnostics.DiagnosticSource": "9.0.0",
           "System.Threading.Tasks.Extensions": "4.6.0"
@@ -476,6 +478,25 @@
       "Microsoft.AspNetCore.Routing.Abstractions/2.3.0": {
         "dependencies": {
           "Microsoft.AspNetCore.Http.Abstractions": "2.3.0"
+        }
+      },
+      "Microsoft.AspNetCore.SpaProxy/9.0.10": {
+        "runtime": {
+          "lib/net9.0/Microsoft.AspNetCore.SpaProxy.dll": {
+            "assemblyVersion": "9.0.10.0",
+            "fileVersion": "9.0.1025.47517"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.SpaServices.Extensions/9.0.10": {
+        "dependencies": {
+          "Microsoft.Extensions.FileProviders.Physical": "9.0.10"
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.AspNetCore.SpaServices.Extensions.dll": {
+            "assemblyVersion": "9.0.10.0",
+            "fileVersion": "9.0.1025.47517"
+          }
         }
       },
       "Microsoft.AspNetCore.WebUtilities/2.3.0": {
@@ -946,8 +967,8 @@
         "dependencies": {
           "Microsoft.Extensions.Configuration": "9.0.8",
           "Microsoft.Extensions.Configuration.Abstractions": "9.0.10",
-          "Microsoft.Extensions.FileProviders.Abstractions": "9.0.8",
-          "Microsoft.Extensions.FileProviders.Physical": "8.0.0",
+          "Microsoft.Extensions.FileProviders.Abstractions": "9.0.10",
+          "Microsoft.Extensions.FileProviders.Physical": "9.0.10",
           "Microsoft.Extensions.Primitives": "9.0.10"
         }
       },
@@ -956,15 +977,15 @@
           "Microsoft.Extensions.Configuration": "9.0.8",
           "Microsoft.Extensions.Configuration.Abstractions": "9.0.10",
           "Microsoft.Extensions.Configuration.FileExtensions": "8.0.1",
-          "Microsoft.Extensions.FileProviders.Abstractions": "9.0.8"
+          "Microsoft.Extensions.FileProviders.Abstractions": "9.0.10"
         }
       },
       "Microsoft.Extensions.Configuration.UserSecrets/8.0.1": {
         "dependencies": {
           "Microsoft.Extensions.Configuration.Abstractions": "9.0.10",
           "Microsoft.Extensions.Configuration.Json": "8.0.1",
-          "Microsoft.Extensions.FileProviders.Abstractions": "9.0.8",
-          "Microsoft.Extensions.FileProviders.Physical": "8.0.0"
+          "Microsoft.Extensions.FileProviders.Abstractions": "9.0.10",
+          "Microsoft.Extensions.FileProviders.Physical": "9.0.10"
         }
       },
       "Microsoft.Extensions.DependencyInjection/9.0.10": {
@@ -1051,25 +1072,38 @@
       },
       "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions/8.0.18": {},
       "Microsoft.Extensions.Features/8.0.18": {},
-      "Microsoft.Extensions.FileProviders.Abstractions/9.0.8": {
+      "Microsoft.Extensions.FileProviders.Abstractions/9.0.10": {
         "dependencies": {
           "Microsoft.Extensions.Primitives": "9.0.10"
         },
         "runtime": {
           "lib/net9.0/Microsoft.Extensions.FileProviders.Abstractions.dll": {
             "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.825.36511"
+            "fileVersion": "9.0.1025.47515"
           }
         }
       },
-      "Microsoft.Extensions.FileProviders.Physical/8.0.0": {
+      "Microsoft.Extensions.FileProviders.Physical/9.0.10": {
         "dependencies": {
-          "Microsoft.Extensions.FileProviders.Abstractions": "9.0.8",
-          "Microsoft.Extensions.FileSystemGlobbing": "8.0.0",
+          "Microsoft.Extensions.FileProviders.Abstractions": "9.0.10",
+          "Microsoft.Extensions.FileSystemGlobbing": "9.0.10",
           "Microsoft.Extensions.Primitives": "9.0.10"
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.Extensions.FileProviders.Physical.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.1025.47515"
+          }
         }
       },
-      "Microsoft.Extensions.FileSystemGlobbing/8.0.0": {},
+      "Microsoft.Extensions.FileSystemGlobbing/9.0.10": {
+        "runtime": {
+          "lib/net9.0/Microsoft.Extensions.FileSystemGlobbing.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.1025.47515"
+          }
+        }
+      },
       "Microsoft.Extensions.Hosting/8.0.1": {
         "dependencies": {
           "Microsoft.Extensions.Configuration": "9.0.8",
@@ -1083,8 +1117,8 @@
           "Microsoft.Extensions.DependencyInjection": "9.0.10",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.10",
           "Microsoft.Extensions.Diagnostics": "9.0.8",
-          "Microsoft.Extensions.FileProviders.Abstractions": "9.0.8",
-          "Microsoft.Extensions.FileProviders.Physical": "8.0.0",
+          "Microsoft.Extensions.FileProviders.Abstractions": "9.0.10",
+          "Microsoft.Extensions.FileProviders.Physical": "9.0.10",
           "Microsoft.Extensions.Hosting.Abstractions": "9.0.8",
           "Microsoft.Extensions.Logging": "9.0.10",
           "Microsoft.Extensions.Logging.Abstractions": "9.0.10",
@@ -1101,7 +1135,7 @@
           "Microsoft.Extensions.Configuration.Abstractions": "9.0.10",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.10",
           "Microsoft.Extensions.Diagnostics.Abstractions": "9.0.8",
-          "Microsoft.Extensions.FileProviders.Abstractions": "9.0.8",
+          "Microsoft.Extensions.FileProviders.Abstractions": "9.0.10",
           "Microsoft.Extensions.Logging.Abstractions": "9.0.10"
         },
         "runtime": {
@@ -2184,6 +2218,20 @@
       "path": "microsoft.aspnetcore.routing.abstractions/2.3.0",
       "hashPath": "microsoft.aspnetcore.routing.abstractions.2.3.0.nupkg.sha512"
     },
+    "Microsoft.AspNetCore.SpaProxy/9.0.10": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-MiCiYQDvJIGjPYhBIUbbhECpjvfKJmK0+99hVJUT+DPaoTMEDDhFYCMqD+dva62Lh8wr2HfagUcLTw9mJcjK1A==",
+      "path": "microsoft.aspnetcore.spaproxy/9.0.10",
+      "hashPath": "microsoft.aspnetcore.spaproxy.9.0.10.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.SpaServices.Extensions/9.0.10": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-GmhDKAiyHp2e5pDuyD2x73oblCXnDmB8XC1eHtEx26WKsV0XnHtEMqZjfyAXVSB0gcIBrmfdEz5RedlzZQ4HSw==",
+      "path": "microsoft.aspnetcore.spaservices.extensions/9.0.10",
+      "hashPath": "microsoft.aspnetcore.spaservices.extensions.9.0.10.nupkg.sha512"
+    },
     "Microsoft.AspNetCore.WebUtilities/2.3.0": {
       "type": "package",
       "serviceable": true,
@@ -2450,26 +2498,26 @@
       "path": "microsoft.extensions.features/8.0.18",
       "hashPath": "microsoft.extensions.features.8.0.18.nupkg.sha512"
     },
-    "Microsoft.Extensions.FileProviders.Abstractions/9.0.8": {
+    "Microsoft.Extensions.FileProviders.Abstractions/9.0.10": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-4zZbQ4w+hCMm9J+z5NOj3giIPT2MhZxx05HX/MGuAmDBbjOuXlYIIRN+t4V6OLxy5nXZIcXO+dQMB/OWubuDkw==",
-      "path": "microsoft.extensions.fileproviders.abstractions/9.0.8",
-      "hashPath": "microsoft.extensions.fileproviders.abstractions.9.0.8.nupkg.sha512"
+      "sha512": "sha512-3+cLxZKUWBbpfIXLLuKcEok9C91PsV1h5xxfUsEnLSXXLNMiPDfrhpb1xajNFcejFPs9Ck/Fi3z71hYDqFBwYg==",
+      "path": "microsoft.extensions.fileproviders.abstractions/9.0.10",
+      "hashPath": "microsoft.extensions.fileproviders.abstractions.9.0.10.nupkg.sha512"
     },
-    "Microsoft.Extensions.FileProviders.Physical/8.0.0": {
+    "Microsoft.Extensions.FileProviders.Physical/9.0.10": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-UboiXxpPUpwulHvIAVE36Knq0VSHaAmfrFkegLyBZeaADuKezJ/AIXYAW8F5GBlGk/VaibN2k/Zn1ca8YAfVdA==",
-      "path": "microsoft.extensions.fileproviders.physical/8.0.0",
-      "hashPath": "microsoft.extensions.fileproviders.physical.8.0.0.nupkg.sha512"
+      "sha512": "sha512-Eg3YOEMpHWZzAgPD9YvGkQSv97AtG3II6maRQV/voDRORh4bRiyl0mVtT2PKnu1JoD9rJeYgjGCwRvVWMBaqgQ==",
+      "path": "microsoft.extensions.fileproviders.physical/9.0.10",
+      "hashPath": "microsoft.extensions.fileproviders.physical.9.0.10.nupkg.sha512"
     },
-    "Microsoft.Extensions.FileSystemGlobbing/8.0.0": {
+    "Microsoft.Extensions.FileSystemGlobbing/9.0.10": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-OK+670i7esqlQrPjdIKRbsyMCe9g5kSLpRRQGSr4Q58AOYEe/hCnfLZprh7viNisSUUQZmMrbbuDaIrP+V1ebQ==",
-      "path": "microsoft.extensions.filesystemglobbing/8.0.0",
-      "hashPath": "microsoft.extensions.filesystemglobbing.8.0.0.nupkg.sha512"
+      "sha512": "sha512-KdZAM2YMYBipVp/4tSEWPLnrocd17SL4iaXdgXjR5/nheBXbfR5QfPWYoTyh6C6IW3uKR7TRMwQr2qCvtaCTiA==",
+      "path": "microsoft.extensions.filesystemglobbing/9.0.10",
+      "hashPath": "microsoft.extensions.filesystemglobbing.9.0.10.nupkg.sha512"
     },
     "Microsoft.Extensions.Hosting/8.0.1": {
       "type": "package",

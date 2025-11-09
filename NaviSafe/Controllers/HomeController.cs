@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace NaviSafe.Controllers;
 
-public class HomeController : Controller
+[ApiController]
+[Route("api/[controller]")]
+public class HomeController : ControllerBase
 {
     private readonly ILogger<HomeController> _logger;
     private readonly IConfiguration config;
@@ -18,17 +20,20 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        return View();
+        return Ok();
     }
 
     public IActionResult Privacy()
     {
-        return View();
+        return Ok();
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        return Ok(new { 
+            message = "An unexpected error occurred.",
+            requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier 
+        });
     }
 }

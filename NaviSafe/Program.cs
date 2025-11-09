@@ -42,6 +42,18 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+// CORS - tillat frontend (Vite) å snakke med backend
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy => policy
+            .WithOrigins("http://localhost:3000") // adressen til Vite
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
+});
+
+
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
@@ -54,6 +66,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseCors("AllowFrontend");
 
 app.UseSession();
 app.UseAuthorization();
@@ -76,5 +89,19 @@ app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+// Make sure the app listens on these URLs explicitly
+app.Urls.Add("https://localhost:7153");
+app.Urls.Add("http://localhost:5169");
+
+// Serve the Vite frontend during development
+if (app.Environment.IsDevelopment())
+{
+    app.UseSpa(spa =>
+    {
+        spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
+    });
+}
+
 
 app.Run();

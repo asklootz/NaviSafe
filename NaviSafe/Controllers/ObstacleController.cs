@@ -3,18 +3,20 @@ using NaviSafe.Models;
 
 namespace NaviSafe.Controllers;
 
-public class ObstacleController : Controller
+[ApiController]
+[Route("api/[controller]")]
+public class ObstacleController : ControllerBase
 {
     [HttpGet]
     public ActionResult DataForm()
     {
-        return View();
+        return Ok();
     }
 
     [HttpPost]
     public ActionResult DataForm(ObstacleData obstacleData)
     {
         // Removed unused isDraft variable and logic
-        return View("Overview", obstacleData);
+        return Ok(obstacleData);
     }
 }

@@ -11,21 +11,21 @@ using System;
 using System.Reflection;
 
 [assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("bc7eb59c-667e-4e0b-bed4-53a68416512f")]
-[assembly: System.Reflection.AssemblyMetadata("dcpclipath", ("C:\\Users\\asklo\\.nuget\\packages\\aspire.hosting.orchestration.win-x64\\9.4.1\\tools\\d" +
-    "cp.exe"))]
-[assembly: System.Reflection.AssemblyMetadata("dcpextensionpaths", ("C:\\Users\\asklo\\.nuget\\packages\\aspire.hosting.orchestration.win-x64\\9.4.1\\tools\\e" +
-    "xt\\"))]
-[assembly: System.Reflection.AssemblyMetadata("dcpbinpath", ("C:\\Users\\asklo\\.nuget\\packages\\aspire.hosting.orchestration.win-x64\\9.4.1\\tools\\e" +
-    "xt\\bin\\"))]
-[assembly: System.Reflection.AssemblyMetadata("apphostprojectpath", "C:\\Users\\asklo\\repo\\NaviSafe\\NaviSafe.AppHost")]
+[assembly: System.Reflection.AssemblyMetadata("dcpclipath", ("/Users/synnekyrkjebo/.nuget/packages/aspire.hosting.orchestration.osx-arm64/9.4.1" +
+    "/tools/dcp"))]
+[assembly: System.Reflection.AssemblyMetadata("dcpextensionpaths", ("/Users/synnekyrkjebo/.nuget/packages/aspire.hosting.orchestration.osx-arm64/9.4.1" +
+    "/tools/ext/"))]
+[assembly: System.Reflection.AssemblyMetadata("dcpbinpath", ("/Users/synnekyrkjebo/.nuget/packages/aspire.hosting.orchestration.osx-arm64/9.4.1" +
+    "/tools/ext/bin/"))]
+[assembly: System.Reflection.AssemblyMetadata("apphostprojectpath", "/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe.AppHost")]
 [assembly: System.Reflection.AssemblyMetadata("apphostprojectname", "NaviSafe.AppHost.csproj")]
-[assembly: System.Reflection.AssemblyMetadata("aspiredashboardpath", ("C:\\Users\\asklo\\.nuget\\packages\\aspire.dashboard.sdk.win-x64\\9.4.1\\tools\\Aspire.Da" +
-    "shboard.exe"))]
-[assembly: System.Reflection.AssemblyMetadataAttribute("apphostprojectbaseintermediateoutputpath", "C:\\Users\\asklo\\repo\\NaviSafe\\NaviSafe.AppHost\\obj\\")]
+[assembly: System.Reflection.AssemblyMetadata("aspiredashboardpath", ("/Users/synnekyrkjebo/.nuget/packages/aspire.dashboard.sdk.osx-arm64/9.4.1/tools/A" +
+    "spire.Dashboard.dll"))]
+[assembly: System.Reflection.AssemblyMetadataAttribute("apphostprojectbaseintermediateoutputpath", "/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe.AppHost/obj/")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("NaviSafe.AppHost")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ebc613f2a83864f7335934d5ba49defdd0d2b0eb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+24780a038d079588bbd4bf291840ac28832e4751")]
 [assembly: System.Reflection.AssemblyProductAttribute("NaviSafe.AppHost")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NaviSafe.AppHost")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

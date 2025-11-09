@@ -13,6 +13,8 @@
     <PackageReference Include="Aspire.MySqlConnector" Version="9.4.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="9.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="9.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.10">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -24,6 +26,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NaviSafe.ServiceDefaults\NaviSafe.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ClientApp_old\src\" />
+    <Folder Include="WebApp\src\assets\" />
   </ItemGroup>
 
 </Project>
