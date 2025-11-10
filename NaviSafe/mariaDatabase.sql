@@ -59,7 +59,7 @@ INSERT INTO `organisation` (`orgNr`, `orgName`) VALUES
 DROP TABLE IF EXISTS `registrations`;
 CREATE TABLE IF NOT EXISTS `registrations` (
   `regID` int(11) NOT NULL AUTO_INCREMENT,
-  `lan` float NOT NULL,
+  `lat` float NOT NULL,
   `lon` float NOT NULL,
   `altitude` float DEFAULT NULL,
   `accuracy` int(11) DEFAULT NULL,
