@@ -164,7 +164,7 @@ INSERT INTO `userInfo` (`userID`, `firstName`, `lastName`, `email`, `phone`, `or
 
 DROP TABLE IF EXISTS `userRole`;
 CREATE TABLE IF NOT EXISTS `userRole` (
-  `roleID` char(5) NOT NULL,
+  `roleID` char(3) NOT NULL,
   `rolePermissions` char(20) NOT NULL,
   `permissionsDescription` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`roleID`)
