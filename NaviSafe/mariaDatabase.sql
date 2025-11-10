@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `registrations` (
   `longDesc` varchar(255) DEFAULT NULL,
   `img` mediumblob DEFAULT NULL,
   `isSent` tinyint(1) NOT NULL,
-  `state` char(10) NOT NULL,
+  `state` ENUM('SENT','PENDING','REJECTED') NOT NULL,
   `rejectComment` varchar(255) DEFAULT NULL,
   `userID` int(11) NOT NULL,
   `creationDate` timestamp NOT NULL DEFAULT current_timestamp(),
