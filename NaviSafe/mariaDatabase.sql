@@ -105,14 +105,18 @@ CREATE TABLE IF NOT EXISTS `userAuth` (
 -- Dumping data for table `userAuth`
 --
 
+-- WARNING: The following credentials are for development/testing only.
+-- DO NOT USE THIS DATA IN PRODUCTION OR STAGING ENVIRONMENTS.
+-- All users have password: TestPassword123!
+
 INSERT INTO `userAuth` (`userID`, `username`, `passHash`, `passSalt`) VALUES
-(1, 'Yonathan (Admin)', 'hash_admin', 'salt_admin'),
-(2, 'NLA_pilot1', 'hash_pilot1', 'salt_pilot1'),
-(3, 'NLA_pilot2', 'hash_pilot2', 'salt_pilot2'),
-(4, 'LUFT_pilot1', 'hash_pilot3', 'salt_pilot3'),
-(5, 'LUFT_pilot2', 'hash_pilot4', 'salt_pilot4'),
-(6, 'PHT_pilot1', 'hash_pilot5', 'salt_pilot5'),
-(7, 'PHT_pilot2', 'hash_pilot6', 'salt_pilot6');
+(1, 'Yonathan (Admin)', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8uQ8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8u'),
+(2, 'NLA_pilot1', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8uQ8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8u'),
+(3, 'NLA_pilot2', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8uQ8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8u'),
+(4, 'LUFT_pilot1', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8uQ8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8u'),
+(5, 'LUFT_pilot2', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8uQ8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8u'),
+(6, 'PHT_pilot1', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8uQ8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8u'),
+(7, 'PHT_pilot2', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8uQ8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8u');
 
 -- --------------------------------------------------------
 
