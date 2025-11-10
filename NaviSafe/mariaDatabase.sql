@@ -165,7 +165,7 @@ INSERT INTO `userInfo` (`userID`, `firstName`, `lastName`, `email`, `phone`, `or
 DROP TABLE IF EXISTS `userRole`;
 CREATE TABLE IF NOT EXISTS `userRole` (
   `roleID` char(3) NOT NULL,
-  `rolePermissions` char(20) NOT NULL,
+  `rolePermissions` ENUM('ADMIN','PILOT') NOT NULL,
   `permissionsDescription` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`roleID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
