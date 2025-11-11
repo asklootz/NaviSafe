@@ -260,3 +260,5 @@ To all [contributors](https://github.com/domoritz/leaflet-locatecontrol/contribu
 MIT
 
 SVG icons from [Font Awesome v5.15.4](https://github.com/FortAwesome/Font-Awesome/releases/tag/5.15.4): [Creative Commons Attribution 4.0](https://fontawesome.com/license/free)
+
+point end is react
