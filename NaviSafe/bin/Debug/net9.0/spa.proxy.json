@@ -1,0 +1,10 @@
+{
+"SpaProxyServer": {
+"ServerUrl": "",
+"RedirectUrl": "",
+"LaunchCommand": "",
+"WorkingDirectory": "/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe",
+"MaxTimeoutInSeconds": "120",
+"KeepRunning": "false"
+}
+}
