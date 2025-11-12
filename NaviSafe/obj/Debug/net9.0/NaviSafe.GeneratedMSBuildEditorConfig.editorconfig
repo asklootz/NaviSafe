@@ -17,57 +17,57 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = NaviSafe
 build_property.RootNamespace = NaviSafe
-build_property.ProjectDir = C:\Users\asklo\repo\NaviSafe\NaviSafe\
+build_property.ProjectDir = /Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\asklo\repo\NaviSafe\NaviSafe
+build_property.MSBuildProjectDirectory = /Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 9.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/asklo/repo/NaviSafe/NaviSafe/Views/Account/Login.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
+[/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/Views/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWNjb3VudC9Mb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/asklo/repo/NaviSafe/NaviSafe/Views/Account/Register.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
+[/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/Views/Account/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWNjb3VudC9SZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/asklo/repo/NaviSafe/NaviSafe/Views/Home/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+[/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9JbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/asklo/repo/NaviSafe/NaviSafe/Views/Home/Privacy.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+[/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9Qcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/asklo/repo/NaviSafe/NaviSafe/Views/Obstacle/DataForm.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT2JzdGFjbGVcRGF0YUZvcm0uY3NodG1s
+[/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/Views/Obstacle/DataForm.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT2JzdGFjbGUvRGF0YUZvcm0uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/asklo/repo/NaviSafe/NaviSafe/Views/Obstacle/Overview.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT2JzdGFjbGVcT3ZlcnZpZXcuY3NodG1s
+[/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/Views/Obstacle/Overview.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvT2JzdGFjbGUvT3ZlcnZpZXcuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/asklo/repo/NaviSafe/NaviSafe/Views/Shared/Error.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+[/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL0Vycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/asklo/repo/NaviSafe/NaviSafe/Views/Shared/_ValidationScriptsPartial.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+[/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/asklo/repo/NaviSafe/NaviSafe/Views/_ViewImports.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+[/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/asklo/repo/NaviSafe/NaviSafe/Views/_ViewStart.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+[/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/asklo/repo/NaviSafe/NaviSafe/Views/Shared/_Layout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = b-tdzbmtpqsr
+[/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-h4oexzjzk1

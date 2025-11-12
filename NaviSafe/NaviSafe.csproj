@@ -26,4 +26,14 @@
     <ProjectReference Include="..\NaviSafe.ServiceDefaults\NaviSafe.ServiceDefaults.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="WebApp\package-lock.json" />
+    <_ContentIncludedByDefault Remove="WebApp\package.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\globals.css" />
+    <None Include="wwwroot\index.html" />
+  </ItemGroup>
+
 </Project>

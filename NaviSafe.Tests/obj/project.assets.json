@@ -8788,19 +8788,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/jimmyhtrinh/.nuget/packages/": {}
+    "/Users/synnekyrkjebo/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.Tests/NaviSafe.Tests.csproj",
+      "projectUniqueName": "/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe.Tests/NaviSafe.Tests.csproj",
       "projectName": "NaviSafe.Tests",
-      "projectPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.Tests/NaviSafe.Tests.csproj",
-      "packagesPath": "/Users/jimmyhtrinh/.nuget/packages/",
-      "outputPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.Tests/obj/",
+      "projectPath": "/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe.Tests/NaviSafe.Tests.csproj",
+      "packagesPath": "/Users/synnekyrkjebo/.nuget/packages/",
+      "outputPath": "/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe.Tests/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/jimmyhtrinh/.nuget/NuGet/NuGet.Config"
+        "/Users/synnekyrkjebo/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -8812,8 +8812,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/NaviSafe.csproj": {
-              "projectPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/NaviSafe.csproj"
+            "/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/NaviSafe.csproj": {
+              "projectPath": "/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/NaviSafe.csproj"
             }
           }
         }
