@@ -12,42 +12,45 @@ public class AccountController : Controller
     {
         _userStorage = userStorage;
     }
-
+    
+    // Account actions
     [HttpGet]
     public IActionResult Login(string? returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
         return View();
     }
-
+    
+    // POST: /Account/Login
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Login(LoginViewModel model, string? returnUrl = null)
+    public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
     {
         if (!ModelState.IsValid)
             return View(model);
 
-        if (!_userStorage.ValidateUser(model.Email, model.Password))
+        if (!await _userStorage.ValidateUser(model.Email, model.Password))
         {
             ModelState.AddModelError(string.Empty, "Invalid email or password.");
             return View(model);
         }
-
-        // Login successful - store user in session
-        StoreUserInSession(model.Email);
         
+        // Store user info in session
+        await StoreUserInSession(model.Email);
         return RedirectToReturnUrl(returnUrl);
     }
-
+    
+    // Registration actions
     [HttpGet]
     public IActionResult Register()
     {
         return View();
     }
-
-    [HttpPost]
+    
+    // POST: /Account/Register
+    [HttpPost] 
     [ValidateAntiForgeryToken]
-    public IActionResult Register(RegisterViewModel model)
+    public async Task<IActionResult> Register(RegisterViewModel model) 
     {
         if (!ModelState.IsValid)
             return View(model);
@@ -58,29 +61,23 @@ public class AccountController : Controller
             return View(model);
         }
 
-        var userId = _userStorage.RegisterUser(
-            model.Email, 
-            model.Password, 
-            model.FullName, 
-            model.PhoneNumber,
-            model.StreetAddress,
-            model.City,
-            model.PostalCode,
-            model.Country
-        );
+        var userId = await _userStorage.RegisterUser(
+            model.Email, model.Password, model.FullName, 
+            model.PhoneNumber, model.StreetAddress, model.City, 
+            model.PostalCode, model.Country);
 
         if (string.IsNullOrEmpty(userId))
         {
-            ModelState.AddModelError(string.Empty, "Registration failed. Please try again.");
+            ModelState.AddModelError(string.Empty, "Registration failed.");
             return View(model);
         }
-
-        // Auto-login after successful registration
-        StoreUserInSession(model.Email);
         
+        // Store user info in session
+        await StoreUserInSession(model.Email);
         return RedirectToAction("Index", "Home");
     }
-
+    
+    // Logout action
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Logout()
@@ -90,9 +87,9 @@ public class AccountController : Controller
     }
 
     // Helper methods
-    private void StoreUserInSession(string email)
+    private async Task StoreUserInSession(string email)
     {
-        var userInfo = _userStorage.GetUserInfo(email);
+        var userInfo = await _userStorage.GetUserInfo(email);
         if (userInfo == null) return;
 
         HttpContext.Session.SetString("UserId", userInfo.UserId);
