@@ -3,6 +3,8 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using NaviSafe.Services;
+using NaviSafe.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,8 +33,15 @@ builder.Logging.AddOpenTelemetry(options =>
 // Add services
 builder.Services.AddControllersWithViews();
 
+// Add database context
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
+    ));
+
 // Register UserStorage
-builder.Services.AddSingleton<UserStorage>();
+builder.Services.AddScoped<UserStorage>();
 
 // Add simple session support for login
 builder.Services.AddSession(options =>
@@ -76,5 +85,19 @@ app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    try
+    {
+        db.Database.CanConnect();
+        Console.WriteLine("✅ Successfully connected to MariaDB!");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Failed to connect to MariaDB: {ex.Message}");
+    }
+}
 
 app.Run();
