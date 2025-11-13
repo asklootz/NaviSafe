@@ -1219,8 +1219,8 @@ C:/Users/asklo/repo/NaviSafe/NaviSafe/obj/Debug/net9.0/compressed/q1081mfb61-w4n
 /Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/obj/Debug/net9.0/scopedcss/projectbundle/NaviSafe.bundle.scp.css
 /Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/obj/Debug/net9.0/compressed/snbm3sljr0-6lexs1bnqu.gz
 /Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/obj/Debug/net9.0/compressed/818en926oy-61n19gt1b8.gz
-/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/obj/Debug/net9.0/compressed/aa83o3d858-ywl8mrbgyv.gz
-/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/obj/Debug/net9.0/compressed/u3dmcw0738-gw0j9q7aox.gz
+/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/obj/Debug/net9.0/compressed/aa83o3d858-mmsh118iy3.gz
+/Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/obj/Debug/net9.0/compressed/u3dmcw0738-09z5kutihh.gz
 /Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/obj/Debug/net9.0/compressed/rcrda6pt6m-bqjiyaj88i.gz
 /Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/obj/Debug/net9.0/compressed/br8d6o9axk-c2jlpeoesf.gz
 /Users/synnekyrkjebo/RiderProjects/NaviSafe/NaviSafe/obj/Debug/net9.0/compressed/sogxc0t6dd-erw9l3u2r3.gz

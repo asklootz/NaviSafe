@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NaviSafe.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+24780a038d079588bbd4bf291840ac28832e4751")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2e329ef313cb016bbc0c5f8b046403e1e31156c4")]
 [assembly: System.Reflection.AssemblyProductAttribute("NaviSafe.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NaviSafe.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
