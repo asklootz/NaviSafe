@@ -33,7 +33,6 @@
 
   <ItemGroup>
     <None Include="wwwroot\css\globals.css" />
-    <None Include="wwwroot\index.html" />
   </ItemGroup>
 
 </Project>
