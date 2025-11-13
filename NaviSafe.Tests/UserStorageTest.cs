@@ -110,4 +110,38 @@ public class UserStorageTest
         );
     }
     
+    
+    [Fact]
+    public void CannotRegisterTheSameEmailTwice()
+    {
+        var sut = new UserStorage();
+
+        var email = $"dup_{Guid.NewGuid():N}@example.com";
+
+        var firstId = sut.RegisterUser(
+            email,
+            "blabla",
+            "Lise Barken",
+            "+47 936 83 937",
+            "Bokkelibruseveien 12",
+            "Kristiansund",
+            "4247",
+            "Norway"
+        );
+
+        var secondId = sut.RegisterUser(
+            email,
+            "blabla",
+            "Lise Barken",
+            "+47 936 83 937",
+            "Bokkelibruseveien 12",
+            "Kristiansund",
+            "4247",
+            "Norway"
+        );
+
+        Assert.False(string.IsNullOrWhiteSpace(firstId));
+        Assert.Equal(string.Empty, secondId);
+    }
+    
 }
