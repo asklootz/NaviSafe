@@ -50,4 +50,64 @@ public class UserStorageTest
         );
     }
     
+    
+    [Fact]
+    public void RegisterUserStoresData()
+    {
+        var sut = new UserStorage(); 
+
+        var email = $"register_{Guid.NewGuid():N}@example.com"; 
+
+        var password = "Secret123";           
+        var fullName = "Maren Bokkeli";          
+        var phone    = "+47 998 03 403";         
+        var street   = "Blikksveien 20";      
+        var city     = "Kristiansand";                   
+        var postal   = "4525";                   
+        var country  = "Norway";                 
+
+        var userId = sut.RegisterUser(
+            email,
+            password,
+            fullName,
+            phone,
+            street,
+            city,
+            postal,
+            country
+        );
+
+        Assert.False(
+            string.IsNullOrWhiteSpace(userId),
+            "Expected RegisterUser to return non empty userId."
+        );
+
+        Assert.True(
+            Guid.TryParse(userId, out _),
+            "Expected userId to be a fully valid GUID string."
+        );
+
+        var user = sut.GetUserInfo(email);
+
+        Assert.NotNull(user);
+        Assert.Equal(userId, user!.UserId);
+        Assert.Equal(password, user.Password);
+        Assert.Equal(fullName, user.FullName);
+        Assert.Equal(phone, user.PhoneNumber);
+        Assert.Equal(street, user.StreetAddress);
+        Assert.Equal(city, user.City);
+        Assert.Equal(postal, user.PostalCode);
+        Assert.Equal(country, user.Country);
+
+        Assert.Equal(
+            $"{street}, {postal} {city}, {country}",
+            user.FullAddress
+        );
+
+        Assert.NotEqual(
+            default,
+            user.RegisteredDate
+        );
+    }
+    
 }
