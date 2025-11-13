@@ -144,4 +144,39 @@ public class UserStorageTest
         Assert.Equal(string.Empty, secondId);
     }
     
+    
+    [Fact]
+    public void ValidateUserReturnsTrueOnlyIfPasswordIsCorrect()
+    {
+        var sut = new UserStorage();
+
+        var email = $"login_{Guid.NewGuid():N}@example.com";
+
+        var correctPassword = "correct123";
+        var wrongPassword   = "wrong123";
+        var fullName        = "Markus Lie";
+        var phone           = "+47 993 19 836";
+        var street          = "Blikksveien 1";
+        var city            = "Bergen";
+        var postal          = "4937";
+        var country         = "Norway";
+
+        sut.RegisterUser(
+            email,
+            correctPassword,
+            fullName,
+            phone,
+            street,
+            city,
+            postal,
+            country
+        );
+
+        var resultCorrect = sut.ValidateUser(email, correctPassword);
+        var resultWrong   = sut.ValidateUser(email, wrongPassword);
+
+        Assert.True(resultCorrect);
+        Assert.False(resultWrong);
+    }
+    
 }
