@@ -7692,19 +7692,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/jimmyhtrinh/.nuget/packages/": {}
+    "/home/runner/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/NaviSafe.csproj",
+      "projectUniqueName": "/home/runner/work/NaviSafe/NaviSafe/NaviSafe/NaviSafe.csproj",
       "projectName": "NaviSafe",
-      "projectPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/NaviSafe.csproj",
-      "packagesPath": "/Users/jimmyhtrinh/.nuget/packages/",
-      "outputPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe/obj/",
+      "projectPath": "/home/runner/work/NaviSafe/NaviSafe/NaviSafe/NaviSafe.csproj",
+      "packagesPath": "/home/runner/.nuget/packages/",
+      "outputPath": "/home/runner/work/NaviSafe/NaviSafe/NaviSafe/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/jimmyhtrinh/.nuget/NuGet/NuGet.Config"
+        "/home/runner/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -7716,8 +7716,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj": {
-              "projectPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj"
+            "/home/runner/work/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj": {
+              "projectPath": "/home/runner/work/NaviSafe/NaviSafe/NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj"
             }
           }
         }
@@ -7732,7 +7732,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "10.0.100"
     },
     "frameworks": {
       "net9.0": {
@@ -7792,7 +7792,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.304/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

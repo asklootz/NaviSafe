@@ -2,15 +2,15 @@
   "version": 3,
   "targets": {
     "net9.0": {
-      "Aspire.Dashboard.Sdk.osx-arm64/9.4.1": {
+      "Aspire.Dashboard.Sdk.linux-x64/9.4.1": {
         "type": "package",
         "build": {
-          "buildTransitive/Aspire.Dashboard.Sdk.osx-arm64.props": {},
-          "buildTransitive/Aspire.Dashboard.Sdk.osx-arm64.targets": {}
+          "buildTransitive/Aspire.Dashboard.Sdk.linux-x64.props": {},
+          "buildTransitive/Aspire.Dashboard.Sdk.linux-x64.targets": {}
         },
         "buildMultiTargeting": {
-          "buildMultiTargeting/Aspire.Dashboard.Sdk.osx-arm64.props": {},
-          "buildMultiTargeting/Aspire.Dashboard.Sdk.osx-arm64.targets": {}
+          "buildMultiTargeting/Aspire.Dashboard.Sdk.linux-x64.props": {},
+          "buildMultiTargeting/Aspire.Dashboard.Sdk.linux-x64.targets": {}
         }
       },
       "Aspire.Hosting/9.4.1": {
@@ -179,13 +179,13 @@
           }
         }
       },
-      "Aspire.Hosting.Orchestration.osx-arm64/9.4.1": {
+      "Aspire.Hosting.Orchestration.linux-x64/9.4.1": {
         "type": "package",
         "build": {
-          "buildTransitive/Aspire.Hosting.Orchestration.osx-arm64.targets": {}
+          "buildTransitive/Aspire.Hosting.Orchestration.linux-x64.targets": {}
         },
         "buildMultiTargeting": {
-          "buildMultiTargeting/Aspire.Hosting.Orchestration.osx-arm64.targets": {}
+          "buildMultiTargeting/Aspire.Hosting.Orchestration.linux-x64.targets": {}
         }
       },
       "Aspire.MySqlConnector/9.4.1": {
@@ -1599,10 +1599,10 @@
     }
   },
   "libraries": {
-    "Aspire.Dashboard.Sdk.osx-arm64/9.4.1": {
-      "sha512": "/0uF20xKNjQuROGHZlhw/wWj2CY/EBYssuztjCD9zLyEW+Gik0K02lYOqbvF4Nmjkh54O26NRghguZ8LaclMgA==",
+    "Aspire.Dashboard.Sdk.linux-x64/9.4.1": {
+      "sha512": "N1OTD6hZe6kM6m3JsDB/FuSMfH3ZRs1fT/w1cjD186qX7KLK/qN7Q4ManwwbNNeEz2tbd08uZTDQZ2DpNe25QA==",
       "type": "package",
-      "path": "aspire.dashboard.sdk.osx-arm64/9.4.1",
+      "path": "aspire.dashboard.sdk.linux-x64/9.4.1",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -1610,14 +1610,14 @@
         "EULA.md",
         "Icon.png",
         "THIRD-PARTY-NOTICES.TXT",
-        "aspire.dashboard.sdk.osx-arm64.9.4.1.nupkg.sha512",
-        "aspire.dashboard.sdk.osx-arm64.nuspec",
-        "build/Aspire.Dashboard.Sdk.osx-arm64.props",
-        "build/Aspire.Dashboard.Sdk.osx-arm64.targets",
-        "buildMultiTargeting/Aspire.Dashboard.Sdk.osx-arm64.props",
-        "buildMultiTargeting/Aspire.Dashboard.Sdk.osx-arm64.targets",
-        "buildTransitive/Aspire.Dashboard.Sdk.osx-arm64.props",
-        "buildTransitive/Aspire.Dashboard.Sdk.osx-arm64.targets",
+        "aspire.dashboard.sdk.linux-x64.9.4.1.nupkg.sha512",
+        "aspire.dashboard.sdk.linux-x64.nuspec",
+        "build/Aspire.Dashboard.Sdk.linux-x64.props",
+        "build/Aspire.Dashboard.Sdk.linux-x64.targets",
+        "buildMultiTargeting/Aspire.Dashboard.Sdk.linux-x64.props",
+        "buildMultiTargeting/Aspire.Dashboard.Sdk.linux-x64.targets",
+        "buildTransitive/Aspire.Dashboard.Sdk.linux-x64.props",
+        "buildTransitive/Aspire.Dashboard.Sdk.linux-x64.targets",
         "data/UnixFilePermissions.xml",
         "tools/Aspire.Dashboard",
         "tools/Aspire.Dashboard.deps.json",
@@ -1796,21 +1796,21 @@
         "lib/net8.0/Aspire.Hosting.MySql.xml"
       ]
     },
-    "Aspire.Hosting.Orchestration.osx-arm64/9.4.1": {
-      "sha512": "eLHF8YZpi4frMlShB8YWHEKZLHMuGVGhOoRzqjlUB8cKBt7RLsc1cQqg0TVRHErKFfU42NB0vDGQ9ZubNOSoow==",
+    "Aspire.Hosting.Orchestration.linux-x64/9.4.1": {
+      "sha512": "JyRt+l2wq4qB4zzuwS3fK+HOm7rResLhd6y7J1QFVm5zj84F0T23YWXBuiVXqJnQ7wJAHhCEGVziJwHxAxLGPA==",
       "type": "package",
-      "path": "aspire.hosting.orchestration.osx-arm64/9.4.1",
+      "path": "aspire.hosting.orchestration.linux-x64/9.4.1",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "THIRD-PARTY-NOTICES.TXT",
-        "aspire.hosting.orchestration.osx-arm64.9.4.1.nupkg.sha512",
-        "aspire.hosting.orchestration.osx-arm64.nuspec",
-        "build/Aspire.Hosting.Orchestration.osx-arm64.targets",
-        "buildMultiTargeting/Aspire.Hosting.Orchestration.osx-arm64.targets",
-        "buildTransitive/Aspire.Hosting.Orchestration.osx-arm64.targets",
+        "aspire.hosting.orchestration.linux-x64.9.4.1.nupkg.sha512",
+        "aspire.hosting.orchestration.linux-x64.nuspec",
+        "build/Aspire.Hosting.Orchestration.linux-x64.targets",
+        "buildMultiTargeting/Aspire.Hosting.Orchestration.linux-x64.targets",
+        "buildTransitive/Aspire.Hosting.Orchestration.linux-x64.targets",
         "data/UnixFilePermissions.xml",
         "tools/EULA.rtf",
         "tools/NOTICE",
@@ -3816,28 +3816,28 @@
   },
   "projectFileDependencyGroups": {
     "net9.0": [
-      "Aspire.Dashboard.Sdk.osx-arm64 >= 9.4.1",
+      "Aspire.Dashboard.Sdk.linux-x64 >= 9.4.1",
       "Aspire.Hosting.AppHost >= 9.4.1",
       "Aspire.Hosting.MySql >= 9.4.1",
-      "Aspire.Hosting.Orchestration.osx-arm64 >= 9.4.1",
+      "Aspire.Hosting.Orchestration.linux-x64 >= 9.4.1",
       "Aspire.MySqlConnector >= 9.4.1",
       "OpenTelemetry.Exporter.Console >= 1.12.0"
     ]
   },
   "packageFolders": {
-    "/Users/jimmyhtrinh/.nuget/packages/": {}
+    "/home/runner/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.AppHost/NaviSafe.AppHost.csproj",
+      "projectUniqueName": "/home/runner/work/NaviSafe/NaviSafe/NaviSafe.AppHost/NaviSafe.AppHost.csproj",
       "projectName": "NaviSafe.AppHost",
-      "projectPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.AppHost/NaviSafe.AppHost.csproj",
-      "packagesPath": "/Users/jimmyhtrinh/.nuget/packages/",
-      "outputPath": "/Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafe/NaviSafe/NaviSafe.AppHost/obj/",
+      "projectPath": "/home/runner/work/NaviSafe/NaviSafe/NaviSafe.AppHost/NaviSafe.AppHost.csproj",
+      "packagesPath": "/home/runner/.nuget/packages/",
+      "outputPath": "/home/runner/work/NaviSafe/NaviSafe/NaviSafe.AppHost/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/jimmyhtrinh/.nuget/NuGet/NuGet.Config"
+        "/home/runner/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -3861,13 +3861,13 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "10.0.100"
     },
     "frameworks": {
       "net9.0": {
         "targetAlias": "net9.0",
         "dependencies": {
-          "Aspire.Dashboard.Sdk.osx-arm64": {
+          "Aspire.Dashboard.Sdk.linux-x64": {
             "target": "Package",
             "version": "[9.4.1, )",
             "autoReferenced": true
@@ -3880,7 +3880,7 @@
             "target": "Package",
             "version": "[9.4.1, )"
           },
-          "Aspire.Hosting.Orchestration.osx-arm64": {
+          "Aspire.Hosting.Orchestration.linux-x64": {
             "target": "Package",
             "version": "[9.4.1, )",
             "autoReferenced": true
@@ -3910,7 +3910,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.304/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

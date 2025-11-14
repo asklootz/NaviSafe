@@ -444,10 +444,34 @@ function submitObstacle() {
     return;
   }
 
+  // Validate required fields
+  const obstacleType = $('#obstacleType').val();
+  const description = $('#obstacleDescription').val();
+  const height = $('#obstacleHeight').val();
+
+  if (!obstacleType || obstacleType === '') {
+    alert('Please select an obstacle type');
+    return;
+  }
+
+  if (!description || description.trim() === '') {
+    alert('Please provide a description of the obstacle');
+    return;
+  }
+
+  // Validate height if provided
+  if (height !== '' && height !== null && height !== undefined) {
+    const heightNum = parseFloat(height);
+    if (isNaN(heightNum) || heightNum <= 0) {
+      alert('Height must be a positive number');
+      return;
+    }
+  }
+
   const formData = {
-    type: $('#obstacleType').val(),
-    height: $('#obstacleHeight').val() || null,
-    description: $('#obstacleDescription').val(),
+    type: obstacleType,
+    height: height || null,
+    description: description,
     lighting: $('#obstacleLighting').val(),
     geometry: currentObstacleGeometry,
     reporter: currentUser.name,
