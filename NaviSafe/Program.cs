@@ -61,15 +61,17 @@ app.UseAuthorization();
 app.MapStaticAssets();
 
 // Redirect to login ONLY if not authenticated
+/*
 app.MapGet("/", (HttpContext context) =>
 {
     var isAuthenticated = context.Session.GetString("IsAuthenticated");
     if (string.IsNullOrEmpty(isAuthenticated) || isAuthenticated != "true")
     {
+        //return Results.Redirect("/Account/Login");
         return Results.Redirect("/Account/Login");
     }
     return Results.Redirect("/Home/Index");
-});
+});*/
 
 // Map controllers
 app.MapControllerRoute(
