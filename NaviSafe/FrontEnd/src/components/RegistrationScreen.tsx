@@ -8,7 +8,7 @@ import { Moon, Sun, ArrowLeft } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
 import { UserRole, OrganizationType } from '../lib/types';
 import { toast } from 'sonner';
-import naviSafeLogo from 'figma:asset/43a784f34af36c961963a10e84aa679ef45d4749.png';
+import naviSafeLogo from '../assets/NaviSafe_logo.png';
 
 interface RegistrationScreenProps {
   onRegister: (data: RegisterData) => Promise<boolean>;
