@@ -423,3 +423,7 @@ C:/Users/asklo/repo/NaviSafe/NaviSafe.AppHost/bin/Debug/net9.0/OpenTelemetry.Exp
 /Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafeProject/NaviSafe/NaviSafe.AppHost/obj/Debug/net9.0/NaviSafe.AppHost.pdb
 /Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafeProject/NaviSafe/NaviSafe.AppHost/obj/Debug/net9.0/NaviSafe.AppHost.genruntimeconfig.cache
 /Users/jimmyhtrinh/Documents/Skole-oppgave/NaviSafeProject/NaviSafe/NaviSafe.AppHost/obj/Debug/net9.0/ref/NaviSafe.AppHost.dll
+/Users/synnekyrkjebo/IT/HØST 2025/RiderProject/NaviSafe.AppHost/obj/Debug/net9.0/NaviSafe.AppHost.csproj.AssemblyReference.cache
+/Users/synnekyrkjebo/IT/HØST 2025/RiderProject/NaviSafe.AppHost/obj/Debug/net9.0/NaviSafe.AppHost.dll
+/Users/synnekyrkjebo/IT/HØST 2025/RiderProject/NaviSafe.AppHost/obj/Debug/net9.0/refint/NaviSafe.AppHost.dll
+/Users/synnekyrkjebo/IT/HØST 2025/RiderProject/NaviSafe.AppHost/obj/Debug/net9.0/NaviSafe.AppHost.pdb
