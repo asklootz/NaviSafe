@@ -1,0 +1,105 @@
+﻿:root{
+    --ns-indigo: #4f46e5;
+    --ns-indigo-hover: #4338ca;
+    --ns-gray-200: #e5e7eb;
+    --ns-gray-800: #1f2937;
+}
+
+.page-bg{
+    background-color: #bde3ff;
+}
+
+/* Navbar logo size (replaces Tailwind h-8 w-8) */
+.brand-logo{
+    width: 4rem;
+    height: 4rem;
+    object-fit: contain;
+}
+
+/* Card look (replaces rounded-2xl, ring-1, ring-gray-200) */
+.card-ns{
+    border: 1px solid var(--ns-gray-200);
+    border-radius: 1rem;
+}
+
+/* Constrain form width (replaces max-w-2xl) */
+.section-narrow{
+    max-width: 42rem; /* ~ Tailwind 2xl */
+}
+
+/* Map container (replaces inline Tailwind styles) */
+.map-container{
+    height: 40rem;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    border: 1px solid var(--ns-gray-200);
+}
+
+/* Inputs: focus color (replaces focus:border/ring indigo) */
+.form-control:focus{
+    border-color: var(--ns-indigo);
+    box-shadow: 0 0 0 .25rem rgba(79,70,229,.25);
+}
+
+/* Primary indigo button (replaces Tailwind bg-indigo-600) */
+.btn-indigo{
+    color: #fff;
+    background-color: var(--ns-indigo);
+    border-color: var(--ns-indigo);
+}
+.btn-indigo:hover,
+.btn-indigo:focus{
+    color: #fff;
+    background-color: var(--ns-indigo-hover);
+    border-color: var(--ns-indigo-hover);
+}
+
+.btn-report{
+    background-color: #ffffff;
+    border-color: #ffffff;
+    height: 4rem;
+    font-weight: 750;
+}
+.btn-report:hover,
+.btn-report:focus{
+    background-color: #a7adaf;
+    border-color: #a7adaf;
+    color: #fff;
+}
+
+.formLabel{
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.formTextField{
+    min-height: 5.5rem;
+    font-size: 2rem;
+    border-width: medium;
+    border-color: rgba(0, 0, 0, .8);
+    color: #000000FF;
+    background-color: rgba(0, 0, 0, .05);
+}
+
+#ObstacleNameMenu {
+    padding: 0;
+}
+
+/* Make each suggestion larger and give each item a top border */
+#ObstacleNameMenu .dropdown-item {
+    background-color: var(--ns-gray-200);
+    font-size: 2rem;           /* larger text */
+    padding: 0.75rem 1rem;        /* taller items */
+    min-height: 3rem;             /* ensure a consistent height */
+    line-height: 1.2;
+    display: flex;
+    align-items: center;
+    border-top: 2px solid var(--bs-black); /* top border for each item */
+}
+
+#ObstacleNameMenu .dropdown-item:hover,
+#ObstacleNameMenu .dropdown-item.active {
+    background-color: #a7adaf;
+    color: var(--ns-gray-800);
+}
+

@@ -366,3 +366,14 @@ git clone https://github.com/asklootz/NaviSafe.git
 cd NaviSafe
 dotnet restore
 ```
+
+---
+## Use of external resources
+Thanks to all the different open-source resources that have been used in order to develop NaviSafe, including but not limited to:
+- [Docker Engine](https://www.docker.com/):[Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+- [MariaDB Foundation](https://mariadb.org/):[GPL v2 License](https://mariadb.org/about-us/licensing/)
+- [phpMyAdmin](https://www.phpmyadmin.net/):[GPL v2 License](https://www.phpmyadmin.net/about/legal/)
+- Live GPS location services [Leaflet Locate Control v0.85.0](https://github.com/domoritz/leaflet-locatecontrol):[MIT License](https://github.com/domoritz/leaflet-locatecontrol/blob/gh-pages/LICENSE)
+- Interactive map [Leaflet v1.9.4](https://leafletjs.com/):[BSD 2-Clause "Simplified" License](https://github.com/Leaflet/Leaflet/blob/main/LICENSE)
+- Map service provider [OpenStreetMap](https://www.openstreetmap.org/):[Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1.0/)
+- SVG icons from [Iconify Design](https://iconify.design/):[MIT License](https://github.com/iconify/iconify/blob/main/license.txt)
