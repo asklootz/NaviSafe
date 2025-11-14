@@ -1,39 +1,440 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+  ViewData["Title"] = "Registration Form";
+  Layout = null;
 }
 
-<head>
-    <title>Index</title>
-</head>
 
-<section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <div class="text-center space-y-4">
-        <!-- Logout Button at the top -->
-        <div style="text-align: right; margin-bottom: 20px;">
-            <form asp-controller="Account" asp-action="Logout" method="post" style="display: inline;">
-                @Html.AntiForgeryToken()
-                <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
-            </form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NaviSafe - Aviation Obstacle Reporting</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <!-- Leaflet Draw CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+  
+  <!-- Leaflet Locate Control CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.79.0/dist/L.Control.Locate.min.css" />
+  
+  <link rel="stylesheet" href="~/css/main.css">
+</head>
+<body>
+  
+  <!-- Login Page -->
+  <div id="loginPage" class="auth-page">
+    <div class="container">
+      <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-md-5">
+          <div class="card shadow-lg">
+            <div class="card-body p-5">
+              <div class="text-center mb-4">
+                <img src="~/NaviSafeIcon.svg" alt="NaviSafe Logo" class="navisafe-logo mb-3">
+                <h2 class="mt-3">NaviSafe</h2>
+                <p class="text-muted">Aviation Obstacle Reporting System</p>
+              </div>
+              
+              <ul class="nav nav-tabs mb-4" role="tablist">
+                <li class="nav-item flex-fill">
+                  <button class="nav-link active w-100" data-bs-toggle="tab" data-bs-target="#loginTab">Sign In</button>
+                </li>
+                <li class="nav-item flex-fill">
+                  <button class="nav-link w-100" data-bs-toggle="tab" data-bs-target="#registerTab">Register</button>
+                </li>
+              </ul>
+
+              <div class="tab-content">
+                <!-- Login Tab -->
+                <div class="tab-pane fade show active" id="loginTab">
+                  <form id="loginForm">
+                    <div class="mb-3">
+                      <label for="loginEmail" class="form-label">Email</label>
+                      <input type="email" class="form-control" id="loginEmail" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="loginPassword" class="form-label">Password</label>
+                      <input type="password" class="form-control" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Sign In</button>
+                  </form>
+                </div>
+
+                <!-- Register Tab -->
+                <div class="tab-pane fade" id="registerTab">
+                  <form id="registerForm">
+                    <div class="mb-3">
+                      <label for="registerName" class="form-label">Full Name</label>
+                      <input type="text" class="form-control" id="registerName" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="registerEmail" class="form-label">Email</label>
+                      <input type="email" class="form-control" id="registerEmail" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="registerOrganization" class="form-label">Organization</label>
+                      <select class="form-select" id="registerOrganization" required>
+                        <option value="">Select organization...</option>
+                        <option value="NAA">Norwegian Air Ambulance (NAA)</option>
+                        <option value="AirForce">Air Force</option>
+                        <option value="Police">Police Helicopter Service</option>
+                        <option value="Kartverket">Norwegian Mapping Authority</option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label for="registerPassword" class="form-label">Password</label>
+                      <input type="password" class="form-control" id="registerPassword" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="registerPasswordConfirm" class="form-label">Confirm Password</label>
+                      <input type="password" class="form-control" id="registerPasswordConfirm" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Create Account</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        
-        <h1 class="text-3xl sm:text-4xl font-bold tracking-light">Welcome</h1>
-        <p class ="text-base sm:text-lg text-gray-700">
-            Learn about
-            <a class ="text-indigo-700 hover:underline"
-               href="https://learn.microsoft.com/aspnet/core">
-                building Web apps with ASP.NET Core
-            </a>.
-        </p>
-        <div id="map"></div>
-        @if (!string.IsNullOrEmpty(Model))
-        {
-            <p class="text-gray-800">@Model</p>
-        }
-        <div class="pt-4">
-            <a asp-action="DataForm" asp-controller="Obstacle"
-               class="inline-flex items-center rounded-lg px-4 py-2 ring-1 ring-indigo-600 text-indigo-700 hover:bg-indigo-50">
-                Register Obstacle
-            </a>
-        </div>
+      </div>
     </div>
-</section>
+  </div>
+
+  <!-- Main Application -->
+  <div id="mainApp" style="display: none;">
+    
+    <!-- Header -->
+    <nav class="navbar navbar-dark bg-primary">
+      <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1">
+          <img src="~/NaviSafeIcon.svg" alt="NaviSafe" class="navbar-logo me-2">
+          NaviSafe
+        </span>
+        <div class="d-flex align-items-center">
+          <span class="text-white me-3">
+            <i class="bi bi-person-circle"></i> 
+            <span id="currentUserName"></span>
+            <small class="text-white-50" id="currentUserOrg"></small>
+          </span>
+          <button class="btn btn-outline-light btn-sm me-2" id="viewReportsBtn">
+            <i class="bi bi-list-ul"></i> My Reports
+          </button>
+          <button class="btn btn-outline-light btn-sm" id="logoutBtn">
+            <i class="bi bi-box-arrow-right"></i> Logout
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Map Container -->
+    <div class="map-container">
+      <div id="map"></div>
+
+      <!-- Map Controls -->
+      <div class="map-controls">
+        <div class="card shadow mb-2">
+          <div class="card-body p-2">
+            <button class="btn btn-primary w-100 mb-2" id="reportObstacleBtn">
+              <i class="bi bi-plus-circle"></i> Report Obstacle
+            </button>
+            <button class="btn btn-outline-secondary w-100" id="toggleLayersBtn">
+              <i class="bi bi-layers"></i> Map Layers
+            </button>
+          </div>
+        </div>
+
+        <!-- Layers Panel -->
+        <div class="card shadow" id="layersPanel" style="display: none;">
+          <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">Map Layers</h6>
+            <button type="button" class="btn-close btn-sm" id="closeLayersBtn"></button>
+          </div>
+          <div class="card-body">
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" name="baseLayer" id="osmLayer" value="osm" checked>
+              <label class="form-check-label" for="osmLayer">
+                OpenStreetMap
+              </label>
+            </div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" name="baseLayer" id="satelliteLayer" value="satellite">
+              <label class="form-check-label" for="satelliteLayer">
+                Satellite
+              </label>
+            </div>
+            <hr>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="obstaclesLayer" checked>
+              <label class="form-check-label" for="obstaclesLayer">
+                Aviation Obstacles (WMS)
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Report Form -->
+      <div id="reportForm" class="report-form" style="display: none;">
+        <div class="card shadow">
+          <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">Report Aviation Obstacle</h6>
+            <button type="button" class="btn-close btn-close-white" id="closeReportFormBtn"></button>
+          </div>
+          <div class="card-body">
+            <form id="obstacleForm">
+              <div class="alert alert-info small">
+                <i class="bi bi-info-circle"></i> Draw the obstacle on the map as a point or line
+              </div>
+
+              <div class="mb-3">
+                <label for="obstacleType" class="form-label">Obstacle Type *</label>
+                <select class="form-select" id="obstacleType" required>
+                  <option value="">Select type...</option>
+                  <option value="Mast">Mast/Tower</option>
+                  <option value="PowerLine">Power Line</option>
+                  <option value="WindTurbine">Wind Turbine</option>
+                  <option value="Building">Building (over 15m)</option>
+                  <option value="Tower">Communications Tower</option>
+                  <option value="Chimney">Chimney</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="obstacleHeight" class="form-label">Height (meters)</label>
+                <input type="number" class="form-control" id="obstacleHeight" step="0.1">
+                <small class="text-muted">Estimate if unknown</small>
+              </div>
+
+              <div class="mb-3">
+                <label for="obstacleDescription" class="form-label">Description *</label>
+                <textarea class="form-control" id="obstacleDescription" rows="3" required placeholder="Describe the obstacle, location, and any safety concerns..."></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="obstacleLighting" class="form-label">Lighting</label>
+                <select class="form-select" id="obstacleLighting">
+                  <option value="">Unknown</option>
+                  <option value="Yes">Yes - obstacle is lit</option>
+                  <option value="No">No - obstacle is not lit</option>
+                  <option value="Defective">Defective - lights not working</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="obstaclePhoto" class="form-label">Photo (optional)</label>
+                <input type="file" class="form-control" id="obstaclePhoto" accept="image/*" capture="environment">
+                <small class="text-muted">Take a photo of the obstacle if possible</small>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Coordinates</label>
+                <input type="text" class="form-control" id="obstacleCoords" readonly>
+                <small class="text-muted">WGS84 (auto-filled)</small>
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-send"></i> Submit Report
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Admin Dashboard (for Kartverket) -->
+  <div id="adminDashboard" style="display: none;">
+    <nav class="navbar navbar-dark bg-dark">
+      <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1">
+          <img src="~/NaviSafeIcon.svg" alt="NaviSafe" class="navbar-logo me-2">
+          NaviSafe Administration
+        </span>
+        <div>
+          <button class="btn btn-outline-light btn-sm me-2" id="backToMapBtn">
+            <i class="bi bi-map"></i> Back to Map
+          </button>
+          <button class="btn btn-outline-light btn-sm" id="adminLogoutBtn">
+            <i class="bi bi-box-arrow-right"></i> Logout
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+      <div class="row mb-4">
+        <div class="col-md-3">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="text-muted">Total Reports</h6>
+              <h2 id="totalReports">0</h2>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="text-muted">Pending Review</h6>
+              <h2 class="text-warning" id="pendingReports">0</h2>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="text-muted">Approved</h6>
+              <h2 class="text-success" id="approvedReports">0</h2>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="text-muted">Rejected</h6>
+              <h2 class="text-danger" id="rejectedReports">0</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header bg-light">
+          <div class="row align-items-center">
+            <div class="col-md-3">
+              <h5 class="mb-0">Obstacle Reports</h5>
+            </div>
+            <div class="col-md-9">
+              <div class="row g-2">
+                <div class="col">
+                  <select class="form-select form-select-sm" id="filterStatus">
+                    <option value="">All Statuses</option>
+                    <option value="Pending">Pending Review</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                  </select>
+                </div>
+                <div class="col">
+                  <select class="form-select form-select-sm" id="filterOrganization">
+                    <option value="">All Organizations</option>
+                    <option value="NAA">Norwegian Air Ambulance</option>
+                    <option value="AirForce">Air Force</option>
+                    <option value="Police">Police</option>
+                  </select>
+                </div>
+                <div class="col">
+                  <select class="form-select form-select-sm" id="filterType">
+                    <option value="">All Types</option>
+                    <option value="Mast">Mast</option>
+                    <option value="PowerLine">Power Line</option>
+                    <option value="WindTurbine">Wind Turbine</option>
+                    <option value="Building">Building</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>ID</th>
+                  <th>Date</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                  <th>Reporter</th>
+                  <th>Organization</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="reportsTableBody">
+                <!-- Reports will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Report Detail Modal -->
+  <div class="modal fade" id="reportDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Report Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div id="reportDetailMap" style="height: 300px; border-radius: 8px;"></div>
+            </div>
+            <div class="col-md-6">
+              <div id="reportDetailContent">
+                <!-- Content will be loaded dynamically -->
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-12">
+              <h6>Case Management</h6>
+              <div class="mb-3">
+                <label for="assignTo" class="form-label">Assign To</label>
+                <select class="form-select" id="assignTo">
+                  <option value="">Select handler...</option>
+                  <option value="admin1">Admin 1</option>
+                  <option value="admin2">Admin 2</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="adminComment" class="form-label">Comment/Feedback</label>
+                <textarea class="form-control" id="adminComment" rows="3"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" id="rejectReportBtn">
+            <i class="bi bi-x-circle"></i> Reject
+          </button>
+          <button type="button" class="btn btn-success" id="approveReportBtn">
+            <i class="bi bi-check-circle"></i> Approve
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <!-- Leaflet Draw -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+  
+  <!-- Leaflet Locate Control -->
+  <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.79.0/dist/L.Control.Locate.min.js"></script>
+  
+  <!-- Main App Script -->
+  <script src="~/js/app.js"></script>
+</body>
+</html>

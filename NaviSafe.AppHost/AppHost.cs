@@ -18,22 +18,13 @@ builder.AddProject<Projects.NaviSafe>("navisafe")
     .WithReference(mariaDatabase)
     .WaitFor(mariaDatabase);*/
 
-//Run the front-end on a Docker container NEW
+//To run the web-server on a Docker container
 
-builder.AddDockerfile("NaviSafeDocker", "..", "NaviSafe/FrontEnd/Dockerfile")
-    .WithExternalHttpEndpoints()
-    .WithReference(mariaDatabase)
-    .WaitFor(mariaDatabase)
-    .WithHttpEndpoint(3000, 3000, "NaviSafeDevPort")
-    .WithOtlpExporter();
-
-//To run the web-server on a Docker container OLD
-/*
 builder.AddDockerfile("naviSafe", "../", "NaviSafe/Dockerfile")
     .WithExternalHttpEndpoints()
-    .WithReference(mariaDatabase)
-    .WaitFor(mariaDatabase)
+    //.WithReference(mariaDatabase)
+    //.WaitFor(mariaDatabase)
     .WithHttpEndpoint(8080, 8080, "NaviSafe")
-    .WithOtlpExporter();*/
+    .WithOtlpExporter();
 
 builder.Build().Run();

@@ -1,0 +1,186 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Auth Page */
+.auth-page {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+
+/* NaviSafe Logo Styling */
+.navisafe-logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.navbar-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
+/* Map Container */
+.map-container {
+  height: calc(100vh - 56px);
+  position: relative;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+}
+
+/* Map Controls */
+.map-controls {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  width: 280px;
+}
+
+/* Report Form */
+.report-form {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  width: 380px;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+
+/* Custom Leaflet Controls */
+.leaflet-control-draw {
+  margin-top: 10px;
+}
+
+/* Report Status Badges */
+.badge-status-pending {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.badge-status-approved {
+  background-color: #28a745;
+}
+
+.badge-status-rejected {
+  background-color: #dc3545;
+}
+
+/* Table Styling */
+.table-hover tbody tr:hover {
+  cursor: pointer;
+}
+
+/* Modal Map */
+#reportDetailMap {
+  border: 1px solid #dee2e6;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .map-controls,
+  .report-form {
+    width: calc(100% - 40px);
+    max-height: 50vh;
+  }
+
+  .report-form {
+    top: auto;
+    bottom: 20px;
+    right: 20px;
+  }
+}
+
+/* Photo Preview */
+.photo-preview {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+/* Drawing Tools Info */
+.draw-toolbar {
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 10px;
+}
+
+.draw-toolbar.active {
+  border-left: 4px solid #0d6efd;
+}
+
+/* Admin Dashboard */
+.card {
+  border: none;
+  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+}
+
+/* Scrollbar Styling */
+.report-form::-webkit-scrollbar {
+  width: 6px;
+}
+
+.report-form::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.report-form::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.report-form::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Loading State */
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+}
+
+/* Permalink Info */
+.permalink-info {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  font-size: 12px;
+  z-index: 999;
+}
+
+/* Offline Indicator */
+.offline-indicator {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  right: 0;
+  background: #dc3545;
+  color: white;
+  text-align: center;
+  padding: 8px;
+  z-index: 10000;
+  display: none;
+}
+
+.offline-indicator.show {
+  display: block;
+}
