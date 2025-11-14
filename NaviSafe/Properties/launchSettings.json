@@ -23,8 +23,9 @@
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
       "environmentVariables": {
+        "otel_EXPORTER_OTLP_ENDPOINT": "http://*:19107",
         "ASPNETCORE_HTTPS_PORTS": "8081",
-        "ASPNETCORE_HTTP_PORTS": "8080"
+        "ASPNETCORE_HTTP_PORTS": "3000"
       },
       "publishAllPorts": true,
       "useSSL": true
