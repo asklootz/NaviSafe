@@ -25,7 +25,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NaviSafe.AppHost")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+acab39735ae8011a0504af7874a68dc305129aa0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e5ecc2c91f1c7df01f6178730bce625fb839983b")]
 [assembly: System.Reflection.AssemblyProductAttribute("NaviSafe.AppHost")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NaviSafe.AppHost")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
