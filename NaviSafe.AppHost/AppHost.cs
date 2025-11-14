@@ -13,11 +13,21 @@ var mariaDatabase = mariaContainer.AddDatabase("mariaDatabase");
 //2 choices of how to run the web-server - ONLY CHOOSE ONE:
 
 //To run on the web-server locally on your machine via AppHost - Should only be used for development with "Hot Reload"
+/*
 builder.AddProject<Projects.NaviSafe>("navisafe")
     .WithReference(mariaDatabase)
-    .WaitFor(mariaDatabase);
+    .WaitFor(mariaDatabase);*/
 
-//To run the web-server on a Docker container
+//Run the front-end on a Docker container NEW
+
+builder.AddDockerfile("NaviSafeDocker", "..", "NaviSafe/FrontEnd/Dockerfile")
+    .WithExternalHttpEndpoints()
+    .WithReference(mariaDatabase)
+    .WaitFor(mariaDatabase)
+    .WithHttpEndpoint(3000, 3000, "NaviSafeDevPort")
+    .WithOtlpExporter();
+
+//To run the web-server on a Docker container OLD
 /*
 builder.AddDockerfile("naviSafe", "../", "NaviSafe/Dockerfile")
     .WithExternalHttpEndpoints()
