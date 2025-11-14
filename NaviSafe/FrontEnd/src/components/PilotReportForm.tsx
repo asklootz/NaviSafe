@@ -10,7 +10,7 @@ import { User, ObstacleType, GeometryType, GeoJSONGeometry, ObstacleReport } fro
 import { ArrowLeft, Camera, Send, Save, Moon, Sun, Navigation, List, Radio, Zap, Wind, Building2, HelpCircle, MapPin, Minus, X, Check } from 'lucide-react';
 import { toast } from 'sonner@2.0.3';
 import { useTheme } from './ThemeProvider';
-import naviSafeLogo from '../assets/NaviSafe_logo.png';
+import naviSafeLogo from 'figma:asset/43a784f34af36c961963a10e84aa679ef45d4749.png';
 import { Alert, AlertDescription } from './ui/alert';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './ui/command';

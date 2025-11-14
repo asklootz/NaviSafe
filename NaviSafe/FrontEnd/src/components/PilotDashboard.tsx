@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { User, ObstacleReport, ReportStatus } from '../lib/types';
 import { mockObstacleReports } from '../lib/mockData';
 import { Edit, Eye, Plus, LogOut, Moon, Sun } from 'lucide-react';
-import naviSafeLogo from '../assets/NaviSafe_logo.png';
+import naviSafeLogo from 'figma:asset/43a784f34af36c961963a10e84aa679ef45d4749.png';
 import { useTheme } from './ThemeProvider';
 
 interface PilotDashboardProps {

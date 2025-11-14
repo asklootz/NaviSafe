@@ -1,206 +1,297 @@
-# NaviSafe - Aviation Obstacle Reporting System
+# 🛫 NaviSafe - Aviation Obstacle Reporting System
 
-NaviSafe er en webapplikasjon for rapportering av luftfartshindre til Norges Nasjonale Register for Luftfartshindre (NRL), utviklet som del av et universitetsprosjekt for UiA, Kartverket og Norsk Luftambulanse.
+En webapplikasjon for rapportering av luftfartshindre til **Norges Nasjonale Register for Luftfartshindre (NRL)**.
 
-## 🚀 Funksjoner
-
-### For Piloter
-- **Interaktivt kart** med Leaflet for nøyaktig posisjonering
-- **Live GPS-posisjonering** med nøyaktighetsvisning
-- **Punkt- og linjehindre** (Tower, Power Line, Wind Turbine, Building, etc.)
-- **Bildeupplasting** fra kamera eller galleri
-- **Utkast og innsending** av rapporter
-- **Oversikt over egne rapporter** med status
-
-### For Administratorer (NRL)
-- **Oversikt over alle rapporter** fra piloter
-- **Duplikatdeteksjon** (automatisk varsling om lignende rapporter innenfor 100m)
-- **Godkjenning av rapporter** for registrering i NRL
-- **Sortering og filtrering** av rapporter
-- **Detaljert rapportvisning** med GPS-data
-
-## 🛠️ Teknologi
-
-- **Frontend**: Vanilla JavaScript (ES6+)
-- **Styling**: Tailwind CSS
-- **Kart**: Leaflet.js med OpenStreetMap
-- **Ikoner**: Lucide Icons
-- **Backend**: Planlagt C# ASP.NET Core med MariaDB
-
-## 📦 Installasjon
-
-### Kjøre lokalt
-
-1. Klon repositoryet:
-```bash
-git clone https://github.com/[ditt-brukernavn]/navisafe.git
-cd navisafe
-```
-
-2. Åpne `index.html` i nettleseren:
-```bash
-# macOS
-open index.html
-
-# Windows
-start index.html
-
-# Linux
-xdg-open index.html
-```
-
-Ingen byggesteg eller npm install nødvendig! Applikasjonen kjører direkte i nettleseren.
-
-### Alternativt: Bruk en lokal server
-
-For bedre GPS-funksjonalitet og testing:
-
-```bash
-# Python 3
-python -m http.server 8000
-
-# Python 2
-python -m SimpleHTTPServer 8000
-
-# Node.js (npx)
-npx serve
-
-# PHP
-php -S localhost:8000
-```
-
-Åpne deretter `http://localhost:8000` i nettleseren.
-
-## 👤 Demo-brukere
-
-### Piloter
-- **Brukernavn**: `pilot1`, `pilot2`, `pilot3`
-- **Organisasjon**: NLA, Luftforsvaret, Politiet
-- **Passord**: `any` (hvilken som helst tekst)
-
-### Administrator
-- **Brukernavn**: `admin`
-- **Organisasjon**: Kartverket
-- **Passord**: `any` (hvilken som helst tekst)
-
-## 🗺️ Bruk av kartet
-
-### Punkt-hindre (Point)
-1. Velg "Point" i kartverktøyet
-2. Klikk på kartet der hinderet er
-3. Eller bruk "Use My GPS Position" for nåværende posisjon
-4. Eller skriv inn koordinater manuelt
-
-### Linje-hindre (LineString)
-1. Velg "Line" i kartverktøyet
-2. Klikk flere ganger på kartet for å tegne linjen
-3. Minimum 2 punkter kreves
-
-### GPS-funksjonalitet
-- GPS-posisjonen oppdateres automatisk i sanntid
-- Nøyaktighet vises i meter (±)
-- Fungerer på mobile enheter med GPS
-- Fallback til Kristiansand, Norge hvis GPS ikke er tilgjengelig
-
-## 📱 Responsivt design
-
-Applikasjonen er fullt responsiv og fungerer på:
-- 📱 Mobile enheter
-- 💻 Tablets
-- 🖥️ Desktop
-
-## 🌓 Dark Mode
-
-Støtter automatisk dark/light mode med toggle-knapp i høyre hjørne.
-
-## 🔄 Dataflyt
-
-```
-Pilot rapporterer hinder
-    ↓
-Rapport lagres med GPS-data og geometri
-    ↓
-Admin mottar rapport i dashboard
-    ↓
-Duplikatsjekk (100m radius)
-    ↓
-Admin godkjenner → Registreres i NRL
-```
-
-## 📊 Datamodell
-
-### ObstacleReport
-```javascript
-{
-  id: string,
-  reporter_id: string,
-  reporter_name: string,
-  organization: 'NLA' | 'Luftforsvaret' | 'Politiet',
-  obstacle_type: 'Tower' | 'Power Line' | 'Wind Turbine' | 'Building' | 'Other',
-  geometry_type: 'Point' | 'LineString',
-  geometry: GeoJSON,
-  height_meters: number,
-  description: string,
-  status: 'Draft' | 'Submitted' | 'Approved',
-  reporter_position: GeoJSON Point,
-  reporter_position_accuracy: number (meters),
-  created_at: ISO8601,
-  updated_at: ISO8601
-}
-```
-
-### GeoJSON Format (WGS84)
-```javascript
-// Point
-{
-  type: 'Point',
-  coordinates: [longitude, latitude]
-}
-
-// LineString
-{
-  type: 'LineString',
-  coordinates: [[lon1, lat1], [lon2, lat2], ...]
-}
-```
-
-## 🔮 Fremtidige forbedringer
-
-- [ ] Koble til C# ASP.NET Core backend
-- [ ] MariaDB database-integrasjon
-- [ ] Autentisering med JWT tokens
-- [ ] Bildelagring og komprimering
-- [ ] Export til GeoJSON/KML
-- [ ] Offline-støtte med Service Workers
-- [ ] Push-notifikasjoner for administratorer
-- [ ] Rapporthistorikk og revisjonslogg
-- [ ] Mer avansert duplikatdeteksjon
-
-## 📄 Filstruktur
-
-```
-navisafe/
-├── index.html          # Hovedfil med HTML-struktur og styling
-├── app.js             # All JavaScript-logikk og state management
-├── README.md          # Denne filen
-└── guidelines/        # Backend-integrasjonsguider (eksisterende)
-    ├── MariaDB-Integration-Guide.md
-    ├── Backend-Integration.md
-    └── database-setup.sql
-```
-
-## 🤝 Bidrag
-
-Dette er et universitetsprosjekt for UiA, Kartverket og Norsk Luftambulanse.
-
-## 📝 Lisens
-
-[Spesifiser lisens her]
-
-## 👥 Kontakt
-
-For spørsmål om prosjektet, kontakt UiA eller Kartverket.
+**Utviklet for:** Universitetet i Agder (UiA), Kartverket og Norsk Luftambulanse
 
 ---
 
-**Utviklet med ❤️ for luftfartssikkerhet i Norge**
+## 🚀 Teknologi Stack
+
+- **Frontend:** React 18 + TypeScript
+- **Styling:** Tailwind CSS v4
+- **Kart:** Leaflet.js + React Leaflet
+- **UI Components:** Shadcn/ui
+- **Build Tool:** Vite
+- **Production Server:** Nginx (Docker)
+
+---
+
+## 🐳 Kjøre med Docker (Anbefalt)
+
+### Forutsetninger
+- Docker Desktop installert ([Last ned her](https://www.docker.com/products/docker-desktop))
+- Docker Compose (inkludert i Docker Desktop)
+
+### Rask start
+
+```bash
+# 1. Bygg og start applikasjonen
+docker-compose up -d
+
+# 2. Åpne i nettleser
+open http://localhost:8080
+```
+
+**Container administrasjon:**
+```bash
+# Se logger
+docker-compose logs -f
+
+# Stopp applikasjonen
+docker-compose down
+
+# Rebuild etter kodeendringer
+docker-compose up -d --build
+```
+
+### Docker kommandoer (uten Docker Compose)
+
+```bash
+# Bygg Docker image
+docker build -t navisafe:latest .
+
+# Kjør container
+docker run -d \
+  -p 8080:80 \
+  --name navisafe-app \
+  navisafe:latest
+
+# Stopp og fjern container
+docker stop navisafe-app
+docker rm navisafe-app
+```
+
+---
+
+## 💻 Lokal Utvikling (uten Docker)
+
+### Forutsetninger
+- Node.js 20+ ([Last ned her](https://nodejs.org/))
+- npm eller pnpm
+
+### Installasjon
+
+```bash
+# 1. Installer dependencies
+npm install
+
+# 2. Start dev server
+npm run dev
+
+# 3. Åpne http://localhost:3000
+```
+
+### Tilgjengelige Scripts
+
+```bash
+npm run dev       # Start utviklingsserver (port 3000)
+npm run build     # Bygg produksjonsversjon
+npm run preview   # Preview produksjonsbygg lokalt
+npm run lint      # Kjør ESLint
+```
+
+---
+
+## 👥 Demo Brukere
+
+| Brukernavn | Rolle | Organisasjon | Passord |
+|------------|-------|--------------|---------|
+| `pilot1` | Pilot | NLA (Norsk Luftambulanse) | `any` |
+| `pilot2` | Pilot | Luftforsvaret | `any` |
+| `pilot3` | Pilot | Politiet | `any` |
+| `admin` | Administrator | Kartverket (NRL) | `any` |
+
+**Merk:** Dette er mock-login. Passord kan være hva som helst.
+
+---
+
+## ✨ Funksjoner
+
+### 🧑‍✈️ For Piloter og Flybesetning
+- ✅ **Rapporter luftfartshindre** med GPS-posisjon
+- 🗺️ **Interaktivt Leaflet-kart**
+  - Punkt-geometri (enkelthinderr)
+  - Linje-geometri (kraftlinjer, kabler)
+- 📍 **GPS-tracking** i sanntid
+- 📸 **Bildeopplasting** fra mobil/kamera
+- 💾 **Lagre utkast** eller send direkte til NRL
+- 📊 **Se egne rapporter** med statusoversikt
+- ⚠️ **Duplikatvarsel** ved innsending
+
+### 👨‍💼 For NRL-Administratorer
+- 📋 **Se alle innsendte rapporter**
+- ✅ **Godkjenn rapporter** til NRL-database
+- 🔍 **Filtrer og søk** i rapporter
+- ⚠️ **Automatisk duplikatdeteksjon** (100m radius)
+- 📊 **Statistikk** per organisasjon
+- 🗺️ **Kartvisning** av alle hindre
+
+---
+
+## 📁 Prosjektstruktur
+
+```
+NaviSafe/
+├── components/
+│   ├── AdminDashboard.tsx       # Admin dashboard
+│   ├── AdminAppSidebar.tsx      # Admin sidebar
+│   ├── LoginScreen.tsx          # Login skjerm
+│   ├── MapComponent.tsx         # Leaflet kart komponent
+│   ├── PilotDashboard.tsx       # Pilot dashboard
+│   ├── PilotReportForm.tsx      # Rapportskjema
+│   ├── ThemeProvider.tsx        # Mørk/lys modus
+│   └── ui/                      # Shadcn/ui komponenter
+├── lib/
+│   ├── api.ts                   # API klient (mock)
+│   ├── mockData.ts              # Mock data
+│   └── types.ts                 # TypeScript types
+├── styles/
+│   └── globals.css              # Global CSS + Tailwind
+├── guidelines/                  # Dokumentasjon
+├── App.tsx                      # Hovedapp
+├── Dockerfile                   # Docker build config
+├── docker-compose.yml           # Docker Compose config
+├── nginx.conf                   # Nginx webserver config
+├── package.json                 # Dependencies
+└── vite.config.ts               # Vite build config
+```
+
+---
+
+## 🔧 Produksjonsdrift
+
+### Docker Production Features
+- ✅ **Multi-stage build** (minimerer image størrelse)
+- ✅ **Nginx webserver** (battle-tested, høy ytelse)
+- ✅ **Gzip kompresjon** aktivert
+- ✅ **Security headers** konfigurert
+- ✅ **Asset caching** (1 år for statiske filer)
+- ✅ **Health checks** inkludert
+- ✅ **SPA routing** støtte
+
+### Deployment til Sky
+
+**Docker Hub:**
+```bash
+docker build -t yourusername/navisafe:latest .
+docker push yourusername/navisafe:latest
+```
+
+**Deploy hvor som helst:**
+```bash
+docker run -d -p 80:80 yourusername/navisafe:latest
+```
+
+---
+
+## 🌍 Miljøvariabler
+
+For fremtidig backend-integrasjon:
+
+```bash
+# .env.production
+VITE_API_URL=https://api.kartverket.no/navisafe
+VITE_MAP_TILES_URL=https://tiles.kartverket.no/{z}/{x}/{y}.png
+```
+
+---
+
+## 🗺️ Kartdata
+
+- **Basiskart:** OpenStreetMap (kan byttes til Kartverket)
+- **Koordinatsystem:** WGS84 (EPSG:4326)
+- **Format:** GeoJSON
+- **Geometrityper:** Point, LineString
+
+---
+
+## 🔐 Sikkerhet
+
+### Implementerte Security Headers
+```nginx
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: no-referrer-when-downgrade
+```
+
+**Merk:** Dette er en prototype med mock-autentisering. For produksjon må implementeres:
+- ✅ Ekte autentisering (OAuth2, SAML)
+- ✅ HTTPS/TLS
+- ✅ CORS-policy
+- ✅ Rate limiting
+- ✅ Input validering
+
+---
+
+## 📊 Database Schema
+
+Se `guidelines/Backend-Integration.md` for fullstendig database-design.
+
+**Hovedtabeller:**
+- `users` - Brukere og roller
+- `obstacle_reports` - Hinderrapporter
+- `obstacle_report_geometries` - GeoJSON geometrier
+- `obstacle_report_images` - Bildeopplastinger
+
+---
+
+## 🧪 Testing
+
+```bash
+# Kjør tests (når implementert)
+npm test
+
+# E2E tests
+npm run test:e2e
+```
+
+---
+
+## 🤝 Bidrag
+
+Dette er et universitetsprosjekt utviklet i samarbeid med:
+
+- **Universitetet i Agder (UiA)** - Utdanning og forskning
+- **Kartverket** - Nasjonalt register for luftfartshindre (NRL)
+- **Norsk Luftambulanse** - Operative krav fra luftfart
+
+---
+
+## 📄 Lisens
+
+Utviklet som universitetsprosjekt for UiA (2025)
+
+---
+
+## 📧 Kontakt
+
+For spørsmål om prosjektet:
+- **UiA:** [kontakt@uia.no](mailto:kontakt@uia.no)
+- **Kartverket:** [post@kartverket.no](mailto:post@kartverket.no)
+- **NLA:** [post@norskluftambulanse.no](mailto:post@norskluftambulanse.no)
+
+---
+
+## 🚀 Quick Reference
+
+```bash
+# Development
+npm install && npm run dev          # Start dev server
+open http://localhost:3000           # Åpne i nettleser
+
+# Docker Production
+docker-compose up -d                 # Start i Docker
+open http://localhost:8080           # Åpne i nettleser
+docker-compose logs -f               # Se logger
+docker-compose down                  # Stopp
+
+# Build for production
+npm run build                        # Bygg til dist/
+npm run preview                      # Test produksjonsbygg
+```
+
+---
+
+**Made with ❤️ for safer Norwegian aviation** 🇳🇴

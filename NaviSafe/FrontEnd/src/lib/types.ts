@@ -2,7 +2,7 @@
 
 export type UserRole = 'pilot' | 'admin';
 
-export type OrganizationType = 'NLA' | 'Luftforsvaret' | 'Politiet' | 'Kartverket';
+export type OrganizationType = 'NLA' | 'Luftforsvaret' | 'Politiet';
 
 export type ObstacleType = 
   | 'Tower'

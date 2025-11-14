@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Checkbox } from './ui/checkbox';
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
-import naviSafeLogo from '../assets/NaviSafe_logo.png';
+import naviSafeLogo from 'figma:asset/43a784f34af36c961963a10e84aa679ef45d4749.png';
 
 interface LoginScreenProps {
   onLogin: (username: string, password: string) => Promise<boolean>;

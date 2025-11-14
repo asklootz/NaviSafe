@@ -15,7 +15,7 @@ import { User } from '../lib/types';
 import { List, Map, Moon, Sun, LogOut } from 'lucide-react';
 import { Button } from './ui/button';
 import { useTheme } from './ThemeProvider';
-import naviSafeLogo from '../assets/NaviSafe_logo.png';
+import naviSafeLogo from 'figma:asset/43a784f34af36c961963a10e84aa679ef45d4749.png';
 
 interface AdminAppSidebarProps {
   user: User;
