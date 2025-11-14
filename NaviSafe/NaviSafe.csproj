@@ -27,39 +27,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="FrontEnd\.git\config" />
-    <Content Include="FrontEnd\.git\description" />
-    <Content Include="FrontEnd\.git\HEAD" />
-    <Content Include="FrontEnd\.git\hooks\applypatch-msg.sample" />
-    <Content Include="FrontEnd\.git\hooks\commit-msg.sample" />
-    <Content Include="FrontEnd\.git\hooks\fsmonitor-watchman.sample" />
-    <Content Include="FrontEnd\.git\hooks\post-update.sample" />
-    <Content Include="FrontEnd\.git\hooks\pre-applypatch.sample" />
-    <Content Include="FrontEnd\.git\hooks\pre-commit.sample" />
-    <Content Include="FrontEnd\.git\hooks\pre-merge-commit.sample" />
-    <Content Include="FrontEnd\.git\hooks\pre-push.sample" />
-    <Content Include="FrontEnd\.git\hooks\pre-rebase.sample" />
-    <Content Include="FrontEnd\.git\hooks\pre-receive.sample" />
-    <Content Include="FrontEnd\.git\hooks\prepare-commit-msg.sample" />
-    <Content Include="FrontEnd\.git\hooks\push-to-checkout.sample" />
-    <Content Include="FrontEnd\.git\hooks\sendemail-validate.sample" />
-    <Content Include="FrontEnd\.git\hooks\update.sample" />
-    <Content Include="FrontEnd\.git\index" />
-    <Content Include="FrontEnd\.git\info\exclude" />
-    <Content Include="FrontEnd\.git\logs\HEAD" />
-    <Content Include="FrontEnd\.git\logs\refs\heads\main" />
-    <Content Include="FrontEnd\.git\logs\refs\remotes\origin\HEAD" />
-    <Content Include="FrontEnd\.git\objects\pack\pack-f7d5368bfc1e13a2a83e9eef0fc1b3264cd8219b.idx" />
-    <Content Include="FrontEnd\.git\objects\pack\pack-f7d5368bfc1e13a2a83e9eef0fc1b3264cd8219b.pack" />
-    <Content Include="FrontEnd\.git\objects\pack\pack-f7d5368bfc1e13a2a83e9eef0fc1b3264cd8219b.rev" />
-    <Content Include="FrontEnd\.git\packed-refs" />
-    <Content Include="FrontEnd\.git\refs\heads\main" />
-    <Content Include="FrontEnd\.git\refs\remotes\origin\HEAD" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="FrontEnd\.git\objects\info\" />
-    <Folder Include="FrontEnd\.git\refs\tags\" />
+    <_ContentIncludedByDefault Remove="FrontEnd_backup\package-lock.json" />
+    <_ContentIncludedByDefault Remove="FrontEnd_backup\package.json" />
+    <_ContentIncludedByDefault Remove="FrontEnd_backup\tsconfig.app.json" />
+    <_ContentIncludedByDefault Remove="FrontEnd_backup\tsconfig.json" />
+    <_ContentIncludedByDefault Remove="FrontEnd_backup\tsconfig.node.json" />
   </ItemGroup>
 
 </Project>

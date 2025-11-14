@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NaviSafe")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8065861fc8f4dfe645c6d4a47ff81583bc0c33e8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+35d3734daa13af0017e30e4aa81001c397461763")]
 [assembly: System.Reflection.AssemblyProductAttribute("NaviSafe")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NaviSafe")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

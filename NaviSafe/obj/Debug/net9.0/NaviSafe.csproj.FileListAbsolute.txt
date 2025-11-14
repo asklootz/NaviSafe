@@ -1343,11 +1343,3 @@ C:/Users/asklo/repo/NaviSafe/NaviSafe/obj/Debug/net9.0/compressed/q1081mfb61-w4n
 /Users/synnekyrkjebo/IT/HØST 2025/RiderProject/NaviSafe/obj/Debug/net9.0/NaviSafe.pdb
 /Users/synnekyrkjebo/IT/HØST 2025/RiderProject/NaviSafe/obj/Debug/net9.0/NaviSafe.genruntimeconfig.cache
 /Users/synnekyrkjebo/IT/HØST 2025/RiderProject/NaviSafe/obj/Debug/net9.0/ref/NaviSafe.dll
-/Users/synnekyrkjebo/IT/HØST 2025/RiderProject/NaviSafe/bin/Debug/net9.0/FrontEnd_backup/package-lock.json
-/Users/synnekyrkjebo/IT/HØST 2025/RiderProject/NaviSafe/bin/Debug/net9.0/FrontEnd_backup/package.json
-/Users/synnekyrkjebo/IT/HØST 2025/RiderProject/NaviSafe/bin/Debug/net9.0/FrontEnd_backup/tsconfig.app.json
-/Users/synnekyrkjebo/IT/HØST 2025/RiderProject/NaviSafe/bin/Debug/net9.0/FrontEnd_backup/tsconfig.json
-/Users/synnekyrkjebo/IT/HØST 2025/RiderProject/NaviSafe/bin/Debug/net9.0/FrontEnd_backup/tsconfig.node.json
-/Users/synnekyrkjebo/IT/HØST 2025/RiderProject/NaviSafe/bin/Debug/net9.0/FrontEnd/tsconfig.app.json
-/Users/synnekyrkjebo/IT/HØST 2025/RiderProject/NaviSafe/bin/Debug/net9.0/FrontEnd/tsconfig.json
-/Users/synnekyrkjebo/IT/HØST 2025/RiderProject/NaviSafe/bin/Debug/net9.0/FrontEnd/tsconfig.node.json
