@@ -52,4 +52,38 @@ public class AccountControllerTests
         var error = controller.ModelState[string.Empty]!.Errors.Single();
         Assert.Equal("Invalid email or password.", error.ErrorMessage);
     }
+    
+    
+    [Fact]
+    public void RegisterPostAddAModelErrorWhenTheEmailAlreadyExists()
+    {
+        var userStorage = new UserStorage();
+        var controller = new AccountController(userStorage);
+
+        var model = new RegisterViewModel
+        {
+            Email = "admin@navisafe.com",
+            Password = "RandomPassword111?",
+            FullName = "Alex Rambo",
+            PhoneNumber = "+47 902 39 948",
+            StreetAddress = "Strømsdalen 15",
+            City = "Kristiansand",
+            PostalCode = "4638",
+            Country = "Norway"
+        };
+
+        var result = controller.Register(model);
+
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Same(model, viewResult.Model);
+
+        Assert.False(controller.ModelState.IsValid);
+        Assert.True(controller.ModelState.ContainsKey(string.Empty));
+
+        var error = controller.ModelState[string.Empty]!.Errors.Single();
+        Assert.Equal(
+            "An account with this email already exists.",
+            error.ErrorMessage
+        );
+    }
 }
