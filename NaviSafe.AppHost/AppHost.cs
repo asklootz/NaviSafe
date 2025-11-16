@@ -24,8 +24,8 @@ builder.AddDockerfile("naviSafe", "../", "NaviSafe/Dockerfile")
     .WithExternalHttpEndpoints()
     .WithReference(mariaDatabase)
     .WaitFor(mariaDatabase)
-    .WithHttpEndpoint(8080, 8080, "NaviSafe")
-    .WithHttpsEndpoint(8081, 8081, "NaviSafe")
+    .WithHttpEndpoint(8080, 8080, "NaviSafeHTTP")
+    .WithHttpsEndpoint(8081, 8081, "NaviSafeHTTPS")
     .WithOtlpExporter();
 
 builder.Build().Run();

@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36408.4 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NaviSafe", "NaviSafe\NaviSafe.csproj", "{CFBCC4B6-729E-E6A6-CE94-85B1FA4BF1C1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NaviSafe", "NaviSafe/NaviSafe.csproj", "{CFBCC4B6-729E-E6A6-CE94-85B1FA4BF1C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NaviSafe.AppHost", "NaviSafe.AppHost\NaviSafe.AppHost.csproj", "{0D6F1EC3-1378-49DE-A7E7-8D4A24470A2D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NaviSafe.AppHost", "NaviSafe.AppHost/NaviSafe.AppHost.csproj", "{0D6F1EC3-1378-49DE-A7E7-8D4A24470A2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NaviSafe.ServiceDefaults", "NaviSafe.ServiceDefaults\NaviSafe.ServiceDefaults.csproj", "{808D1150-CB77-A2A2-B750-1DB0B237AC4D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NaviSafe.ServiceDefaults", "NaviSafe.ServiceDefaults/NaviSafe.ServiceDefaults.csproj", "{808D1150-CB77-A2A2-B750-1DB0B237AC4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NaviSafe.Tests", "NaviSafe.Tests\NaviSafe.Tests.csproj", "{8A5162B6-D2A0-40E8-9676-9B6E077FFB46}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NaviSafe.Tests", "NaviSafe.Tests/NaviSafe.Tests.csproj", "{8A5162B6-D2A0-40E8-9676-9B6E077FFB46}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
