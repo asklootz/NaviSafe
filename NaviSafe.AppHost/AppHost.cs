@@ -4,7 +4,7 @@ var mariaContainer = builder.AddMySql("mariaContainer", null, 3307)
     .WithLifetime(ContainerLifetime.Persistent)
     .WithImage("mariadb:11.8")
     .WithContainerName("mariaContainer")
-    .WithDataBindMount(source: @"..\MariaDB\Data") //Code to create a bind mount to a local folder
+    .WithDataBindMount(source: "../MariaDB/Data") //Code to create a bind mount to a local folder
     .WithPhpMyAdmin()
     .WithOtlpExporter(); //Creates a phpMyAdmin container linked to the database container for easy management
 
@@ -22,9 +22,10 @@ builder.AddProject<Projects.NaviSafe>("navisafe")
 
 builder.AddDockerfile("naviSafe", "../", "NaviSafe/Dockerfile")
     .WithExternalHttpEndpoints()
-    //.WithReference(mariaDatabase)
-    //.WaitFor(mariaDatabase)
+    .WithReference(mariaDatabase)
+    .WaitFor(mariaDatabase)
     .WithHttpEndpoint(8080, 8080, "NaviSafe")
+    .WithHttpsEndpoint(8081, 8081, "NaviSafe")
     .WithOtlpExporter();
 
 builder.Build().Run();
