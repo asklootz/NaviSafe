@@ -1,10 +1,13 @@
+using Aspire.Hosting;
+using Aspire.Hosting.ApplicationModel;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
 var mariaContainer = builder.AddMySql("mariaContainer", null, 3307)
     .WithLifetime(ContainerLifetime.Persistent)
     .WithImage("mariadb:11.8")
     .WithContainerName("mariaContainer")
-    .WithDataBindMount(source: @"..\MariaDB\Data") //Code to create a bind mount to a local folder
+    .WithDataBindMount(source: "../MariaDB/Data") //Code to create a bind mount to a local folder
     .WithPhpMyAdmin()
     .WithOtlpExporter(); //Creates a phpMyAdmin container linked to the database container for easy management
 
@@ -22,9 +25,10 @@ builder.AddProject<Projects.NaviSafe>("navisafe")
 
 builder.AddDockerfile("naviSafe", "../", "NaviSafe/Dockerfile")
     .WithExternalHttpEndpoints()
-    //.WithReference(mariaDatabase)
-    //.WaitFor(mariaDatabase)
-    .WithHttpEndpoint(8080, 8080, "NaviSafe")
+    .WithReference(mariaDatabase)
+    .WaitFor(mariaDatabase)
+    .WithHttpEndpoint(8080, 8080, "NaviSafeHTTP")
+    .WithHttpsEndpoint(8081, 8081, "NaviSafeHTTPS")
     .WithOtlpExporter();
 
 builder.Build().Run();
