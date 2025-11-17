@@ -43,7 +43,7 @@ RegisterUserStoresData – After calling RegisterUser, the method should return 
 
 CannotRegisterTheSameEmailTwice – Registering the same email twice should succeed the first time and then return an empty string on the second call, which means duplicate emails are not allowed.
 
-ValidateUserReturnsTrueOnlyForCorrectPassword – ValidateUser should return true only when the correct password is provided for a registered email, and false when the password is wrong.
+ValidateUserReturnsTrueOnlyIfPasswordIsCorrect – ValidateUser should return true only when the correct password is provided for a registered email, and false when the password is wrong.
 
 AccountControllerTests
 
