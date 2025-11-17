@@ -7,7 +7,7 @@ namespace NaviSafe.Tests;
 public class UserStorageTest
 {
     [Fact]
-    public void FindUserIgnoreCase()
+    public void FindsUserIgnoreCase()
     {
         var sut = new  UserStorage();
 
