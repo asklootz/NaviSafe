@@ -1,3 +1,6 @@
+using Aspire.Hosting;
+using Aspire.Hosting.ApplicationModel;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
 var mariaContainer = builder.AddMySql("mariaContainer", null, 3307)
