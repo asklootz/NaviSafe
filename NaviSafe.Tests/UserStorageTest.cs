@@ -36,7 +36,7 @@ public class UserStorageTest
 
         Assert.False(
             string.IsNullOrWhiteSpace(userId),
-            "Registration returned an empty userId - it expected a valdi GUID."
+            "Registration returned an empty userId - it expected a valid GUID."
         );
         
         Assert.True(
