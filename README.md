@@ -68,13 +68,13 @@ The founding members of NaviSafe from Group 9 consists of:
 ---
 
 ## Tech Stack
-| Layer | Technology |
-|------|-------------|
-| **Front-End** | *(Leaflet, JavaScript, CSS, Tailwind CSS, HTML)* |
-| **API & Orchestration** | ASP.NET Core 9.0 |
-| **Database** | MariaDB 11.8 |
-| **DB Admin Tool** | phpMyAdmin 5.2 |
-| **Containerization** | Docker, Docker Compose |
+| Layer | Technology                                        |
+|------|---------------------------------------------------|
+| **Front-End** | *(Leaflet, JavaScript, CSS, Bootstrap CSS, HTML)* |
+| **API & Orchestration** | ASP.NET Core 9.0                                  |
+| **Database** | MariaDB 11.8                                      |
+| **DB Admin Tool** | phpMyAdmin 5.2                                    |
+| **Containerization** | Docker, Docker File                               |
 
 ---
 
