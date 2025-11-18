@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mariaContainer:3306
--- Generation Time: Nov 09, 2025 at 08:41 PM
+-- Generation Time: Nov 18, 2025 at 03:09 PM
 -- Server version: 11.8.3-MariaDB-ubu2404
 -- PHP Version: 8.3.26
 
@@ -28,8 +28,6 @@ USE `mariaDatabase`;
 --
 -- Table structure for table `organisation`
 --
--- Creation: Nov 09, 2025 at 08:30 PM
---
 
 DROP TABLE IF EXISTS `organisation`;
 CREATE TABLE IF NOT EXISTS `organisation` (
@@ -51,13 +49,11 @@ INSERT INTO `organisation` (`orgNr`, `orgName`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `registrations`
---
--- Creation: Nov 09, 2025 at 08:30 PM
+-- Table structure for table `reporting`
 --
 
-DROP TABLE IF EXISTS `registrations`;
-CREATE TABLE IF NOT EXISTS `registrations` (
+DROP TABLE IF EXISTS `reporting`;
+CREATE TABLE IF NOT EXISTS `reporting` (
   `regID` int(11) NOT NULL AUTO_INCREMENT,
   `lat` float NOT NULL,
   `lon` float NOT NULL,
@@ -67,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `registrations` (
   `longDesc` varchar(255) DEFAULT NULL,
   `img` mediumblob DEFAULT NULL,
   `isSent` tinyint(1) NOT NULL,
-  `state` ENUM('SENT','PENDING','REJECTED') NOT NULL,
+  `state` enum('SENT','PENDING','REJECTED') NOT NULL,
   `rejectComment` varchar(255) DEFAULT NULL,
   `userID` int(11) NOT NULL,
   `creationDate` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -76,10 +72,10 @@ CREATE TABLE IF NOT EXISTS `registrations` (
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
--- Dumping data for table `registrations`
+-- Dumping data for table `reporting`
 --
 
-INSERT INTO `registrations` (`regID`, `lan`, `lon`, `altitude`, `accuracy`, `shortDesc`, `longDesc`, `img`, `isSent`, `state`, `rejectComment`, `userID`, `creationDate`) VALUES
+INSERT INTO `reporting` (`regID`, `lat`, `lon`, `altitude`, `accuracy`, `shortDesc`, `longDesc`, `img`, `isSent`, `state`, `rejectComment`, `userID`, `creationDate`) VALUES
 (1, 63.4298, 10.394, 33, 22, 'Building in Trondheim', 'PHT_pilot1 registered building during low altitude patrol near Trondheim', NULL, 1, 'SENT', 'Submitted', 6, '2025-11-08 15:57:50'),
 (2, 59.917, 10.7611, 25, 15, 'Power line over Oslo fjord', 'LUFT_pilot2 registered power line due to poor visibility in harsh weather', NULL, 1, 'SENT', 'Pending', 5, '2025-10-27 00:00:00'),
 (3, 58.1585, 8.0165, 12, 8, 'High tower near Kjevik Airport', 'NLA_pilot1 registered tower observed during landing', NULL, 1, 'SENT', 'Submitted', 2, '2025-10-28 00:00:00');
@@ -88,8 +84,6 @@ INSERT INTO `registrations` (`regID`, `lan`, `lon`, `altitude`, `accuracy`, `sho
 
 --
 -- Table structure for table `userAuth`
---
--- Creation: Nov 09, 2025 at 08:30 PM
 --
 
 DROP TABLE IF EXISTS `userAuth`;
@@ -105,10 +99,6 @@ CREATE TABLE IF NOT EXISTS `userAuth` (
 -- Dumping data for table `userAuth`
 --
 
--- WARNING: The following credentials are for development/testing only.
--- DO NOT USE THIS DATA IN PRODUCTION OR STAGING ENVIRONMENTS.
--- All users have password: TestPassword123!
-
 INSERT INTO `userAuth` (`userID`, `username`, `passHash`, `passSalt`) VALUES
 (1, 'Yonathan (Admin)', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8uQ8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8u'),
 (2, 'NLA_pilot1', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8uQ8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8u'),
@@ -122,8 +112,6 @@ INSERT INTO `userAuth` (`userID`, `username`, `passHash`, `passSalt`) VALUES
 
 --
 -- Table structure for table `userInfo`
---
--- Creation: Nov 09, 2025 at 08:30 PM
 --
 
 DROP TABLE IF EXISTS `userInfo`;
@@ -159,13 +147,11 @@ INSERT INTO `userInfo` (`userID`, `firstName`, `lastName`, `email`, `phone`, `or
 --
 -- Table structure for table `userRole`
 --
--- Creation: Nov 09, 2025 at 08:30 PM
---
 
 DROP TABLE IF EXISTS `userRole`;
 CREATE TABLE IF NOT EXISTS `userRole` (
   `roleID` char(3) NOT NULL,
-  `rolePermissions` ENUM('ADMIN','PILOT') NOT NULL,
+  `rolePermissions` enum('ADMIN','PILOT') NOT NULL,
   `permissionsDescription` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`roleID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
@@ -183,10 +169,10 @@ INSERT INTO `userRole` (`roleID`, `rolePermissions`, `permissionsDescription`) V
 --
 
 --
--- Constraints for table `registrations`
+-- Constraints for table `reporting`
 --
-ALTER TABLE `registrations`
-  ADD CONSTRAINT `registrations_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `userInfo` (`userID`);
+ALTER TABLE `reporting`
+  ADD CONSTRAINT `reporting_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `userInfo` (`userID`);
 
 --
 -- Constraints for table `userInfo`
