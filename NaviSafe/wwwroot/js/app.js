@@ -696,28 +696,32 @@ function logout() {
 // ========================================
 
 function showMainApp() {
+  // Hide login page when user is authenticated
   $('#loginPage').hide();
 
-  // Update user info
+  // Update user info in the header (top-right)
   $('#currentUserName').text(currentUser.name);
   $('#currentUserOrg').text('(' + currentUser.organization + ')');
 
-  // Check if user is admin - show dashboard directly
+  // Always initialize the map after login
+  // This is important for BOTH pilots and admins
+  if (!map) {
+    initializeMap();
+  }
+
   if (currentUser.role === 'admin') {
+    // Admin users see the admin dashboard instead of the main pilot UI
     $('#mainApp').hide();
     showAdminDashboard();
   } else {
-    // Regular pilot user - show map and report form
+    // Pilot users see the main app with map and report form
     $('#mainApp').show();
 
-    // Initialize map
-    initializeMap();
-
-    // Load reports
+    // Load existing reports (mock data for now)
     loadReports();
 
-    // Open report form automatically for pilots
-    setTimeout(function() {
+    // Open the "Report Obstacle" form automatically after a short delay
+    setTimeout(function () {
       showReportForm();
     }, 500);
   }
@@ -1435,38 +1439,48 @@ function loadReports() {
 }
 
 function displayReportsOnMap() {
-  // Clear existing markers
+  // Safety check: if the map or drawnItems are not ready, do nothing
+  if (!map || !drawnItems) {
+    return;
+  }
+
+  // Clear existing obstacle layers from the map
   drawnItems.clearLayers();
-  
-  // Add markers for each report
+
+  // Add each report as a GeoJSON layer on the map
   reports.forEach(report => {
     if (report.geometry) {
       const layer = L.geoJSON(report.geometry, {
+        // Style lines and polygons based on report status
         style: function() {
-          let color = '#ffc107'; // Pending - yellow
+          let color = '#ffc107'; // Pending - yellow by default
           if (report.status === 'Approved') color = '#28a745'; // Approved - green
           if (report.status === 'Rejected') color = '#dc3545'; // Rejected - red
-          
+
           return {
             color: color,
             weight: 3
           };
         },
+        // For point geometries, use a marker
         pointToLayer: function(feature, latlng) {
           return L.marker(latlng);
         },
+        // Bind a popup with basic report info
         onEachFeature: function(feature, layer) {
           layer.bindPopup(`
             <div>
               <h6>${report.type}</h6>
               <p class="mb-1"><small>${report.description}</small></p>
               <p class="mb-1"><small><strong>Reported by:</strong> ${report.reporter}</small></p>
-              <p class="mb-0"><small><strong>Status:</strong> <span class="badge badge-status-${report.status.toLowerCase()}">${report.status}</span></small></p>
+              <p class="mb-0"><small><strong>Status:</strong> 
+                <span class="badge badge-status-${report.status.toLowerCase()}">${report.status}</span>
+              </small></p>
             </div>
           `);
         }
       });
-      
+
       drawnItems.addLayer(layer);
     }
   });
@@ -1503,23 +1517,25 @@ function showUserReports() {
 // ========================================
 
 function showAdminDashboard() {
+  // Hide the pilot main app UI and show the admin dashboard
   $('#mainApp').hide();
   $('#adminDashboard').show();
 
-  // Initialize map if not already done (admin needs it for report details)
-  if (!map) {
-    // We'll initialize it later when needed for report details
-  }
-
-  // Load reports first
+  // Load all reports (from mockReports for now)
   loadReports();
-  
-  // Update statistics
+
+  // Update the small statistics cards (total, pending, approved, rejected)
   updateStatistics();
-  
-  // Load reports table
+
+  // Build the table with all reports (using current filters)
   loadReportsTable();
+
+  // Re-bind filter change events to refresh the table when filters change
+  $('#filterStatus, #filterOrganization, #filterType')
+      .off('change')          // Remove any previous handlers to avoid duplicates
+      .on('change', loadReportsTable);
 }
+
 
 function updateStatistics() {
   const total = reports.length;

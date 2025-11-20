@@ -522,6 +522,8 @@ html, body {
   margin-top: 10px;
 }
 
+
+
 /* Drawing Tools Info */
 .draw-toolbar {
   background: white;
@@ -598,3 +600,4 @@ html, body {
 .offline-indicator.show {
   display: block;
 }
+
