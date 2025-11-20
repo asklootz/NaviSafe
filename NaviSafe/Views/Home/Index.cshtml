@@ -9,6 +9,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0d6efd">
   <title>NaviSafe - Aviation Obstacle Reporting</title>
   
   <!-- Bootstrap CSS -->
@@ -136,121 +139,189 @@
 
     <!-- Map Container -->
     <div class="map-container">
-      <div id="map"></div>
-
-      <!-- Map Controls -->
-      <div class="map-controls">
-        <div class="card shadow mb-2">
-          <div class="card-body p-2">
-            <button class="btn btn-primary w-100 mb-2" id="reportObstacleBtn">
-              <i class="bi bi-plus-circle"></i> Report Obstacle
-            </button>
-            <button class="btn btn-outline-secondary w-100" id="toggleLayersBtn">
-              <i class="bi bi-layers"></i> Map Layers
+      <!-- Report Form with Integrated Map -->
+      <div id="reportForm" class="report-form-fullscreen" style="display: none;">
+        <div class="card shadow h-100">
+          <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center" style="padding: 1.5rem 2rem;">
+            <h4 class="mb-0 fw-bold"><i class="bi bi-exclamation-triangle-fill me-3 fs-3"></i>Report Obstacle</h4>
+            <button type="button" class="btn btn-light btn-lg rounded-circle" id="closeReportFormBtn" style="width: 60px; height: 60px; font-size: 1.5rem;">
+              <i class="bi bi-x-lg"></i>
             </button>
           </div>
-        </div>
+          <div class="card-body p-0 d-flex flex-column" style="height: calc(100vh - 160px);">
+            
+            <!-- Form Section -->
+            <div class="p-4 p-md-5" style="height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; background: #f8f9fa;">
+              <form id="obstacleForm">
 
-        <!-- Layers Panel -->
-        <div class="card shadow" id="layersPanel" style="display: none;">
-          <div class="card-header bg-light d-flex justify-content-between align-items-center">
-            <h6 class="mb-0">Map Layers</h6>
-            <button type="button" class="btn-close btn-sm" id="closeLayersBtn"></button>
-          </div>
-          <div class="card-body">
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="radio" name="baseLayer" id="osmLayer" value="osm" checked>
-              <label class="form-check-label" for="osmLayer">
-                OpenStreetMap
-              </label>
+                <!-- Obstacle Type with Autocomplete -->
+                <div class="mb-5 position-relative">
+                  <label for="obstacleType" class="form-label-ipad">
+                    <i class="bi bi-tag-fill fs-3 text-primary me-3"></i>
+                    <span>Obstacle Type <span class="text-danger">*</span></span>
+                  </label>
+                  <input 
+                    type="text" 
+                    class="form-control form-control-ipad" 
+                    id="obstacleType" 
+                    required 
+                    placeholder="Select or type obstacle type..." 
+                    autocomplete="off">
+                  
+                  <!-- Custom Autocomplete Dropdown -->
+                  <div id="obstacleTypeDropdown" class="autocomplete-dropdown" style="display: none;">
+                    <div class="autocomplete-item" data-value="Power Line">
+                      <i class="bi bi-lightning-charge-fill text-warning fs-2 me-3"></i>
+                      <span class="fs-5 fw-bold">Power Line</span>
+                    </div>
+                    <div class="autocomplete-item" data-value="Mast/Tower">
+                      <i class="bi bi-broadcast-pin text-danger fs-2 me-3"></i>
+                      <span class="fs-5 fw-bold">Mast/Tower</span>
+                    </div>
+                    <div class="autocomplete-item" data-value="Other">
+                      <i class="bi bi-three-dots text-muted fs-2 me-3"></i>
+                      <span class="fs-5 fw-bold">Other</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Height -->
+                <div class="mb-5">
+                  <label for="obstacleHeight" class="form-label-ipad">
+                    <i class="bi bi-arrows-vertical fs-3 text-primary me-3"></i>
+                    <span>Height (meters) <span class="text-danger">*</span></span>
+                  </label>
+                  <input 
+                    type="number" 
+                    class="form-control form-control-ipad" 
+                    id="obstacleHeight" 
+                    step="0.1" 
+                    required 
+                    placeholder="Enter height (e.g., 25.5)" 
+                    inputmode="decimal">
+                </div>
+
+                <!-- Integrated Map Section with Controls -->
+                <div class="mb-5" style="height: 400px; position: relative; background: #e9ecef; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                  <div id="map" style="height: 100%; width: 100%;"></div>
+                  
+                  <!-- Map Drawing Mode Toggle -->
+                  <div class="map-drawing-controls">
+                    <button type="button" class="btn-drawing-mode active" id="pointModeBtn" data-mode="point">
+                      <i class="bi bi-geo-alt-fill fs-3 me-2"></i>
+                      <span class="fw-bold">Point</span>
+                    </button>
+                    <button type="button" class="btn-drawing-mode" id="lineModeBtn" data-mode="line">
+                      <i class="bi bi-diagram-3-fill fs-3 me-2"></i>
+                      <span class="fw-bold">Line</span>
+                    </button>
+                    <button type="button" class="btn-drawing-mode btn-clear" id="clearMapBtn">
+                      <i class="bi bi-trash-fill fs-3 me-2"></i>
+                      <span class="fw-bold">Clear</span>
+                    </button>
+                  </div>
+                  
+                  <!-- Finish Line Button (only visible when drawing line) -->
+                  <div class="map-finish-line-btn" id="finishLineBtn" style="display: none;">
+                    <button type="button" class="btn btn-success btn-lg">
+                      <i class="bi bi-check-circle-fill fs-3 me-2"></i>
+                      <span class="fw-bold">Finish Line</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Coordinates with GPS toggle -->
+                <div class="mb-5">
+                  <label class="form-label-ipad">
+                    <i class="bi bi-geo-alt-fill fs-3 text-primary me-3"></i>
+                    <span>Location</span>
+                  </label>
+                  
+                  <!-- GPS Toggle Button -->
+                  <div class="d-grid mb-3">
+                    <button type="button" class="btn btn-gps-toggle" id="gpsToggleBtn">
+                      <i class="bi bi-crosshair fs-3 me-3"></i>
+                      <span class="fs-5 fw-bold">Use My GPS Location</span>
+                      <i class="bi bi-chevron-right fs-4 ms-auto"></i>
+                    </button>
+                  </div>
+                  
+                  <!-- Coordinates Display -->
+                  <div class="coords-display mb-3">
+                    <div class="row g-3">
+                      <div class="col-6">
+                        <div class="coord-box">
+                          <label class="coord-label">Latitude</label>
+                          <input type="text" class="form-control form-control-ipad text-center" id="obstacleLat" readonly placeholder="--">
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="coord-box">
+                          <label class="coord-label">Longitude</label>
+                          <input type="text" class="form-control form-control-ipad text-center" id="obstacleLon" readonly placeholder="--">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="alert alert-light border" id="coordsSource">
+                    <i class="bi bi-cursor-fill text-primary me-2"></i>
+                    <span class="fw-bold">Tap on map above to set location</span>
+                  </div>
+                </div>
+
+                <!-- Description (Optional) -->
+                <div class="mb-5">
+                  <label for="obstacleDescription" class="form-label-ipad">
+                    <i class="bi bi-chat-left-text fs-3 text-secondary me-3"></i>
+                    <span>Description</span>
+                    <span class="badge bg-secondary ms-2">Optional</span>
+                  </label>
+                  <textarea 
+                    class="form-control form-control-ipad" 
+                    id="obstacleDescription" 
+                    rows="5" 
+                    placeholder="Add any additional details about the obstacle..." 
+                    style="resize: none; font-size: 1.15rem;"></textarea>
+                </div>
+
+                <!-- Photo (Optional) -->
+                <div class="mb-5">
+                  <label for="obstaclePhoto" class="form-label-ipad">
+                    <i class="bi bi-camera-fill fs-3 text-secondary me-3"></i>
+                    <span>Photo</span>
+                    <span class="badge bg-secondary ms-2">Optional</span>
+                  </label>
+                  <div class="d-grid">
+                    <label for="obstaclePhoto" class="btn btn-photo-upload">
+                      <i class="bi bi-camera fs-2 me-3"></i>
+                      <span class="fs-5 fw-bold">Take or Select Photo</span>
+                    </label>
+                    <input type="file" class="d-none" id="obstaclePhoto" accept="image/*" capture="environment">
+                  </div>
+                  <div id="photoPreviewContainer"></div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-grid gap-4 mt-5 pb-4">
+                  <button type="submit" class="btn btn-submit-ipad">
+                    <i class="bi bi-send-fill fs-2 me-3"></i>
+                    <span class="fs-3 fw-bold">Submit Report</span>
+                  </button>
+                  <button type="button" class="btn btn-draft-ipad" id="saveDraftBtn">
+                    <i class="bi bi-save fs-3 me-3"></i>
+                    <span class="fs-4 fw-bold">Save as Draft</span>
+                  </button>
+                </div>
+              </form>
             </div>
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="radio" name="baseLayer" id="satelliteLayer" value="satellite">
-              <label class="form-check-label" for="satelliteLayer">
-                Satellite
-              </label>
-            </div>
-            <hr>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="obstaclesLayer" checked>
-              <label class="form-check-label" for="obstaclesLayer">
-                Aviation Obstacles (WMS)
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Report Form -->
-      <div id="reportForm" class="report-form" style="display: none;">
-        <div class="card shadow">
-          <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h6 class="mb-0">Report Aviation Obstacle</h6>
-            <button type="button" class="btn-close btn-close-white" id="closeReportFormBtn"></button>
-          </div>
-          <div class="card-body">
-            <form id="obstacleForm">
-              <div class="alert alert-info small">
-                <i class="bi bi-info-circle"></i> Draw the obstacle on the map as a point or line
-              </div>
-
-              <div class="mb-3">
-                <label for="obstacleType" class="form-label">Obstacle Type *</label>
-                <select class="form-select" id="obstacleType" required>
-                  <option value="">Select type...</option>
-                  <option value="Mast">Mast/Tower</option>
-                  <option value="PowerLine">Power Line</option>
-                  <option value="WindTurbine">Wind Turbine</option>
-                  <option value="Building">Building (over 15m)</option>
-                  <option value="Tower">Communications Tower</option>
-                  <option value="Chimney">Chimney</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-
-              <div class="mb-3">
-                <label for="obstacleHeight" class="form-label">Height (meters)</label>
-                <input type="number" class="form-control" id="obstacleHeight" step="0.1">
-                <small class="text-muted">Estimate if unknown</small>
-              </div>
-
-              <div class="mb-3">
-                <label for="obstacleDescription" class="form-label">Description *</label>
-                <textarea class="form-control" id="obstacleDescription" rows="3" required placeholder="Describe the obstacle, location, and any safety concerns..."></textarea>
-              </div>
-
-              <div class="mb-3">
-                <label for="obstacleLighting" class="form-label">Lighting</label>
-                <select class="form-select" id="obstacleLighting">
-                  <option value="">Unknown</option>
-                  <option value="Yes">Yes - obstacle is lit</option>
-                  <option value="No">No - obstacle is not lit</option>
-                  <option value="Defective">Defective - lights not working</option>
-                </select>
-              </div>
-
-              <div class="mb-3">
-                <label for="obstaclePhoto" class="form-label">Photo (optional)</label>
-                <input type="file" class="form-control" id="obstaclePhoto" accept="image/*" capture="environment">
-                <small class="text-muted">Take a photo of the obstacle if possible</small>
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label">Coordinates</label>
-                <input type="text" class="form-control" id="obstacleCoords" readonly>
-                <small class="text-muted">WGS84 (auto-filled)</small>
-              </div>
-
-              <button type="submit" class="btn btn-primary w-100">
-                <i class="bi bi-send"></i> Submit Report
-              </button>
-            </form>
           </div>
         </div>
       </div>
 
     </div>
   </div>
+
 
   <!-- Admin Dashboard (for Kartverket) -->
   <div id="adminDashboard" style="display: none;">

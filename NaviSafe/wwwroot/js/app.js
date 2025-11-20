@@ -12,15 +12,22 @@ let reports = [];
 let currentReportId = null;
 let baseLayers = {};
 let wmsLayer = null;
+let userLocation = null;
+let currentMarker = null;
+let drafts = [];
+let drawingMode = 'point'; // 'point' or 'line'
+let linePoints = []; // Array to store points when drawing line
+let tempPolyline = null; // Temporary polyline while drawing
+
 
 // Mock users database (replace with API)
 const mockUsers = [
   {
     id: 1,
     name: "Test Pilot",
-    email: "pilot@naa.no",
+    email: "pilot@nla.no",
     password: "test123",
-    organization: "NAA",
+    organization: "NLA",
     role: "pilot"
   },
   {
@@ -34,7 +41,352 @@ const mockUsers = [
 ];
 
 // Mock reports database (replace with API)
-const mockReports = [];
+const mockReports = [
+  {
+    id: 1,
+    type: "Power Line",
+    height: 45,
+    description: "High voltage power line crossing valley near Stavanger Airport. Multiple transmission towers with cables at approximately 45m height.",
+    geometry: {
+      type: "Feature",
+      geometry: {
+        type: "LineString",
+        coordinates: [
+          [5.6284, 58.8769],
+          [5.6310, 58.8790],
+          [5.6345, 58.8815],
+          [5.6380, 58.8840]
+        ]
+      },
+      properties: {}
+    },
+    latitude: "58.8769",
+    longitude: "5.6284",
+    reporter: "Ola Nordmann",
+    reporterEmail: "ola.nordmann@nla.no",
+    organization: "Norsk Luftambulanse",
+    status: "Approved",
+    reportDate: "2024-11-15T09:23:00Z",
+    photo: null
+  },
+  {
+    id: 2,
+    type: "Wind Turbine",
+    height: 120,
+    description: "Large wind turbine at Raggovidda wind farm. Total height including rotor blade at maximum position is approximately 120 meters. Turbine has red obstruction lighting.",
+    geometry: {
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [23.6543, 70.3891]
+      },
+      properties: {}
+    },
+    latitude: "70.3891",
+    longitude: "23.6543",
+    reporter: "Kari Hansen",
+    reporterEmail: "kari.hansen@wideroe.no",
+    organization: "Widerøe",
+    status: "Approved",
+    reportDate: "2024-11-14T14:45:00Z",
+    photo: null
+  },
+  {
+    id: 3,
+    type: "Communications Tower",
+    height: 85,
+    description: "Telecommunications tower on hilltop near Trondheim. Red and white painted with flashing red lights at top. Located on elevated terrain.",
+    geometry: {
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [10.3951, 63.4305]
+      },
+      properties: {}
+    },
+    latitude: "63.4305",
+    longitude: "10.3951",
+    reporter: "Lars Bergstrøm",
+    reporterEmail: "lars.bergstrom@nla.no",
+    organization: "Norsk Luftambulanse",
+    status: "Pending",
+    reportDate: "2024-11-17T11:20:00Z",
+    photo: null
+  },
+  {
+    id: 4,
+    type: "Crane",
+    height: 65,
+    description: "Construction crane at new hospital building site in Bergen. Temporary obstacle, expected to be removed in 6 months. Yellow tower crane with red warning lights.",
+    geometry: {
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [5.3221, 60.3913]
+      },
+      properties: {}
+    },
+    latitude: "60.3913",
+    longitude: "5.3221",
+    reporter: "Maria Olsen",
+    reporterEmail: "maria.olsen@nla.no",
+    organization: "NLA",
+    status: "Pending",
+    reportDate: "2024-11-18T08:15:00Z",
+    photo: null
+  },
+  {
+    id: 5,
+    type: "Building (over 15m)",
+    height: 28,
+    description: "New apartment building near Torp Airport approach path. Building exceeds 15m obstacle notification requirement. Flat roof, no lighting.",
+    geometry: {
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [10.2586, 59.1867]
+      },
+      properties: {}
+    },
+    latitude: "59.1867",
+    longitude: "10.2586",
+    reporter: "Ola Nordmann",
+    reporterEmail: "ola.nordmann@nla.no",
+    organization: "Norsk Luftambulanse",
+    status: "Approved",
+    reportDate: "2024-11-12T16:30:00Z",
+    photo: null
+  },
+  {
+    id: 6,
+    type: "Mast/Tower",
+    height: 95,
+    description: "Radio broadcast mast near Bodø. Guyed steel lattice tower with multiple antenna arrays. Red obstruction lighting installed. Located on slight elevation.",
+    geometry: {
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [14.4051, 67.2804]
+      },
+      properties: {}
+    },
+    latitude: "67.2804",
+    longitude: "14.4051",
+    reporter: "Erik Johnsen",
+    reporterEmail: "erik.johnsen@sas.no",
+    organization: "SAS",
+    status: "Approved",
+    reportDate: "2024-11-10T10:45:00Z",
+    photo: null
+  },
+  {
+    id: 7,
+    type: "Bridge",
+    height: 35,
+    description: "Suspension bridge over Hardangerfjord. Main cables approximately 35m above water level at center span. Bridge deck width 12m.",
+    geometry: {
+      type: "Feature",
+      geometry: {
+        type: "LineString",
+        coordinates: [
+          [6.5432, 60.3245],
+          [6.5478, 60.3256],
+          [6.5521, 60.3268],
+          [6.5567, 60.3279]
+        ]
+      },
+      properties: {}
+    },
+    latitude: "60.3245",
+    longitude: "6.5432",
+    reporter: "Kari Hansen",
+    reporterEmail: "kari.hansen@wideroe.no",
+    organization: "Widerøe",
+    status: "Rejected",
+    reportDate: "2024-11-09T13:15:00Z",
+    photo: null
+  },
+  {
+    id: 8,
+    type: "Chimney",
+    height: 78,
+    description: "Industrial chimney at cement factory in Brevik. Red and white painted concrete stack. Smoke occasionally visible. Red obstruction lights at top.",
+    geometry: {
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [9.7012, 59.0512]
+      },
+      properties: {}
+    },
+    latitude: "59.0512",
+    longitude: "9.7012",
+    reporter: "Lars Bergstrøm",
+    reporterEmail: "lars.bergstrom@nla.no",
+    organization: "Norsk Luftambulanse",
+    status: "Approved",
+    reportDate: "2024-11-08T09:00:00Z",
+    photo: null
+  },
+  {
+    id: 9,
+    type: "Antenna",
+    height: 42,
+    description: "Cellular network antenna array on building rooftop in Tromsø city center. Multiple panel antennas and microwave dishes. Total height above ground 42m.",
+    geometry: {
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [18.9553, 69.6492]
+      },
+      properties: {}
+    },
+    latitude: "69.6492",
+    longitude: "18.9553",
+    reporter: "Maria Olsen",
+    reporterEmail: "maria.olsen@nla.no",
+    organization: "NLA",
+    status: "Pending",
+    reportDate: "2024-11-16T15:50:00Z",
+    photo: null
+  },
+  {
+    id: 10,
+    type: "Power Line",
+    height: 52,
+    description: "High voltage transmission line near Kristiansand. Power lines crossing E39 highway. Six conductors at approximately 52m height. No lighting.",
+    geometry: {
+      type: "Feature",
+      geometry: {
+        type: "LineString",
+        coordinates: [
+          [8.0012, 58.1467],
+          [8.0089, 58.1489],
+          [8.0145, 58.1512]
+        ]
+      },
+      properties: {}
+    },
+    latitude: "58.1467",
+    longitude: "8.0012",
+    reporter: "Erik Johnsen",
+    reporterEmail: "erik.johnsen@sas.no",
+    organization: "SAS",
+    status: "Approved",
+    reportDate: "2024-11-11T12:30:00Z",
+    photo: null
+  },
+  {
+    id: 11,
+    type: "Wind Turbine",
+    height: 135,
+    description: "Offshore wind turbine at Hywind Tampen floating wind farm. Total height to blade tip approximately 135m above sea level. White tower with red markings.",
+    geometry: {
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [3.7123, 61.0892]
+      },
+      properties: {}
+    },
+    latitude: "61.0892",
+    longitude: "3.7123",
+    reporter: "Ola Nordmann",
+    reporterEmail: "ola.nordmann@nla.no",
+    organization: "Norsk Luftambulanse",
+    status: "Approved",
+    reportDate: "2024-11-07T08:20:00Z",
+    photo: null
+  },
+  {
+    id: 12,
+    type: "Crane",
+    height: 58,
+    description: "Mobile crane at port facility in Ålesund. Yellow mobile crane used for ship loading. Position may vary. Estimated height 58m when boom is vertical.",
+    geometry: {
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [6.1549, 62.4722]
+      },
+      properties: {}
+    },
+    latitude: "62.4722",
+    longitude: "6.1549",
+    reporter: "Kari Hansen",
+    reporterEmail: "kari.hansen@wideroe.no",
+    organization: "Widerøe",
+    status: "Rejected",
+    reportDate: "2024-11-13T14:00:00Z",
+    photo: null
+  },
+  {
+    id: 13,
+    type: "Communications Tower",
+    height: 105,
+    description: "Major telecommunications tower on Grefsenkollen overlooking Oslo. Multiple cellular and broadcast antennas. Red aviation warning lights. Very prominent landmark.",
+    geometry: {
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [10.8234, 59.9667]
+      },
+      properties: {}
+    },
+    latitude: "59.9667",
+    longitude: "10.8234",
+    reporter: "Lars Bergstrøm",
+    reporterEmail: "lars.bergstrom@nla.no",
+    organization: "Norsk Luftambulanse",
+    status: "Approved",
+    reportDate: "2024-11-05T11:10:00Z",
+    photo: null
+  },
+  {
+    id: 14,
+    type: "Mast/Tower",
+    height: 72,
+    description: "Meteorological observation tower at Finse mountain station. White painted lattice tower with weather instruments. Located at 1222m elevation.",
+    geometry: {
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [7.5005, 60.6042]
+      },
+      properties: {}
+    },
+    latitude: "60.6042",
+    longitude: "7.5005",
+    reporter: "Maria Olsen",
+    reporterEmail: "maria.olsen@nla.no",
+    organization: "NLA",
+    status: "Pending",
+    reportDate: "2024-11-18T10:05:00Z",
+    photo: null
+  },
+  {
+    id: 15,
+    type: "Building (over 15m)",
+    height: 34,
+    description: "New hotel building in Lillehammer near airport approach. Seven story building with peaked roof. Total height 34m. Reflective windows on south facade.",
+    geometry: {
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [10.4662, 61.1153]
+      },
+      properties: {}
+    },
+    latitude: "61.1153",
+    longitude: "10.4662",
+    reporter: "Erik Johnsen",
+    reporterEmail: "erik.johnsen@sas.no",
+    organization: "SAS",
+    status: "Approved",
+    reportDate: "2024-11-06T16:45:00Z",
+    photo: null
+  }
+];
 
 // ========================================
 // INITIALIZATION
@@ -61,6 +413,44 @@ $(document).ready(function() {
     window.permalinkReportId = reportId;
   }
 });
+
+// iPad Pro specific optimizations
+function optimizeForIPad() {
+  // Detect iPad
+  const isIPad = /iPad|Macintosh/.test(navigator.userAgent) && 'ontouchend' in document;
+
+  if (isIPad) {
+    document.body.classList.add('ipad-device');
+
+    // Prevent double-tap zoom
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function(event) {
+      const now = Date.now();
+      if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, false);
+
+    // Better scroll handling
+    document.addEventListener('touchmove', function(e) {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    // Haptic feedback on form submit (if available)
+    if (window.navigator && window.navigator.vibrate) {
+      $('#obstacleForm').on('submit', function() {
+        window.navigator.vibrate(50);
+      });
+
+      $('#saveDraftBtn').on('click', function() {
+        window.navigator.vibrate(30);
+      });
+    }
+  }
+}
 
 // ========================================
 // AUTHENTICATION
@@ -103,6 +493,9 @@ function setupEventHandlers() {
   $('#closeReportFormBtn').click(function() {
     hideReportForm();
   });
+
+  // Autocomplete for Obstacle Type
+  setupObstacleTypeAutocomplete();
 
   // Toggle layers
   $('#toggleLayersBtn').click(function() {
@@ -161,6 +554,52 @@ function setupEventHandlers() {
   // Photo preview
   $('#obstaclePhoto').change(function(e) {
     previewPhoto(e.target.files[0]);
+  });
+
+  // GPS toggle button
+  $('#gpsToggleBtn').click(function() {
+    const btn = $(this);
+    if (btn.hasClass('active')) {
+      // Deactivate GPS
+      btn.removeClass('active');
+      btn.find('span').text('Use My GPS Location');
+      useMapLocation();
+      if (window.accuracyCircle) {
+        map.removeLayer(window.accuracyCircle);
+      }
+    } else {
+      // Activate GPS
+      useGPSLocation();
+    }
+  });
+
+  // Save draft button
+  $('#saveDraftBtn').click(function() {
+    saveDraft();
+  });
+
+  // Drawing mode toggle buttons
+  $('#pointModeBtn').click(function() {
+    setDrawingMode('point');
+  });
+
+  $('#lineModeBtn').click(function() {
+    setDrawingMode('line');
+  });
+
+  // Clear map button
+  $('#clearMapBtn').click(function() {
+    clearMapDrawing();
+  });
+
+  // Finish line button
+  $(document).on('click', '#finishLineBtn button', function() {
+    finishLineDrawing();
+  });
+
+  // Map click for setting location
+  $(document).on('click', '#map', function(e) {
+    // This will be handled by Leaflet click event
   });
 }
 
@@ -258,26 +697,49 @@ function logout() {
 
 function showMainApp() {
   $('#loginPage').hide();
-  $('#mainApp').show();
-  
+
   // Update user info
   $('#currentUserName').text(currentUser.name);
   $('#currentUserOrg').text('(' + currentUser.organization + ')');
-  
-  // Initialize map
-  initializeMap();
-  
-  // Load reports
-  loadReports();
+
+  // Check if user is admin - show dashboard directly
+  if (currentUser.role === 'admin') {
+    $('#mainApp').hide();
+    showAdminDashboard();
+  } else {
+    // Regular pilot user - show map and report form
+    $('#mainApp').show();
+
+    // Initialize map
+    initializeMap();
+
+    // Load reports
+    loadReports();
+
+    // Open report form automatically for pilots
+    setTimeout(function() {
+      showReportForm();
+    }, 500);
+  }
 }
 
 function initializeMap() {
   // Create map centered on Norway
   const defaultView = [65.0, 13.0];
   const defaultZoom = 5;
-  
-  map = L.map('map').setView(defaultView, defaultZoom);
 
+  map = L.map('map', {
+    zoomControl: true,
+    touchZoom: true,
+    scrollWheelZoom: true,
+    doubleClickZoom: true,
+    boxZoom: false,
+    tap: true,
+    tapTolerance: 20, // Increased for better iPad touch
+    zoomAnimation: true,
+    markerZoomAnimation: true
+  }).setView(defaultView, defaultZoom);
+  
   // Base layers
   baseLayers.osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -393,63 +855,338 @@ function toggleObstaclesLayer(show) {
 // ========================================
 
 function showReportForm() {
-  $('#reportForm').show();
-  
-  // Enable drawing
-  if (!map.hasLayer(drawnItems)) {
-    map.addLayer(drawnItems);
-  }
-  map.addControl(drawControl);
-  
-  // Clear previous drawings
+  $('#reportForm').fadeIn(300);
+
+  // Clear previous data
   drawnItems.clearLayers();
   currentObstacleGeometry = null;
   $('#obstacleForm')[0].reset();
-  $('#obstacleCoords').val('');
+  $('#obstacleLat').val('');
+  $('#obstacleLon').val('');
+  $('#photoPreviewContainer').empty();
+
+  // Reset GPS button
+  $('#gpsToggleBtn').removeClass('active');
+  $('#gpsToggleBtn').html('<i class="bi bi-crosshair fs-3 me-3"></i><span class="fs-5 fw-bold">Use My GPS Location</span><i class="bi bi-chevron-right fs-4 ms-auto"></i>');
+
+  // Reset photo button
+  $('.btn-photo-upload').html('<i class="bi bi-camera fs-2 me-3"></i><span class="fs-5 fw-bold">Take or Select Photo</span>');
+  $('.btn-photo-upload').removeClass('border-success');
+
+  // Reset status
+  $('#coordsSource').removeClass('alert-success').addClass('alert-light');
+  $('#coordsSource').html('<i class="bi bi-cursor-fill text-primary me-2"></i><span class="fw-bold">Tap on map above to set location</span>');
+
+  // Get user's GPS location in background
+  getUserLocation();
+
+  // Add map click handler for manual location selection
+  map.on('click', onMapClick);
+
+  // Ensure map renders properly
+  setTimeout(function() {
+    map.invalidateSize();
+  }, 350);
 }
 
 function hideReportForm() {
-  $('#reportForm').hide();
-  
-  // Disable drawing
-  if (drawControl) {
-    map.removeControl(drawControl);
-  }
-  
-  // Clear drawings
+  $('#reportForm').fadeOut(300);
+
+  // Remove map click handler
+  map.off('click', onMapClick);
+
+  // Clear drawings and markers
   drawnItems.clearLayers();
   currentObstacleGeometry = null;
+  if (currentMarker) {
+    map.removeLayer(currentMarker);
+    currentMarker = null;
+  }
+
+  // Clear accuracy circle
+  if (window.accuracyCircle) {
+    map.removeLayer(window.accuracyCircle);
+    window.accuracyCircle = null;
+  }
+}
+
+function onMapClick(e) {
+  if (drawingMode === 'point') {
+    // Point mode: single click sets location
+    setMapLocation(e.latlng.lat, e.latlng.lng);
+  } else if (drawingMode === 'line') {
+    // Line mode: build up points for polyline
+    addLinePoint(e.latlng);
+  }
+}
+
+function addLinePoint(latlng) {
+  linePoints.push(latlng);
+
+  // Add a marker for this point
+  const pointMarker = L.circleMarker(latlng, {
+    radius: 8,
+    fillColor: '#0d6efd',
+    color: 'white',
+    weight: 3,
+    fillOpacity: 1
+  }).addTo(drawnItems);
+
+  // Update or create temporary polyline
+  if (linePoints.length > 1) {
+    if (tempPolyline) {
+      map.removeLayer(tempPolyline);
+    }
+
+    tempPolyline = L.polyline(linePoints, {
+      color: '#0d6efd',
+      weight: 4,
+      opacity: 0.7,
+      dashArray: '10, 5'
+    }).addTo(map);
+
+    // Show finish button
+    $('#finishLineBtn').show();
+
+    // Update info overlay
+    $('#mapInfoText').text(`${linePoints.length} points added - Tap to add more or click Finish Line`);
+  } else {
+    // First point
+    $('#mapInfoText').text('Tap map to add next point');
+  }
+
+  // Update coordinates to show first and last point
+  const firstPoint = linePoints[0];
+  const lastPoint = linePoints[linePoints.length - 1];
+  $('#obstacleLat').val(`${firstPoint.lat.toFixed(6)} → ${lastPoint.lat.toFixed(6)}`);
+  $('#obstacleLon').val(`${firstPoint.lng.toFixed(6)} → ${lastPoint.lng.toFixed(6)}`);
+
+  // Update status
+  $('#coordsSource').removeClass('alert-success').addClass('alert-light');
+  $('#coordsSource').html(`<i class=\"bi bi-diagram-3-fill text-primary me-2\"></i><span class=\"fw-bold\">Line drawing: ${linePoints.length} point${linePoints.length > 1 ? 's' : ''}</span>`);
+}
+
+function setMapLocation(lat, lng) {
+  $('#obstacleLat').val(lat.toFixed(6));
+  $('#obstacleLon').val(lng.toFixed(6));
+
+  // Check if GPS is active
+  const gpsActive = $('#gpsToggleBtn').hasClass('active');
+
+  if (!gpsActive) {
+    $('#coordsSource').removeClass('alert-success').addClass('alert-light');
+    $('#coordsSource').html('<i class="bi bi-pin-map-fill text-success me-2"></i><span class="fw-bold">Location set on map</span>');
+  }
+
+  // Add visual feedback
+  $('#obstacleLat, #obstacleLon').addClass('border-primary');
+  setTimeout(function() {
+    if (!gpsActive) {
+      $('#obstacleLat, #obstacleLon').removeClass('border-primary');
+    }
+  }, 1500);
+
+  // Add/update marker
+  if (currentMarker) {
+    map.removeLayer(currentMarker);
+  }
+
+  // Custom marker icon for better visibility on iPad
+  const markerColor = gpsActive ? '#28a745' : '#0d6efd';
+  const customIcon = L.divIcon({
+    className: 'custom-obstacle-marker',
+    html: `<div style="background-color: ${markerColor}; width: 40px; height: 40px; border-radius: 50%; border: 5px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.4); animation: marker-pop 0.3s ease;"></div>`,
+    iconSize: [40, 40],
+    iconAnchor: [20, 20]
+  });
+
+  currentMarker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
+
+  // Pan to marker
+  map.panTo([lat, lng]);
+
+  // Create geometry for the point
+  currentObstacleGeometry = {
+    type: 'Feature',
+    geometry: {
+      type: 'Point',
+      coordinates: [lng, lat]
+    },
+    properties: {}
+  };
+}
+
+function getUserLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+        function(position) {
+          userLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            accuracy: position.coords.accuracy
+          };
+
+          console.log('GPS acquired:', userLocation);
+
+          // If GPS button is being activated, complete the process
+          if ($('#gpsToggleBtn').prop('disabled')) {
+            $('#gpsToggleBtn').prop('disabled', false);
+            useGPSLocation();
+          }
+        },
+        function(error) {
+          console.error('GPS error:', error);
+          let errorMsg = 'GPS unavailable';
+          let details = 'Try enabling location services';
+
+          if (error.code === 1) {
+            errorMsg = 'GPS permission denied';
+            details = 'Please allow location access in settings';
+          } else if (error.code === 2) {
+            errorMsg = 'GPS position unavailable';
+            details = 'Cannot determine current location';
+          } else if (error.code === 3) {
+            errorMsg = 'GPS timeout';
+            details = 'Location request took too long';
+          }
+
+          // Reset GPS button
+          if ($('#gpsToggleBtn').prop('disabled')) {
+            $('#gpsToggleBtn').prop('disabled', false);
+            $('#gpsToggleBtn').html('<i class="bi bi-crosshair fs-3 me-3"></i><span class="fs-5 fw-bold">Use My GPS Location</span><i class="bi bi-chevron-right fs-4 ms-auto"></i>');
+          }
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 0
+        }
+    );
+  }
+}
+
+function useGPSLocation() {
+  if (userLocation) {
+    setMapLocation(userLocation.lat, userLocation.lng);
+
+    // Update GPS button
+    const btn = $('#gpsToggleBtn');
+    btn.addClass('active');
+    btn.html('<i class="bi bi-check-circle-fill fs-2 me-3"></i><span class="fs-5 fw-bold">GPS Location Active</span><i class="bi bi-chevron-right fs-4 ms-auto"></i>');
+
+    // Update status
+    $('#coordsSource').removeClass('alert-light').addClass('alert-success');
+    $('#coordsSource').html('<i class="bi bi-check-circle-fill text-success me-2"></i><span class="fw-bold">GPS location acquired</span>');
+
+    $('#obstacleLat, #obstacleLon').addClass('border-success');
+    map.setView([userLocation.lat, userLocation.lng], 16);
+
+    // Add accuracy circle if available
+    if (userLocation.accuracy) {
+      if (window.accuracyCircle) {
+        map.removeLayer(window.accuracyCircle);
+      }
+      window.accuracyCircle = L.circle([userLocation.lat, userLocation.lng], {
+        radius: userLocation.accuracy,
+        color: '#28a745',
+        fillColor: '#28a745',
+        fillOpacity: 0.15,
+        weight: 3,
+        dashArray: '10, 5'
+      }).addTo(map);
+    }
+  } else {
+    // Show loading
+    const btn = $('#gpsToggleBtn');
+    btn.prop('disabled', true);
+    btn.html('<i class="bi bi-arrow-clockwise spin fs-2 me-3"></i><span class="fs-5 fw-bold">Getting GPS...</span>');
+
+    setTimeout(function() {
+      if (!userLocation) {
+        alert('⚠️ GPS location not available.\n\nPlease:\n• Allow location access\n• Try again\n• Or tap on map to set location manually');
+        btn.prop('disabled', false);
+        btn.html('<i class="bi bi-crosshair fs-3 me-3"></i><span class="fs-5 fw-bold">Use My GPS Location</span><i class="bi bi-chevron-right fs-4 ms-auto"></i>');
+      }
+    }, 5000);
+
+    getUserLocation();
+  }
+}
+
+function useMapLocation() {
+  if ($('#obstacleLat').val() && $('#obstacleLon').val()) {
+    $('#coordsSource').removeClass('alert-success').addClass('alert-light');
+    $('#coordsSource').html('<i class="bi bi-pin-map-fill text-primary me-2"></i><span class="fw-bold">Using map location</span>');
+    $('#obstacleLat, #obstacleLon').removeClass('border-success');
+  } else {
+    $('#coordsSource').removeClass('alert-success').addClass('alert-light');
+    $('#coordsSource').html('<i class="bi bi-cursor-fill text-primary me-2"></i><span class="fw-bold">Tap on map above to set location</span>');
+  }
 }
 
 function previewPhoto(file) {
   if (file) {
     const reader = new FileReader();
     reader.onload = function(e) {
-      // Remove existing preview
-      $('.photo-preview').remove();
-      
-      // Add new preview
-      const img = $('<img>')
-        .attr('src', e.target.result)
-        .addClass('photo-preview');
-      $('#obstaclePhoto').after(img);
+      // Clear existing preview
+      $('#photoPreviewContainer').empty();
+
+      // Add new preview with remove button
+      const previewHTML = `
+        <div class="position-relative">
+          <img src="${e.target.result}" alt="Photo preview" style="width: 100%; max-height: 300px; object-fit: cover; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+          <button type="button" class="btn btn-danger rounded-circle position-absolute" id="removePhotoBtn" style="top: 10px; right: 10px; width: 50px; height: 50px;">
+            <i class="bi bi-x-lg fs-4"></i>
+          </button>
+        </div>
+      `;
+      $('#photoPreviewContainer').html(previewHTML);
+
+      // Update photo button
+      $('.btn-photo-upload').html('<i class="bi bi-camera-fill fs-2 me-3"></i><span class="fs-5 fw-bold text-success">Photo Added ✓</span>');
+      $('.btn-photo-upload').addClass('border-success');
+
+      // Remove photo handler
+      $('#removePhotoBtn').click(function() {
+        $('#photoPreviewContainer').empty();
+        $('#obstaclePhoto').val('');
+        $('.btn-photo-upload').html('<i class="bi bi-camera fs-2 me-3"></i><span class="fs-5 fw-bold">Take or Select Photo</span>');
+        $('.btn-photo-upload').removeClass('border-success');
+      });
     };
     reader.readAsDataURL(file);
   }
 }
 
 function submitObstacle() {
-  if (!currentObstacleGeometry) {
-    alert('You must draw the obstacle on the map first');
+  // Validate required fields
+  const obstacleType = $('#obstacleType').val();
+  const obstacleHeight = $('#obstacleHeight').val();
+  const lat = $('#obstacleLat').val();
+  const lon = $('#obstacleLon').val();
+
+  if (!obstacleType || !obstacleHeight) {
+    alert('⚠️ Please fill in all required fields:\n• Obstacle Type\n• Height');
     return;
   }
+
+  if (!lat || !lon) {
+    alert('📍 Please set obstacle location:\n• Tap on map, or\n• Enable GPS location');
+    return;
+  }
+
+  // Show loading state
+  const submitBtn = $('button[type="submit"]');
+  const originalText = submitBtn.html();
+  submitBtn.prop('disabled', true).html('<i class="bi bi-arrow-clockwise spin me-2"></i>Submitting...');
 
   const formData = {
     type: $('#obstacleType').val(),
     height: $('#obstacleHeight').val() || null,
     description: $('#obstacleDescription').val(),
-    lighting: $('#obstacleLighting').val(),
     geometry: currentObstacleGeometry,
+    latitude: lat,
+    longitude: lon,
     reporter: currentUser.name,
     reporterEmail: currentUser.email,
     organization: currentUser.organization,
@@ -484,23 +1221,195 @@ function submitObstacle() {
   */
 
   // Mock implementation
-  const newReport = {
-    id: mockReports.length + 1,
-    ...formData
+  setTimeout(function() {
+    const newReport = {
+      id: mockReports.length + 1,
+      ...formData
+    };
+    mockReports.push(newReport);
+    reports.push(newReport);
+
+    // Success feedback
+    submitBtn.prop('disabled', false).html(originalText);
+
+    // Show success message
+    const successHTML = `
+      <div class="alert alert-success alert-dismissible fade show" role="alert" style="position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 10000; min-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <strong>Success!</strong> Obstacle report submitted.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    `;
+    $('body').append(successHTML);
+
+    setTimeout(function() {
+      $('.alert-success').alert('close');
+    }, 3000);
+
+    hideReportForm();
+    displayReportsOnMap();
+
+    // Generate permalink
+    if (currentObstacleGeometry.geometry.type === 'Point') {
+      const coords = currentObstacleGeometry.geometry.coordinates;
+      const permalink = `${window.location.origin}${window.location.pathname}?lat=${coords[1]}&lng=${coords[0]}&zoom=15&report=${newReport.id}`;
+      console.log('Permalink:', permalink);
+    }
+  }, 500); // Simulate API delay
+}
+
+function saveDraft() {
+  const draftData = {
+    id: 'draft_' + Date.now(),
+    type: $('#obstacleType').val(),
+    height: $('#obstacleHeight').val(),
+    description: $('#obstacleDescription').val(),
+    latitude: $('#obstacleLat').val(),
+    longitude: $('#obstacleLon').val(),
+    geometry: currentObstacleGeometry,
+    savedAt: new Date().toISOString()
   };
-  mockReports.push(newReport);
-  reports.push(newReport);
-  
-  alert('Report submitted successfully!');
-  hideReportForm();
-  displayReportsOnMap();
-  
-  // Generate permalink
-  if (currentObstacleGeometry.geometry.type === 'Point') {
-    const coords = currentObstacleGeometry.geometry.coordinates;
-    const permalink = `${window.location.origin}${window.location.pathname}?lat=${coords[1]}&lng=${coords[0]}&zoom=15&report=${newReport.id}`;
-    console.log('Permalink:', permalink);
+
+  // Show loading state
+  const draftBtn = $('#saveDraftBtn');
+  const originalText = draftBtn.html();
+  draftBtn.prop('disabled', true).html('<i class="bi bi-arrow-clockwise spin me-2"></i>Saving...');
+
+  setTimeout(function() {
+    // Save to localStorage
+    const existingDrafts = JSON.parse(localStorage.getItem('navisafe_drafts') || '[]');
+    existingDrafts.push(draftData);
+    localStorage.setItem('navisafe_drafts', JSON.stringify(existingDrafts));
+
+    draftBtn.prop('disabled', false).html(originalText);
+
+    // Success feedback
+    const successHTML = `
+      <div class="alert alert-info alert-dismissible fade show" role="alert" style="position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 10000; min-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+        <i class="bi bi-save-fill me-2"></i>
+        <strong>Draft saved!</strong> You can continue later.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    `;
+    $('body').append(successHTML);
+
+    setTimeout(function() {
+      $('.alert-info').alert('close');
+    }, 3000);
+
+    console.log('Draft saved:', draftData);
+  }, 300);
+}
+
+function setDrawingMode(mode) {
+  drawingMode = mode;
+
+  // Update button states
+  $('#pointModeBtn').toggleClass('active', mode === 'point');
+  $('#lineModeBtn').toggleClass('active', mode === 'line');
+
+  // Clear existing drawings
+  drawnItems.clearLayers();
+  currentObstacleGeometry = null;
+  linePoints = [];
+  if (tempPolyline) {
+    map.removeLayer(tempPolyline);
+    tempPolyline = null;
   }
+  if (currentMarker) {
+    map.removeLayer(currentMarker);
+    currentMarker = null;
+  }
+
+  // Reset form
+  $('#obstacleLat').val('');
+  $('#obstacleLon').val('');
+
+  // Hide finish line button
+  $('#finishLineBtn').hide();
+
+  // Update info overlay text based on mode
+  if (mode === 'point') {
+    $('#mapInfoText').text('Tap map to mark point');
+  } else {
+    $('#mapInfoText').text('Tap map to start drawing line');
+  }
+
+  // Reset status
+  $('#coordsSource').removeClass('alert-success').addClass('alert-light');
+  if (mode === 'point') {
+    $('#coordsSource').html('<i class=\"bi bi-cursor-fill text-primary me-2\"></i><span class=\"fw-bold\">Tap on map to set location</span>');
+  } else {
+    $('#coordsSource').html('<i class=\"bi bi-diagram-3-fill text-primary me-2\"></i><span class=\"fw-bold\">Tap on map to start drawing line</span>');
+  }
+}
+
+function finishLineDrawing() {
+  if (linePoints.length < 2) {
+    alert('⚠️ A line must have at least two points.');
+    return;
+  }
+
+  // Create a polyline from the points
+  const polyline = L.polyline(linePoints, { color: '#0d6efd' }).addTo(drawnItems);
+
+  // Save geometry
+  currentObstacleGeometry = polyline.toGeoJSON();
+
+  // Update coordinates display
+  $('#obstacleCoords').val(`Line with ${linePoints.length} points`);
+
+  // Clear points
+  linePoints = [];
+  tempPolyline = null;
+
+  // Hide finish button
+  $('#finishLineBtn').hide();
+
+  // Add map click handler for manual location selection
+  map.on('click', onMapClick);
+
+  // Ensure map renders properly
+  setTimeout(function() {
+    map.invalidateSize();
+  }, 350);
+}
+
+function clearMapDrawing() {
+  // Clear all drawn items
+  drawnItems.clearLayers();
+
+  // Reset geometry
+  currentObstacleGeometry = null;
+
+  // Reset form fields
+  $('#obstacleForm')[0].reset();
+  $('#obstacleLat').val('');
+  $('#obstacleLon').val('');
+  $('#photoPreviewContainer').empty();
+
+  // Reset GPS button
+  $('#gpsToggleBtn').removeClass('active');
+  $('#gpsToggleBtn').html('<i class="bi bi-crosshair fs-3 me-3"></i><span class="fs-5 fw-bold">Use My GPS Location</span><i class="bi bi-chevron-right fs-4 ms-auto"></i>');
+
+  // Reset photo button
+  $('.btn-photo-upload').html('<i class="bi bi-camera fs-2 me-3"></i><span class="fs-5 fw-bold">Take or Select Photo</span>');
+  $('.btn-photo-upload').removeClass('border-success');
+
+  // Reset status
+  $('#coordsSource').removeClass('alert-success').addClass('alert-light');
+  $('#coordsSource').html('<i class="bi bi-cursor-fill text-primary me-2"></i><span class="fw-bold">Tap on map above to set location</span>');
+
+  // Get user's GPS location in background
+  getUserLocation();
+
+  // Add map click handler for manual location selection
+  map.on('click', onMapClick);
+
+  // Ensure map renders properly
+  setTimeout(function() {
+    map.invalidateSize();
+  }, 350);
 }
 
 // ========================================
@@ -596,6 +1505,14 @@ function showUserReports() {
 function showAdminDashboard() {
   $('#mainApp').hide();
   $('#adminDashboard').show();
+
+  // Initialize map if not already done (admin needs it for report details)
+  if (!map) {
+    // We'll initialize it later when needed for report details
+  }
+
+  // Load reports first
+  loadReports();
   
   // Update statistics
   updateStatistics();
@@ -680,9 +1597,6 @@ function viewReportDetails(reportId) {
       <dt class="col-sm-4">Height:</dt>
       <dd class="col-sm-8">${report.height || 'Not specified'} m</dd>
       
-      <dt class="col-sm-4">Lighting:</dt>
-      <dd class="col-sm-8">${report.lighting || 'Unknown'}</dd>
-      
       <dt class="col-sm-4">Description:</dt>
       <dd class="col-sm-8">${report.description}</dd>
       
@@ -724,7 +1638,6 @@ function updateReportStatus(status) {
   if (!currentReportId) return;
   
   const comment = $('#adminComment').val();
-  const assignedTo = $('#assignTo').val();
   
   // TODO: Replace with actual API call to ASP.NET Core backend
   /*
@@ -747,7 +1660,6 @@ function updateReportStatus(status) {
   if (report) {
     report.status = status;
     report.adminComment = comment;
-    report.assignedTo = assignedTo;
     
     alert(`Report ${status.toLowerCase()}`);
     $('#reportDetailModal').modal('hide');
@@ -784,4 +1696,118 @@ function checkOnlineStatus() {
 if ('serviceWorker' in navigator) {
   // TODO: Register service worker for offline caching
   // navigator.serviceWorker.register('/sw.js');
+}
+// ========================================
+// AUTOCOMPLETE FOR OBSTACLE TYPE
+// ========================================
+
+function setupObstacleTypeAutocomplete() {
+  const $input = $('#obstacleType');
+  const $dropdown = $('#obstacleTypeDropdown');
+  const $items = $('.autocomplete-item');
+
+  // Show dropdown on focus
+  $input.on('focus', function() {
+    $dropdown.show().addClass('show');
+    filterAutocompleteItems(''); // Show all items
+  });
+
+  // Filter items as user types
+  $input.on('input', function() {
+    const searchText = $(this).val().toLowerCase();
+    filterAutocompleteItems(searchText);
+  });
+
+  // Hide dropdown when clicking outside
+  $(document).on('click', function(e) {
+    if (!$(e.target).closest('#obstacleType, #obstacleTypeDropdown').length) {
+      $dropdown.hide().removeClass('show');
+    }
+  });
+
+  // Select item on click
+  $items.on('click', function() {
+    const value = $(this).data('value');
+    $input.val(value);
+    $dropdown.hide().removeClass('show');
+
+    // Visual feedback
+    $input.addClass('border-success');
+    setTimeout(function() {
+      $input.removeClass('border-success');
+    }, 1000);
+
+    // Focus next field (height)
+    $('#obstacleHeight').focus();
+  });
+
+  // Handle keyboard navigation
+  let highlightedIndex = -1;
+
+  $input.on('keydown', function(e) {
+    const $visibleItems = $items.filter(':visible');
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      highlightedIndex = Math.min(highlightedIndex + 1, $visibleItems.length - 1);
+      updateHighlight($visibleItems);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      highlightedIndex = Math.max(highlightedIndex - 1, 0);
+      updateHighlight($visibleItems);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (highlightedIndex >= 0 && highlightedIndex < $visibleItems.length) {
+        $visibleItems.eq(highlightedIndex).click();
+      }
+    } else if (e.key === 'Escape') {
+      $dropdown.hide().removeClass('show');
+    }
+  });
+
+  function filterAutocompleteItems(searchText) {
+    let visibleCount = 0;
+
+    $items.each(function() {
+      const itemText = $(this).data('value').toLowerCase();
+
+      if (itemText.includes(searchText)) {
+        $(this).show();
+        visibleCount++;
+      } else {
+        $(this).hide();
+      }
+    });
+
+    // Show dropdown if there are visible items
+    if (visibleCount > 0 && $input.is(':focus')) {
+      $dropdown.show().addClass('show');
+    } else if (visibleCount === 0) {
+      $dropdown.hide().removeClass('show');
+    }
+
+    // Reset highlight
+    highlightedIndex = -1;
+    $items.removeClass('highlighted');
+  }
+
+  function updateHighlight($visibleItems) {
+    $items.removeClass('highlighted');
+    if (highlightedIndex >= 0 && highlightedIndex < $visibleItems.length) {
+      $visibleItems.eq(highlightedIndex).addClass('highlighted');
+
+      // Scroll highlighted item into view
+      const $highlighted = $visibleItems.eq(highlightedIndex);
+      const dropdownScrollTop = $dropdown.scrollTop();
+      const dropdownHeight = $dropdown.height();
+      const itemTop = $highlighted.position().top;
+      const itemHeight = $highlighted.outerHeight();
+
+      if (itemTop < 0) {
+        $dropdown.scrollTop(dropdownScrollTop + itemTop);
+      } else if (itemTop + itemHeight > dropdownHeight) {
+        $dropdown.scrollTop(dropdownScrollTop + itemTop + itemHeight - dropdownHeight);
+      }
+    }
+  }
 }
