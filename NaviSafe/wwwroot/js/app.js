@@ -18,6 +18,8 @@ let drafts = [];
 let drawingMode = 'point'; // 'point' or 'line'
 let linePoints = []; // Array to store points when drawing line
 let tempPolyline = null; // Temporary polyline while drawing
+let adminMap = null;        // Separate Leaflet map for admin view
+let adminLayerGroup = null; // Layer group for obstacles on admin map
 
 
 // Mock users database (replace with API)
@@ -531,10 +533,29 @@ function setupEventHandlers() {
     }
   });
 
-  // Admin dashboard
-  $('#backToMapBtn').click(function() {
-    $('#adminDashboard').hide();
-    $('#mainApp').show();
+  // Admin: "Back to map" should show the admin map with all obstacles
+  $('#backToMapBtn').click(function () {
+    // Make sure the admin dashboard is visible (we stay in admin view)
+    $('#adminDashboard').show();
+
+    // Show the map container inside the admin dashboard
+    $('#adminMapContainer').show();
+
+    // If reports array is empty, load them (mockReports or from API)
+    if (!reports || reports.length === 0) {
+      loadReports(); // this will fill "reports" from mockReports in your code
+    }
+
+    // Initialize admin map if needed, otherwise just refresh
+    if (!adminMap) {
+      initAdminMap();
+    } else {
+      // Redraw obstacles and fix map size
+      displayReportsOnAdminMap();
+      setTimeout(function () {
+        adminMap.invalidateSize();
+      }, 200);
+    }
   });
 
   // Filters
@@ -1547,6 +1568,91 @@ function updateStatistics() {
   $('#pendingReports').text(pending);
   $('#approvedReports').text(approved);
   $('#rejectedReports').text(rejected);
+}
+
+// Initialize the admin map inside #adminMap
+function initAdminMap() {
+  if (adminMap) {
+    return; // already initialized
+  }
+
+  // Create Leaflet map for admin dashboard
+  adminMap = L.map('adminMap', {
+    zoomControl: true
+  }).setView([65.0, 13.0], 5); // Center over Norway
+
+  // Base layer (separate from pilot map so they don't conflict)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(adminMap);
+
+  // Feature group to hold all obstacle layers
+  adminLayerGroup = L.featureGroup().addTo(adminMap);
+
+  // Draw all reports on the admin map
+  displayReportsOnAdminMap();
+}
+
+// Helper: choose color based on report status
+function getAdminStatusColor(status) {
+  if (status === 'Approved') return '#198754'; // green
+  if (status === 'Rejected') return '#dc3545'; // red
+  return '#ffc107';                            // yellow for Pending/other
+}
+
+// Draw all reports on the admin map using the global "reports" array
+function displayReportsOnAdminMap() {
+  if (!adminLayerGroup || !adminMap) return;
+
+  adminLayerGroup.clearLayers();
+
+  reports.forEach(report => {
+    if (!report.geometry) return;
+
+    const color = getAdminStatusColor(report.status);
+
+    const layer = L.geoJSON(report.geometry, {
+      style: function () {
+        return {
+          color: color,
+          weight: 3,
+          opacity: 0.9
+        };
+      },
+      pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng, {
+          radius: 8,
+          fillColor: color,
+          color: '#ffffff',
+          weight: 2,
+          fillOpacity: 0.9
+        });
+      },
+      onEachFeature: function (feature, layer) {
+        layer.bindPopup(`
+          <div>
+            <h6 class="mb-1">${report.type}</h6>
+            <p class="mb-1"><small>${report.description}</small></p>
+            <p class="mb-1"><small><strong>Height:</strong> ${report.height || 'N/A'} m</small></p>
+            <p class="mb-1"><small><strong>Reported by:</strong> ${report.reporter} (${report.organization})</small></p>
+            <p class="mb-0">
+              <small><strong>Status:</strong>
+                <span class="badge badge-status-${report.status.toLowerCase()}">${report.status}</span>
+              </small>
+            </p>
+          </div>
+        `);
+      }
+    });
+
+    adminLayerGroup.addLayer(layer);
+  });
+
+  // Fit map to all obstacles
+  if (adminLayerGroup.getLayers().length > 0) {
+    adminMap.fitBounds(adminLayerGroup.getBounds(), { padding: [20, 20] });
+  }
 }
 
 function loadReportsTable() {
