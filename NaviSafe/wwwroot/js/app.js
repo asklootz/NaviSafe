@@ -491,11 +491,6 @@ function setupEventHandlers() {
     showReportForm();
   });
 
-  // Close report form
-  $('#closeReportFormBtn').click(function() {
-    hideReportForm();
-  });
-
   // Autocomplete for Obstacle Type
   setupObstacleTypeAutocomplete();
 
