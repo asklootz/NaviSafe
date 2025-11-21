@@ -136,7 +136,7 @@
         </div>
       </div>
     </nav>
-
+    
     <!-- Map Container -->
     <div class="map-container">
       <!-- Report Form with Integrated Map -->
@@ -315,11 +315,83 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
+  
+  <!-- My Reports Page (Pilot) -->
+  <div id="myReportsPage" style="display: none; min-height: 100vh; background: #f8f9fa;">
+    <div class="container-fluid py-4">
 
+      <!-- Header / back button -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">
+          <i class="bi bi-journal-text me-2"></i>
+          My Reports
+        </h2>
+        <button id="goToReportBtn" class="btn btn-primary">
+          + Report Obstacle
+        </button>
+      </div>
+
+      <!-- Submitted reports -->
+      <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">
+            <i class="bi bi-send-check me-2 text-primary"></i>
+            Submitted Reports
+          </h5>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-striped align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Date</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody id="submittedReportsBody">
+                <!-- Filled by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drafts -->
+      <div class="card shadow-sm">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">
+            <i class="bi bi-pencil-square me-2 text-primary"></i>
+            Drafts
+          </h5>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Saved</th>
+                  <th>Type</th>
+                  <th>Location</th>
+                  <th style="width: 90px;">Edit</th>
+                  <th style="width: 90px;">Delete</th>
+                </tr>
+              </thead>
+              <tbody id="draftsTableBody">
+                <!-- Filled by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  
   <!-- Admin Dashboard (for Kartverket) -->
   <div id="adminDashboard" style="display: none;">
     <nav class="navbar navbar-dark bg-dark">
