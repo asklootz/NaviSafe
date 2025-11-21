@@ -22,26 +22,6 @@ let adminMap = null;        // Separate Leaflet map for admin view
 let adminLayerGroup = null; // Layer group for obstacles on admin map
 
 
-// Mock users database (replace with API)
-const mockUsers = [
-  {
-    id: 1,
-    name: "Test Pilot",
-    email: "pilot@nla.no",
-    password: "test123",
-    organization: "NLA",
-    role: "pilot"
-  },
-  {
-    id: 2,
-    name: "Admin User",
-    email: "admin@kartverket.no",
-    password: "admin123",
-    organization: "Kartverket",
-    role: "admin"
-  }
-];
-
 // Mock reports database (replace with API)
 const mockReports = [
   {
@@ -619,92 +599,114 @@ function setupEventHandlers() {
   });
 }
 
-function login() {
+async function login() {
   const email = $('#loginEmail').val();
   const password = $('#loginPassword').val();
-
-  // TODO: Replace with actual API call to ASP.NET Core backend
-  /*
-  $.ajax({
-    url: '/api/auth/login',
-    method: 'POST',
-    contentType: 'application/json',
-    data: JSON.stringify({ email, password }),
-    success: function(user) {
-      currentUser = user;
-      localStorage.setItem('navisafe_user', JSON.stringify(user));
-      showMainApp();
-    },
-    error: function() {
-      alert('Invalid email or password');
+  if (!email || !password) { alert('Please enter email and password'); return; }
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({}));
+      alert(err.message || 'Login failed');
+      return;
     }
-  });
-  */
-
-  // Mock implementation
-  const user = mockUsers.find(u => u.email === email && u.password === password);
-  if (user) {
-    currentUser = { ...user };
-    delete currentUser.password;
+    const auth = await res.json();
+    currentUser = {
+      id: auth.UserId,
+      name: auth.Name,
+      email: auth.Email,
+      organization: auth.Organization,
+      role: auth.Role,
+      token: auth.Token
+    };
     localStorage.setItem('navisafe_user', JSON.stringify(currentUser));
+    localStorage.setItem('navisafe_token', auth.Token);
     showMainApp();
-  } else {
-    alert('Invalid email or password');
+  } catch (e) {
+    console.error(e);
+    alert('Server unreachable');
   }
 }
 
-function register() {
-  const name = $('#registerName').val();
+async function register() {
+  const firstName = $('#registerName').val().trim().split(' ')[0] || '';
+  const lastName = $('#registerName').val().trim().split(' ').slice(1).join(' ') || '';
   const email = $('#registerEmail').val();
-  const organization = $('#registerOrganization').val();
+  const orgCode = $('#registerOrganization').val();
   const password = $('#registerPassword').val();
-  const passwordConfirm = $('#registerPasswordConfirm').val();
-
-  if (password !== passwordConfirm) {
-    alert('Passwords do not match');
-    return;
-  }
-
-  // TODO: Replace with actual API call to ASP.NET Core backend
-  /*
-  $.ajax({
-    url: '/api/auth/register',
-    method: 'POST',
-    contentType: 'application/json',
-    data: JSON.stringify({ name, email, organization, password }),
-    success: function(user) {
-      alert('Account created! You can now sign in.');
-      $('.nav-link[data-bs-target="#loginTab"]').tab('show');
-      $('#registerForm')[0].reset();
-    },
-    error: function() {
-      alert('Registration failed');
+  const confirm = $('#registerPasswordConfirm').val();
+  if (password !== confirm) { alert('Passwords do not match'); return; }
+  try {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email,
+        password,
+        firstName,
+        lastName,
+        phone: '',
+        orgNr: mapOrgToNr(orgCode)
+      })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({}));
+      alert(err.message || 'Registration failed');
+      return;
     }
-  });
-  */
-
-  // Mock implementation
-  const newUser = {
-    id: mockUsers.length + 1,
-    name,
-    email,
-    organization,
-    password,
-    role: 'pilot'
-  };
-  mockUsers.push(newUser);
-  alert('Account created! You can now sign in.');
-  $('.nav-link[data-bs-target="#loginTab"]').tab('show');
-  $('#registerForm')[0].reset();
+    alert('Account created. You can now sign in.');
+    $('.nav-link[data-bs-target="#loginTab"]').tab('show');
+    $('#registerForm')[0].reset();
+  } catch (e) {
+    console.error(e);
+    alert('Server unreachable');
+  }
 }
 
+// Map organization display name to numeric orgNr used by backend
+function mapOrgToNr(code) {
+  switch (code) {
+    case 'Kartverket': return 1;
+    case 'NAA': return 2;
+    case 'AirForce': return 3;
+    case 'Police': return 4;
+    default: return 0;
+  }
+}
+
+// Attach JWT to future POST requests (use when calling protected APIs)
+async function authorizedPost(url, data) {
+  const token = localStorage.getItem('navisafe_token');
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+    },
+    body: JSON.stringify(data)
+  });
+}
+
+// Simple logout that clears local state and shows login again
 function logout() {
-  localStorage.removeItem('navisafe_user');
+  try {
+    localStorage.removeItem('navisafe_user');
+    localStorage.removeItem('navisafe_token');
+  } catch {}
   currentUser = null;
-  $('#mainApp').hide();
+
+  // Tear down maps to avoid stale listeners
+  if (map) { try { map.off(); map.remove(); } catch {} map = null; drawnItems = null; }
+  if (adminMap) { try { adminMap.off(); adminMap.remove(); } catch {} adminMap = null; adminLayerGroup = null; }
+
+  // Reset UI
   $('#adminDashboard').hide();
+  $('#mainApp').hide();
   $('#loginPage').show();
-  location.reload();
 }
 
 // ========================================
