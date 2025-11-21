@@ -438,10 +438,26 @@ function optimizeForIPad() {
 // AUTHENTICATION
 // ========================================
 
+function normalizeUserRole(user) {
+  if (!user) return;
+  const raw = (user.role || user.roleID || user.roleId || user.Role || user.RoleId || user.rolePermissions || user.RolePermissions || '').toString().trim().toLowerCase();
+  if (raw === 'adm' || raw === 'admin' || raw === 'administrator' || raw.includes('admin')) {
+    user.role = 'admin';
+  } else if (raw === 'pil' || raw === 'pilot' || raw.includes('pil')) {
+    user.role = 'pilot';
+  } else {
+    // fallback: preserve existing if already normalized, otherwise default to pilot
+    user.role = (user.role === 'admin' ? 'admin' : 'pilot');
+  }
+}
+
 function checkAuthentication() {
   const storedUser = localStorage.getItem('navisafe_user');
   if (storedUser) {
     currentUser = JSON.parse(storedUser);
+    normalizeUserRole(currentUser);
+    // persist normalized role back to storage so later loads are consistent
+    localStorage.setItem('navisafe_user', JSON.stringify(currentUser));
     showMainApp();
   } else {
     $('#loginPage').show();
@@ -620,11 +636,12 @@ async function login() {
       name: auth.Name,
       email: auth.Email,
       organization: auth.Organization,
-      role: auth.Role,
-      token: auth.Token
+      // accept either role or roleID from server; normalize below
+      role: auth.Role || auth.role || auth.roleID || auth.RoleId || auth.RoleID || ''
     };
+    normalizeUserRole(currentUser);
     localStorage.setItem('navisafe_user', JSON.stringify(currentUser));
-    localStorage.setItem('navisafe_token', auth.Token);
+    if (auth.Token) localStorage.setItem('navisafe_token', auth.Token);
     showMainApp();
   } catch (e) {
     console.error(e);
@@ -658,23 +675,30 @@ async function register() {
       alert(err.message || 'Registration failed');
       return;
     }
+    // If API returns the created user (and token), auto-normalize and store; otherwise fall back to manual sign-in
+    const created = await res.json().catch(()=>null);
+    if (created && created.UserId) {
+      const autoUser = {
+        id: created.UserId,
+        name: created.Name || `${firstName} ${lastName}`.trim(),
+        email: created.Email || email,
+        organization: created.Organization || orgCode || '',
+        role: created.Role || created.role || created.RoleId || created.roleID || ''
+      };
+      normalizeUserRole(autoUser);
+      localStorage.setItem('navisafe_user', JSON.stringify(autoUser));
+      if (created.Token) localStorage.setItem('navisafe_token', created.Token);
+      alert('Account created and signed in.');
+      showMainApp();
+      return;
+    }
+
     alert('Account created. You can now sign in.');
     $('.nav-link[data-bs-target="#loginTab"]').tab('show');
     $('#registerForm')[0].reset();
   } catch (e) {
     console.error(e);
     alert('Server unreachable');
-  }
-}
-
-// Map organization display name to numeric orgNr used by backend
-function mapOrgToNr(code) {
-  switch (code) {
-    case 'Kartverket': return 1;
-    case 'NAA': return 2;
-    case 'AirForce': return 3;
-    case 'Police': return 4;
-    default: return 0;
   }
 }
 
@@ -714,6 +738,9 @@ function logout() {
 // ========================================
 
 function showMainApp() {
+  // Ensure role normalized (cover any direct modifications)
+  normalizeUserRole(currentUser);
+
   // Hide login page when user is authenticated
   $('#loginPage').hide();
 
@@ -1930,3 +1957,4 @@ function setupObstacleTypeAutocomplete() {
     }
   }
 }
+
