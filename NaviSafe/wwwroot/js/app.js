@@ -715,6 +715,17 @@ async function authorizedPost(url, data) {
   });
 }
 
+// Map organization display name to numeric orgNr used by backend
+function mapOrgToNr(code) {
+  switch (code) {
+    case 'Kartverket': return 1;
+    case 'NLA': return 2;
+    case 'AirForce': return 3;
+    case 'Police': return 4;
+    default: return 0;
+  }
+}
+
 // Simple logout that clears local state and shows login again
 function logout() {
   try {
