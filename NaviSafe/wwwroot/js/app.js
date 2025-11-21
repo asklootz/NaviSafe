@@ -1207,10 +1207,11 @@ function submitObstacle() {
   }
 
   // Show loading state
-  const submitBtn = $('button[type="submit"]');
+  const submitBtn = $('#obstacleForm button[type="submit"]');
   const originalText = submitBtn.html();
-  submitBtn.prop('disabled', true).html('<i class="bi bi-arrow-clockwise spin me-2"></i>Submitting...');
-
+  submitBtn.prop('disabled', true)
+      .html('<i class="bi bi-arrow-clockwise spin me-2"></i>Submitting...');
+ 
   const formData = {
     type: $('#obstacleType').val(),
     height: $('#obstacleHeight').val() || null,
