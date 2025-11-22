@@ -15,6 +15,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<UserInfo> UserInfo { get; set; }
     public DbSet<UserRole> UserRole { get; set; }
 
+    // New: reporting table
+    public DbSet<Reporting> Reporting { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -47,5 +50,21 @@ public class ApplicationDbContext : DbContext
                .HasOne<UserRole>()
                .WithMany()
                .HasForeignKey(x => x.RoleId);
+
+        // Reporting mapping
+        builder.Entity<Reporting>().ToTable("reporting").HasKey(r => r.RegID);
+        builder.Entity<Reporting>().Property(r => r.RegID).HasColumnName("regID");
+        builder.Entity<Reporting>().Property(r => r.Lat).HasColumnName("lat");
+        builder.Entity<Reporting>().Property(r => r.Lon).HasColumnName("lon");
+        builder.Entity<Reporting>().Property(r => r.Altitude).HasColumnName("altitude");
+        builder.Entity<Reporting>().Property(r => r.Accuracy).HasColumnName("accuracy");
+        builder.Entity<Reporting>().Property(r => r.ShortDesc).HasColumnName("shortDesc").HasMaxLength(50);
+        builder.Entity<Reporting>().Property(r => r.LongDesc).HasColumnName("longDesc").HasMaxLength(255);
+        builder.Entity<Reporting>().Property(r => r.Img).HasColumnName("img");
+        builder.Entity<Reporting>().Property(r => r.IsSent).HasColumnName("isSent");
+        builder.Entity<Reporting>().Property(r => r.State).HasColumnName("state").HasMaxLength(20);
+        builder.Entity<Reporting>().Property(r => r.RejectComment).HasColumnName("rejectComment").HasMaxLength(255);
+        builder.Entity<Reporting>().Property(r => r.UserID).HasColumnName("userID");
+        builder.Entity<Reporting>().Property(r => r.CreationDate).HasColumnName("creationDate");
     }
 }

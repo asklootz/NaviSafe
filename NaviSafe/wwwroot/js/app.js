@@ -20,6 +20,7 @@ let linePoints = []; // Array to store points when drawing line
 let tempPolyline = null; // Temporary polyline while drawing
 let adminMap = null;        // Separate Leaflet map for admin view
 let adminLayerGroup = null; // Layer group for obstacles on admin map
+let lastPhotoDataUrl = null; // Store last photo data URL for preview
 
 
 // Mock reports database (replace with API)
@@ -715,6 +716,18 @@ async function authorizedPost(url, data) {
   });
 }
 
+// New: authorized GET helper
+async function authorizedGet(url) {
+  const token = localStorage.getItem('navisafe_token');
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+    }
+  });
+}
+
 // Map organization display name to numeric orgNr used by backend
 function mapOrgToNr(code) {
   switch (code) {
@@ -1184,314 +1197,46 @@ function useMapLocation() {
   }
 }
 
-function previewPhoto(file) {
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      // Clear existing preview
-      $('#photoPreviewContainer').empty();
 
-      // Add new preview with remove button
-      const previewHTML = `
-        <div class="position-relative">
-          <img src="${e.target.result}" alt="Photo preview" style="width: 100%; max-height: 300px; object-fit: cover; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-          <button type="button" class="btn btn-danger rounded-circle position-absolute" id="removePhotoBtn" style="top: 10px; right: 10px; width: 50px; height: 50px;">
-            <i class="bi bi-x-lg fs-4"></i>
-          </button>
-        </div>
-      `;
-      $('#photoPreviewContainer').html(previewHTML);
-
-      // Update photo button
-      $('.btn-photo-upload').html('<i class="bi bi-camera-fill fs-2 me-3"></i><span class="fs-5 fw-bold text-success">Photo Added ✓</span>');
-      $('.btn-photo-upload').addClass('border-success');
-
-      // Remove photo handler
-      $('#removePhotoBtn').click(function() {
-        $('#photoPreviewContainer').empty();
-        $('#obstaclePhoto').val('');
-        $('.btn-photo-upload').html('<i class="bi bi-camera fs-2 me-3"></i><span class="fs-5 fw-bold">Take or Select Photo</span>');
-        $('.btn-photo-upload').removeClass('border-success');
-      });
-    };
-    reader.readAsDataURL(file);
-  }
-}
-
-function submitObstacle() {
-  // Validate required fields
-  const obstacleType = $('#obstacleType').val();
-  const obstacleHeight = $('#obstacleHeight').val();
-  const lat = $('#obstacleLat').val();
-  const lon = $('#obstacleLon').val();
-
-  if (!obstacleType || !obstacleHeight) {
-    alert('⚠️ Please fill in all required fields:\n• Obstacle Type\n• Height');
-    return;
-  }
-
-  if (!lat || !lon) {
-    alert('📍 Please set obstacle location:\n• Tap on map, or\n• Enable GPS location');
-    return;
-  }
-
-  // Show loading state
-  const submitBtn = $('button[type="submit"]');
-  const originalText = submitBtn.html();
-  submitBtn.prop('disabled', true).html('<i class="bi bi-arrow-clockwise spin me-2"></i>Submitting...');
-
-  const formData = {
-    type: $('#obstacleType').val(),
-    height: $('#obstacleHeight').val() || null,
-    description: $('#obstacleDescription').val(),
-    geometry: currentObstacleGeometry,
-    latitude: lat,
-    longitude: lon,
-    reporter: currentUser.name,
-    reporterEmail: currentUser.email,
-    organization: currentUser.organization,
-    status: 'Pending',
-    reportDate: new Date().toISOString(),
-    photo: null // Handle file upload separately
-  };
-
-  // Handle photo upload
-  const photoFile = $('#obstaclePhoto')[0].files[0];
-  if (photoFile) {
-    // TODO: Upload photo to server and get URL
-    // formData.photo = uploadedPhotoUrl;
-  }
-
-  // TODO: Replace with actual API call to ASP.NET Core backend
-  /*
-  $.ajax({
-    url: '/api/obstacles',
-    method: 'POST',
-    contentType: 'application/json',
-    data: JSON.stringify(formData),
-    success: function(response) {
-      alert('Report submitted successfully!');
-      hideReportForm();
-      loadReports();
-    },
-    error: function() {
-      alert('Failed to submit report');
-    }
-  });
-  */
-
-  // Mock implementation
-  setTimeout(function() {
-    const newReport = {
-      id: mockReports.length + 1,
-      ...formData
-    };
-    mockReports.push(newReport);
-    reports.push(newReport);
-
-    // Success feedback
-    submitBtn.prop('disabled', false).html(originalText);
-
-    // Show success message
-    const successHTML = `
-      <div class="alert alert-success alert-dismissible fade show" role="alert" style="position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 10000; min-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-        <i class="bi bi-check-circle-fill me-2"></i>
-        <strong>Success!</strong> Obstacle report submitted.
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      </div>
-    `;
-    $('body').append(successHTML);
-
-    setTimeout(function() {
-      $('.alert-success').alert('close');
-    }, 3000);
-
-    hideReportForm();
-    displayReportsOnMap();
-
-    // Generate permalink
-    if (currentObstacleGeometry.geometry.type === 'Point') {
-      const coords = currentObstacleGeometry.geometry.coordinates;
-      const permalink = `${window.location.origin}${window.location.pathname}?lat=${coords[1]}&lng=${coords[0]}&zoom=15&report=${newReport.id}`;
-      console.log('Permalink:', permalink);
-    }
-  }, 500); // Simulate API delay
-}
-
-function saveDraft() {
-  const draftData = {
-    id: 'draft_' + Date.now(),
-    type: $('#obstacleType').val(),
-    height: $('#obstacleHeight').val(),
-    description: $('#obstacleDescription').val(),
-    latitude: $('#obstacleLat').val(),
-    longitude: $('#obstacleLon').val(),
-    geometry: currentObstacleGeometry,
-    savedAt: new Date().toISOString()
-  };
-
-  // Show loading state
-  const draftBtn = $('#saveDraftBtn');
-  const originalText = draftBtn.html();
-  draftBtn.prop('disabled', true).html('<i class="bi bi-arrow-clockwise spin me-2"></i>Saving...');
-
-  setTimeout(function() {
-    // Save to localStorage
-    const existingDrafts = JSON.parse(localStorage.getItem('navisafe_drafts') || '[]');
-    existingDrafts.push(draftData);
-    localStorage.setItem('navisafe_drafts', JSON.stringify(existingDrafts));
-
-    draftBtn.prop('disabled', false).html(originalText);
-
-    // Success feedback
-    const successHTML = `
-      <div class="alert alert-info alert-dismissible fade show" role="alert" style="position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 10000; min-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-        <i class="bi bi-save-fill me-2"></i>
-        <strong>Draft saved!</strong> You can continue later.
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      </div>
-    `;
-    $('body').append(successHTML);
-
-    setTimeout(function() {
-      $('.alert-info').alert('close');
-    }, 3000);
-
-    console.log('Draft saved:', draftData);
-  }, 300);
-}
-
-function setDrawingMode(mode) {
-  drawingMode = mode;
-
-  // Update button states
-  $('#pointModeBtn').toggleClass('active', mode === 'point');
-  $('#lineModeBtn').toggleClass('active', mode === 'line');
-
-  // Clear existing drawings
-  drawnItems.clearLayers();
-  currentObstacleGeometry = null;
-  linePoints = [];
-  if (tempPolyline) {
-    map.removeLayer(tempPolyline);
-    tempPolyline = null;
-  }
-  if (currentMarker) {
-    map.removeLayer(currentMarker);
-    currentMarker = null;
-  }
-
-  // Reset form
-  $('#obstacleLat').val('');
-  $('#obstacleLon').val('');
-
-  // Hide finish line button
-  $('#finishLineBtn').hide();
-
-  // Update info overlay text based on mode
-  if (mode === 'point') {
-    $('#mapInfoText').text('Tap map to mark point');
-  } else {
-    $('#mapInfoText').text('Tap map to start drawing line');
-  }
-
-  // Reset status
-  $('#coordsSource').removeClass('alert-success').addClass('alert-light');
-  if (mode === 'point') {
-    $('#coordsSource').html('<i class=\"bi bi-cursor-fill text-primary me-2\"></i><span class=\"fw-bold\">Tap on map to set location</span>');
-  } else {
-    $('#coordsSource').html('<i class=\"bi bi-diagram-3-fill text-primary me-2\"></i><span class=\"fw-bold\">Tap on map to start drawing line</span>');
-  }
-}
-
-function finishLineDrawing() {
-  if (linePoints.length < 2) {
-    alert('⚠️ A line must have at least two points.');
-    return;
-  }
-
-  // Create a polyline from the points
-  const polyline = L.polyline(linePoints, { color: '#0d6efd' }).addTo(drawnItems);
-
-  // Save geometry
-  currentObstacleGeometry = polyline.toGeoJSON();
-
-  // Update coordinates display
-  $('#obstacleCoords').val(`Line with ${linePoints.length} points`);
-
-  // Clear points
-  linePoints = [];
-  tempPolyline = null;
-
-  // Hide finish button
-  $('#finishLineBtn').hide();
-
-  // Add map click handler for manual location selection
-  map.on('click', onMapClick);
-
-  // Ensure map renders properly
-  setTimeout(function() {
-    map.invalidateSize();
-  }, 350);
-}
-
-function clearMapDrawing() {
-  // Clear all drawn items
-  drawnItems.clearLayers();
-
-  // Reset geometry
-  currentObstacleGeometry = null;
-
-  // Reset form fields
-  $('#obstacleForm')[0].reset();
-  $('#obstacleLat').val('');
-  $('#obstacleLon').val('');
-  $('#photoPreviewContainer').empty();
-
-  // Reset GPS button
-  $('#gpsToggleBtn').removeClass('active');
-  $('#gpsToggleBtn').html('<i class="bi bi-crosshair fs-3 me-3"></i><span class="fs-5 fw-bold">Use My GPS Location</span><i class="bi bi-chevron-right fs-4 ms-auto"></i>');
-
-  // Reset photo button
-  $('.btn-photo-upload').html('<i class="bi bi-camera fs-2 me-3"></i><span class="fs-5 fw-bold">Take or Select Photo</span>');
-  $('.btn-photo-upload').removeClass('border-success');
-
-  // Reset status
-  $('#coordsSource').removeClass('alert-success').addClass('alert-light');
-  $('#coordsSource').html('<i class="bi bi-cursor-fill text-primary me-2"></i><span class="fw-bold">Tap on map above to set location</span>');
-
-  // Get user's GPS location in background
-  getUserLocation();
-
-  // Add map click handler for manual location selection
-  map.on('click', onMapClick);
-
-  // Ensure map renders properly
-  setTimeout(function() {
-    map.invalidateSize();
-  }, 350);
-}
 
 // ========================================
 // REPORTS
 // ========================================
 
-function loadReports() {
-  // TODO: Replace with actual API call to ASP.NET Core backend
-  /*
-  $.ajax({
-    url: '/api/obstacles',
-    method: 'GET',
-    success: function(data) {
-      reports = data;
+/* Replace loadReports with API-backed loader:
+   - fetches GET /api/reports with optional Authorization
+   - on success replaces `reports` array and refreshes maps
+   - on failure falls back to mockReports
+*/
+async function loadReports() {
+  try {
+    const res = await authorizedGet('/api/reports');
+    if (!res.ok) {
+      console.warn('Failed to load reports from API, using mock data', res.status);
+      reports = [...mockReports];
       displayReportsOnMap();
+      if (adminMap) displayReportsOnAdminMap();
+      return;
     }
-  });
-  */
 
-  // Mock implementation
-  reports = [...mockReports];
-  displayReportsOnMap();
+    const data = await res.json().catch(() => null);
+    if (!data || !Array.isArray(data)) {
+      console.warn('Unexpected API response format, falling back to mock data');
+      reports = [...mockReports];
+    } else {
+      // API returns objects shaped for the frontend (id, type, geometry, reporter, etc.)
+      reports = data;
+    }
+
+    // Refresh maps/views
+    displayReportsOnMap();
+    if (adminMap) displayReportsOnAdminMap();
+  } catch (e) {
+    console.error('Error loading reports from API, falling back to mock data', e);
+    reports = [...mockReports];
+    displayReportsOnMap();
+    if (adminMap) displayReportsOnAdminMap();
+  }
 }
 
 function displayReportsOnMap() {
@@ -1572,13 +1317,17 @@ function showUserReports() {
 // ADMIN DASHBOARD
 // ========================================
 
-function showAdminDashboard() {
+// Make showAdminDashboard async so it can await loadReports from DB
+async function showAdminDashboard() {
   // Hide the pilot main app UI and show the admin dashboard
   $('#mainApp').hide();
   $('#adminDashboard').show();
 
-  // Load all reports (from mockReports for now)
-  loadReports();
+  // Ensure admin map container is visible
+  $('#adminMapContainer').show();
+
+  // Load all reports (from DB if available)
+  await loadReports();
 
   // Update the small statistics cards (total, pending, approved, rejected)
   updateStatistics();
@@ -1590,8 +1339,17 @@ function showAdminDashboard() {
   $('#filterStatus, #filterOrganization, #filterType')
       .off('change')          // Remove any previous handlers to avoid duplicates
       .on('change', loadReportsTable);
-}
 
+  // Initialize or refresh admin map
+  if (!adminMap) {
+    initAdminMap();
+  } else {
+    displayReportsOnAdminMap();
+    setTimeout(function () {
+      adminMap.invalidateSize();
+    }, 200);
+  }
+}
 
 function updateStatistics() {
   const total = reports.length;
@@ -1966,6 +1724,145 @@ function setupObstacleTypeAutocomplete() {
         $dropdown.scrollTop(dropdownScrollTop + itemTop + itemHeight - dropdownHeight);
       }
     }
+  }
+}
+
+// ========================================
+// REPORTS
+// ========================================
+
+/* ...existing loadReports / displayReportsOnMap ... */
+
+// Add or replace submitObstacle function used by $('#obstacleForm').submit(...)
+async function submitObstacle() {
+  // Basic validation
+  const obstacleType = $('#obstacleType').val();
+  const obstacleHeight = $('#obstacleHeight').val();
+  const latField = $('#obstacleLat').val();
+  const lonField = $('#obstacleLon').val();
+
+  if (!obstacleType || !obstacleHeight) {
+    alert('⚠️ Please fill in required fields: Obstacle Type and Height');
+    return;
+  }
+
+  if (!latField || !lonField) {
+    alert('📍 Please set obstacle location (tap map or use GPS)');
+    return;
+  }
+
+  // Derive payload coordinates: prefer numeric form fields, else fallback to currentObstacleGeometry
+  let payloadLat = latField;
+  let payloadLon = lonField;
+
+  const latNum = parseFloat(String(payloadLat).replace('→', '').split('→')[0]);
+  const lonNum = parseFloat(String(payloadLon).replace('→', '').split('→')[0]);
+  const latIsNum = !isNaN(latNum);
+  const lonIsNum = !isNaN(lonNum);
+
+  if ((!latIsNum || !lonIsNum) && currentObstacleGeometry && currentObstacleGeometry.geometry) {
+    try {
+      const geom = currentObstacleGeometry.geometry;
+      if (geom.type === 'Point' && Array.isArray(geom.coordinates) && geom.coordinates.length >= 2) {
+        payloadLon = String(geom.coordinates[0]);
+        payloadLat = String(geom.coordinates[1]);
+      } else if (geom.type === 'LineString' && Array.isArray(geom.coordinates) && geom.coordinates.length > 0) {
+        const first = geom.coordinates[0];
+        if (Array.isArray(first) && first.length >= 2) {
+          payloadLon = String(first[0]);
+          payloadLat = String(first[1]);
+        }
+      }
+    } catch (e) {
+      console.warn('Could not extract coords from geometry', e);
+    }
+  }
+
+  // UI: disable submit button
+  const submitBtn = $('button[type="submit"]');
+  const originalHtml = submitBtn.html();
+  submitBtn.prop('disabled', true).html('<i class="bi bi-arrow-clockwise spin me-2"></i>Submitting...');
+
+  // Build payload
+  const payload = {
+    type: $('#obstacleType').val(),
+    height: parseFloat($('#obstacleHeight').val()) || null,
+    description: $('#obstacleDescription').val(),
+    geometry: currentObstacleGeometry,
+    latitude: payloadLat,
+    longitude: payloadLon,
+    reporter: currentUser ? currentUser.name : null,
+    reporterEmail: currentUser ? currentUser.email : null,
+    reporterId: currentUser ? currentUser.id : null,
+    organization: currentUser ? currentUser.organization : null,
+    status: 'Pending',
+    reportDate: new Date().toISOString(),
+    photo: lastPhotoDataUrl // may be null
+  };
+
+  try {
+    const res = await authorizedPost('/api/reports/submit', payload);
+
+    if (!res.ok) {
+      // Try to read text (useful for HTML error pages) then JSON
+      const text = await res.text().catch(() => null);
+      let err = null;
+      try { err = text ? JSON.parse(text) : null; } catch {}
+      const message = (err && (err.message || err.error)) || text || `Server returned ${res.status}`;
+      console.error('Submit failed', res.status, text);
+      alert(message);
+      submitBtn.prop('disabled', false).html(originalHtml);
+      return;
+    }
+
+    // Parse response if JSON
+    let created = null;
+    try { created = await res.json(); } catch {}
+
+    // Success UI
+    submitBtn.prop('disabled', false).html(originalHtml);
+    $('body').append(`<div class="alert alert-success alert-dismissible fade show" role="alert" style="position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 10000;">
+      <i class="bi bi-check-circle-fill me-2"></i><strong>Success!</strong> Obstacle report submitted.
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>`);
+    setTimeout(() => { $('.alert-success').alert && $('.alert-success').alert('close'); }, 3000);
+
+    // Add to client-side reports for immediate feedback
+    const newId = created && created.regID ? created.regID : Math.max(0, ...(reports.map(r => r.id || 0))) + 1;
+    const newReport = {
+      id: newId,
+      type: payload.type,
+      height: payload.height,
+      description: payload.description,
+      geometry: payload.geometry,
+      latitude: payload.latitude,
+      longitude: payload.longitude,
+      reporter: payload.reporter,
+      reporterEmail: payload.reporterEmail,
+      organization: payload.organization,
+      status: 'Pending',
+      reportDate: payload.reportDate,
+      photo: payload.photo
+    };
+    reports.push(newReport);
+
+    // Clear UI and preview
+    lastPhotoDataUrl = null;
+    $('#photoPreviewContainer').empty();
+    $('#obstaclePhoto').val('');
+    hideReportForm();
+
+    // Refresh maps & admin views
+    displayReportsOnMap();
+    if (adminMap) {
+      displayReportsOnAdminMap();
+      updateStatistics();
+      loadReportsTable();
+    }
+  } catch (e) {
+    console.error('Network or unexpected error', e);
+    alert('Server unreachable');
+    submitBtn.prop('disabled', false).html(originalHtml);
   }
 }
 
