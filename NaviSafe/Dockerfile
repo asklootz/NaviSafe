@@ -11,7 +11,6 @@ EXPOSE 8081
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet dev-certs https -p PASSWORD -ep /cert.pfx #Creates a self-signed certificate for HTTPS
 WORKDIR /src
 COPY ["NaviSafe/NaviSafe.csproj", "NaviSafe/"]
 RUN dotnet restore "./NaviSafe/NaviSafe.csproj"
@@ -27,10 +26,5 @@ RUN dotnet publish "./NaviSafe.csproj" -c $BUILD_CONFIGURATION -o /app/publish /
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
-COPY --from=build /cert.pfx /app/cert.pfx
-USER root
-RUN chmod 755 /app/cert.pfx
-USER app
-COPY --from=publish /app/publish .
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "NaviSafe.dll"]
