@@ -517,12 +517,23 @@ function setupEventHandlers() {
   });
 
   // View reports
-  $('#viewReportsBtn').click(function() {
-    if (currentUser.role === 'admin') {
+  $('#viewReportsBtn').click(function () {
+    // Pilot går til egen My Reports-side
+    if (currentUser.role === 'pilot') {
+      showMyReportsPage();
+    } else if (currentUser.role === 'admin') {
+      // Admin kan vi evt. la fortsette til dashboard
       showAdminDashboard();
-    } else {
-      showUserReports();
     }
+  });
+  
+  // From My Reports → back to the Report Obstacle form
+  $('#goToReportBtn').click(function () {
+    $('#myReportsPage').hide();
+    $('#mainApp').show();
+
+    // Åpner Rapporter Hinder-skjemaet direkte
+    showReportForm();
   });
 
   // Admin: "Back to map" should show the admin map with all obstacles
@@ -1287,30 +1298,135 @@ function displayReportsOnMap() {
   });
 }
 
-function showUserReports() {
-  const userReports = reports.filter(r => r.reporterEmail === currentUser.email);
-  
-  let html = '<div class="modal fade" id="userReportsModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content">';
-  html += '<div class="modal-header"><h5 class="modal-title">My Reports</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>';
-  html += '<div class="modal-body"><table class="table"><thead><tr><th>Date</th><th>Type</th><th>Status</th><th>Description</th></tr></thead><tbody>';
-  
-  userReports.forEach(report => {
-    const date = new Date(report.reportDate).toLocaleDateString('en-US');
-    html += `<tr>
-      <td>${date}</td>
-      <td>${report.type}</td>
-      <td><span class="badge badge-status-${report.status.toLowerCase()}">${report.status}</span></td>
-      <td>${report.description}</td>
-    </tr>`;
+// ==============================
+// MY REPORTS PAGE (PILOT)
+// ==============================
+
+function showMyReportsPage() {
+  // Hide other views
+  $('#mainApp').hide();
+  $('#adminDashboard').hide();
+  $('#myReportsPage').show();
+
+  populateMyReportsPage();
+}
+
+function populateMyReportsPage() {
+  if (!currentUser) return;
+
+  const userEmail = currentUser.email;
+
+  // 1. Submitted reports
+  const userReports = reports.filter(r => r.reporterEmail === userEmail);
+  const submittedBody = $('#submittedReportsBody');
+  submittedBody.empty();
+
+  userReports.forEach(r => {
+    submittedBody.append(`
+      <tr>
+        <td>${new Date(r.reportDate).toLocaleDateString()}</td>
+        <td>${r.type}</td>
+        <td><span class="badge badge-status-${r.status.toLowerCase()}">${r.status}</span></td>
+        <td>${(r.description || '').substring(0, 80)}${r.description && r.description.length > 80 ? '…' : ''}</td>
+      </tr>
+    `);
   });
-  
-  html += '</tbody></table></div></div></div></div>';
-  
-  $('body').append(html);
-  $('#userReportsModal').modal('show');
-  $('#userReportsModal').on('hidden.bs.modal', function() {
-    $(this).remove();
+
+  // 2. Drafts fra localStorage
+  const savedDrafts = JSON.parse(localStorage.getItem('navisafe_drafts') || '[]');
+  const draftsBody = $('#draftsTableBody');
+  draftsBody.empty();
+
+  savedDrafts.forEach(d => {
+    const locationText =
+        d.latitude && d.longitude
+            ? `${d.latitude}, ${d.longitude}`
+            : (d.geometry && d.geometry.geometry && d.geometry.geometry.type === 'LineString'
+                ? 'Line obstacle'
+                : '-');
+
+    draftsBody.append(`
+      <tr>
+        <td>${new Date(d.savedAt).toLocaleString()}</td>
+        <td>${d.type || '-'}</td>
+        <td>${locationText}</td>
+        <td>
+          <button class="btn btn-sm btn-primary" onclick="editDraft('${d.id}')">
+            <i class="bi bi-pencil-square"></i>
+          </button>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-danger" onclick="deleteDraft('${d.id}')">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>
+    `);
   });
+}
+
+function editDraft(draftId) {
+  const drafts = JSON.parse(localStorage.getItem('navisafe_drafts') || '[]');
+  const draft = drafts.find(d => d.id === draftId);
+  if (!draft) return;
+
+  // Back to main app + open form
+  $('#myReportsPage').hide();
+  $('#mainApp').show();
+  showReportForm();
+
+  // Fill form fields
+  $('#obstacleType').val(draft.type || '');
+  $('#obstacleHeight').val(draft.height || '');
+  $('#obstacleDescription').val(draft.description || '');
+
+  // Clear previous drawings
+  if (drawnItems) {
+    drawnItems.clearLayers();
+  }
+  currentObstacleGeometry = null;
+  linePoints = [];
+  if (tempPolyline) {
+    map.removeLayer(tempPolyline);
+    tempPolyline = null;
+  }
+  if (currentMarker) {
+    map.removeLayer(currentMarker);
+    currentMarker = null;
+  }
+
+  // Rebuild geometry on map
+  if (draft.geometry && draft.geometry.geometry) {
+    const geom = draft.geometry.geometry;
+
+    if (geom.type === 'Point') {
+      const coords = geom.coordinates; // [lon, lat]
+      setMapLocation(coords[1], coords[0]);
+    } else if (geom.type === 'LineString') {
+      const coords = geom.coordinates; // [[lon,lat], ...]
+      linePoints = coords.map(c => L.latLng(c[1], c[0]));
+      const polyline = L.polyline(linePoints, { color: '#0d6efd' }).addTo(drawnItems);
+      currentObstacleGeometry = polyline.toGeoJSON();
+
+      const first = linePoints[0];
+      const last = linePoints[linePoints.length - 1];
+      $('#obstacleLat').val(`${first.lat.toFixed(6)} → ${last.lat.toFixed(6)}`);
+      $('#obstacleLon').val(`${first.lng.toFixed(6)} → ${last.lng.toFixed(6)}`);
+    }
+  }
+
+  // Remove old draft so it doesn't duplicate when resaving
+  deleteDraft(draftId, false);
+}
+
+function deleteDraft(draftId, refresh = true) {
+  let drafts = JSON.parse(localStorage.getItem('navisafe_drafts') || '[]');
+  drafts = drafts.filter(d => d.id !== draftId);
+  localStorage.setItem('navisafe_drafts', JSON.stringify(drafts));
+
+  if (refresh) {
+    populateMyReportsPage();
+  }
 }
 
 // ========================================
