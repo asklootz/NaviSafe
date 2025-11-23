@@ -88,6 +88,18 @@
                                 <textarea id="MarkerCoordinatesJSON" class="form-control form-control-sm" rows="3" readonly placeholder="Draw on the map to see coordinates here..."></textarea>
                                 <label for="LiveCoordinates" class="form-label mt-2">Live coordinates</label>
                                 <textarea id="LiveCoordinates" class="form-control form-control-sm" rows="4" readonly placeholder="Your live coordinates will appear here..."></textarea>
+
+                                <!-- New separate latitude/longitude inputs -->
+                                <div class="row mt-2 g-2">
+                                    <div class="col-6">
+                                        <label for="Latitude" class="form-label formLabel">Latitude</label>
+                                        <input type="text" id="Latitude" class="form-control formTextField" placeholder="Latitude" />
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="Longitude" class="form-label formLabel">Longitude</label>
+                                        <input type="text" id="Longitude" class="form-control formTextField" placeholder="Longitude" />
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="col-12 mt-4">
@@ -146,7 +158,40 @@
         lc.getContainer().id = "locate-button";
         lc.start();
 
+        // State flags
+        let useLiveData = true;
+        let markerPlaced = false;
+        let manualOverride = false;
+
+        // Helper to update geometry and previews from a lat/lng pair
+        function updateFromLatLng(lat, lng, accuracy = null, source = 'manual') {
+            if (lat == null || lng == null || Number.isNaN(lat) || Number.isNaN(lng)) return;
+
+            const coords = [lng, lat];
+            const feature = {
+                type: 'Feature',
+                geometry: { type: 'Point', coordinates: coords },
+                properties: { source: source }
+            };
+
+            const json = JSON.stringify(feature);
+            document.getElementById('GeometryGeoJson').value = json;
+            document.getElementById('MarkerCoordinatesJSON').value = json;
+
+            // Update lat/lng inputs (format to 6 decimals)
+            document.getElementById('Latitude').value = lat.toFixed ? lat.toFixed(6) : lat;
+            document.getElementById('Longitude').value = lng.toFixed ? lng.toFixed(6) : lng;
+
+            // place a marker in drawnItems for visual feedback
+            drawnItems.clearLayers();
+            const m = L.marker([lat, lng]);
+            drawnItems.addLayer(m);
+        }
+
         map.on('locationfound', function(e) {
+            // only update if using live data and no marker placed and user didn't manually override
+            if (!useLiveData || markerPlaced || manualOverride) return;
+
             drawnItems.clearLayers();
             let lat = e.latlng.lat;
             let lng = e.latlng.lng;
@@ -160,11 +205,10 @@
             };
             let liveCoordinatesJSONString = JSON.stringify(LiveCoordinatesJSON);
             let liveCoordinates = "Lat: " + lat + "\nLng: " + lng + "\nAccuracy: " + radius + "m" + "\nJSON: " + liveCoordinatesJSONString;
-            console.log("User's location: Lat: " + lat + ", Lng: " + lng + ", Accuracy: " + radius + "m" + ", Altitude: " + altitude);
             document.getElementById("LiveCoordinates").value = liveCoordinates;
 
-            let liveCoordinatesJSON = {};
-            document.getElementById("MarkerCoordinatesJSON").value = liveCoordinatesJSON;
+            // update the lat/lng fields and geometry
+            updateFromLatLng(lat, lng, radius, 'live');
         });
 
         let drawnItems = new L.FeatureGroup();
@@ -194,8 +238,6 @@
 
                 L.DomEvent.disableClickPropagation(container);
                 L.DomEvent.on(container, 'click', function() {
-                    // Logic to handle drawing your custom marker
-                    // For example, add a click event listener to the map to place a marker
                     map.once('click', function(e) {
                         L.marker(e.latlng, {
                             icon: L.icon({
@@ -205,7 +247,6 @@
                             })
                         }).addTo(map);
                     });
-                    //alert('Click on the map to place your custom marker!');
                 });
 
                 return container;
@@ -215,23 +256,34 @@
         map.addControl(new customMarkerControl());
 
         map.on(L.Draw.Event.CREATED, function (e) {
+            // When a marker is drawn, stop live tracking and use marker coordinates
             drawnItems.clearLayers();
             let layer = e.layer;
             lc.stop();
+            useLiveData = false;
+            markerPlaced = true;
+            manualOverride = false; // marker is explicit placement
 
             drawnItems.addLayer(layer);
-            
             let geoJsonData = layer.toGeoJSON();
             let geoJsonString = JSON.stringify(geoJsonData);
 
             document.getElementById('GeometryGeoJson').value = geoJsonString;
             document.getElementById('MarkerCoordinatesJSON').value = geoJsonString;
+
+            // update lat/lng inputs
+            if (layer.getLatLng) {
+                const latlng = layer.getLatLng();
+                document.getElementById('Latitude').value = latlng.lat.toFixed(6);
+                document.getElementById('Longitude').value = latlng.lng.toFixed(6);
+            }
         });
 
-        let useLiveData = true;
-
+        // Radio handling
         document.getElementById('liveOption').addEventListener('change', function () {
             useLiveData = true;
+            manualOverride = false;
+            markerPlaced = false;
             lc.start();
             drawnItems.clearLayers();
             document.getElementById('GeometryGeoJson').value = "";
@@ -241,8 +293,32 @@
         document.getElementById('markerOption').addEventListener('change', function () {
             useLiveData = false;
             lc.stop();
-            document.getElementById("LiveCoordinates").value = "";
+            // allow user to draw a marker or type coordinates
         });
+
+        // Coordinate inputs: if user edits them manually we stop live tracking and use those coords
+        const latInput = document.getElementById('Latitude');
+        const lngInput = document.getElementById('Longitude');
+
+        function onManualCoordinateChange() {
+            const latVal = parseFloat(latInput.value);
+            const lngVal = parseFloat(lngInput.value);
+
+            if (isFinite(latVal) && isFinite(lngVal)) {
+                manualOverride = true;
+                useLiveData = false;
+                markerPlaced = false;
+                lc.stop();
+                // place marker and update geometry
+                updateFromLatLng(latVal, lngVal, null, 'manual');
+                // pan map to coordinates
+                try { map.setView([latVal, lngVal], Math.max(map.getZoom(), 13)); } catch { }
+            }
+        }
+
+        latInput.addEventListener('change', onManualCoordinateChange);
+        lngInput.addEventListener('change', onManualCoordinateChange);
+
     </script>
     
     <script>

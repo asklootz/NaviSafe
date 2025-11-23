@@ -4,10 +4,27 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using NaviSafe.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+using NaviSafe.Data;
+using System.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+
+// --- Register DbContext using connection string provided by AppHost ---
+// AppHost usually injects a connection string; try common names or inspect configuration at runtime.
+var connectionString =
+    builder.Configuration.GetConnectionString("mariaDatabase")
+    ?? builder.Configuration.GetConnectionString("MariaContainer")
+    ?? builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? builder.Configuration.GetConnectionString("navisafe")
+    ?? throw new InvalidOperationException("Connection string not found. Verify AppHost configured the DB reference.");
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+});
 
 // Configure OpenTelemetry
 builder.Services.AddOpenTelemetry()
@@ -32,8 +49,8 @@ builder.Logging.AddOpenTelemetry(options =>
 // Add services
 builder.Services.AddControllersWithViews();
 
-// Register UserStorage
-builder.Services.AddSingleton<UserStorage>();
+// Register UserStorage as scoped (required because it depends on DbContext)
+builder.Services.AddScoped<UserStorage>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -47,7 +64,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.Cookie.IsEssential = true;
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("IsPilot", p => p.RequireRole("PIL"));
+    options.AddPolicy("IsAdmin", p => p.RequireRole("ADM"));
+});
 
 // Add simple session support for login
 builder.Services.AddSession(options =>
@@ -73,20 +94,63 @@ app.UseRouting();
 app.UseSession();
 
 app.UseAuthentication();
+
+// Redirect unauthenticated users to the Login page for protected URLs
+app.Use(async (context, next) =>
+{
+    var path = context.Request.Path.Value ?? string.Empty;
+    var isAuthenticated = context.User?.Identity?.IsAuthenticated ?? false;
+
+    // Public/allowed prefixes and exact paths (static assets, health checks, login/register, API endpoints)
+    var allowedPrefixes = new[]
+    {
+        "/Account/Login",
+        "/Account/Register",
+        "/Account/AccessDenied",
+        "/css/",
+        "/js/",
+        "/lib/",
+        "/favicon.ico",
+        "/_framework/",
+        "/health",
+        "/alive",
+        "/static",
+        "/images/",
+        "/NaviSafeIcon.png",
+        "/NaviSafeIcon.svg",
+        "/api/"
+    };
+
+    var isAllowed = allowedPrefixes.Any(p => path.StartsWith(p, StringComparison.OrdinalIgnoreCase) || string.Equals(path, p, StringComparison.OrdinalIgnoreCase));
+
+    if (!isAuthenticated && !isAllowed)
+    {
+        // preserve returnUrl
+        var returnUrl = context.Request.Path + context.Request.QueryString;
+        var loginUrl = "/Account/Login?returnUrl=" + System.Net.WebUtility.UrlEncode(returnUrl);
+        context.Response.Redirect(loginUrl);
+        return;
+    }
+
+    await next();
+});
+
 app.UseAuthorization();
 
 app.MapStaticAssets();
 
-// Redirect to login ONLY if not authenticated
-
+// Redirect root to role-specific start page or login
 app.MapGet("/", (HttpContext context) =>
 {
-    var isAuthenticated = context.Session.GetString("IsAuthenticated");
     if (!context.User?.Identity?.IsAuthenticated ?? true)
-    {
-        //return Results.Redirect("/Account/Login");
         return Results.Redirect("/Account/Login");
-    }
+
+    if (context.User.IsInRole("PIL"))
+        return Results.Redirect("/Obstacle/DataForm");
+
+    if (context.User.IsInRole("ADM"))
+        return Results.Redirect("/Home/AdminDashboard");
+
     return Results.Redirect("/Home/Index");
 });
 
