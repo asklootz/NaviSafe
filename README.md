@@ -321,7 +321,7 @@ This test scenario assumes the following:
 •	Actual result: Only the reports from that organization is shown
 
 ### TS-05: Sort the obstacle reports by Obstacle type
-•	Input: click the **All types** button and click either **Tower/Mast**, **Power Line** or **Other**
+•	Input: click the **All types** button and click either **Mast**, **Power Line**, **Wind Turbine**, **Building** or **Other**
 •	Expected result: The list of reports are only of that obstacle type
 •	Actual result: Only the reports with that obstacle type are shown
 
