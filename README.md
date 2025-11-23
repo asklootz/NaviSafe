@@ -206,87 +206,120 @@ Make sure you have:
 
 ## Usage
 
-### 1. Login Screen
-Visit http://localhost:8080 to access the login page. 
-- **Email**: *admin@navisafe.com*
-- **Password**: *Admin123*
+### 1. Login Screen (For Admins)
+Visit http://localhost:8080 to access the login page.
+•	Email: admin@kartverket.no  
+•	Password: admin123
+From here, after you have logged in, you will arrive to the admin dashboard.
 
+### 2. Admin Dashboard
+
+After a successful login, you should now have access the main admin dashboard. Here you can view a map with all the reports from across the country and their statuses. Scrolling down will reveal a list of each obstacle and their respective information.
+By clicking the “View Details” Button under the “Action” tab will allow you to assign the Report to another handler, comment on the report and either approve or reject the report. When you are finished you can logout with the logout button in the top right part of the screen.
+
+---
+
+### 1. Login Screen (For Pilots)
+Visit http://localhost:8080 to access the login page.
+•	Email: pilot@nla.no | pilot@politiet.no | pilot@forsvaret.no | admin@kartverket.no 
+•	Password: test123
 From here, after you have logged in, you will arrive to the main dashboard.
 
 ### 2. Home Dashboard
-After a successful login, you should now have access the main dashboard. From here, you can navigate to **Register Obstacle**. 
+
+After a successful login, you are directed to the Report obstacle page
 
 ### 3. Obstacle Registration
-1. Fill in **Obstacle Name** and **Obstacle Height**.
-2. Add a **Description** with details about the obstacle.
-3. Select the location of the map (powered by OpenStreetMap + Leaflet). You will receive a pop-up notification whether you will allow to turn on location or not.
-After that, you should be able to draw a marker on the map. Then **Coordinates Preview** will pinpoint your coordinates in terms of longitude and latitude, while 
-**Live coordinates** tracks your location with described coordinates in realtime. 
-4. Click **Submit Data** - the data will be sent via `POST`to the API and stored in the MariaDB database. 
-5. After submitting data, you can select **Back To Home** and thus return to the main dashboard.
 
-### 4. Return to Home Dashboard and Logout
-You can also click on the **NaviSafe** name in order to return to your main dashboard. If you wish to logout, simply click on the **Logout** button.
+1.	Fill in Obstacle Name and Obstacle Height.
+2.	Add an optional Description with details about the obstacle.
+3.	Select the obstacles’ location on the map as a point or multiple lines(powered by OpenStreetMap + Leaflet) or use your GPS Location. You will receive a pop-up notification whether you will allow to turn on location or not. The latitude and longitude are shown below the map
+4.	Click Submit Data - the data will be sent via POSTto the API and stored in the MariaDB database.
+5.	After submitting data, you can click the “My Reports” Button to then view submitted obstacles and report new ones. You can also click the “Logout” Button to log out of your account
 
 ---
 
 ## Testing
+
 The objective of this **Test Scenario** is to verify that users can submit data, interact with the map, and have their location accurately tracked.
+### Pilot test scenario
 
 Preconditions:
-This test scenario assumes the following:
-•   The pilot is logged in to their account
-•   The pilot has service
-•   The pilot is using an iOS Device with Safari or Google Chrome
+
+This test scenario assumes the following: 
+• The pilot is logged in to their account 
+• The pilot has service 
+• The pilot is using an iOS Device with Safari or Google Chrome
 
 ### TS-01: Obstacle Registration with pin
-- **Input**: Submit an obstacle with type, height, a description and a pin.
-- **Expected result**: The obstacle is submitted and appears on the map
-- **Actual result**: The obstacle is displayed on the map
-
----
-
-### TS-02: Obstacle Registration without pin
-- **Input**: Submit an Obstacle with Type, Height and Description but without pin
-- **Expected result**: the helicopter’s live location will be used instead of the pin
-- **Actual result**: Feature not available, the registration goes through; however, no marker on the map
-
----
-
+•	Input: Submit an obstacle with type, height, a description and a pin.
+•	Expected result: The obstacle is submitted and you are sent to a new report form
+•	Actual result: The obstacle is submitted successfully however you are sent to a white screen. You can from here select “My Reports” or log out via the logout button
+________________________________________
+### TS-02: Obstacle Registration with GPS Location
+•	Input: Submit an Obstacle with Type, Height and Description and use the Helicopters GPS Location
+•	Expected result: the helicopter’s live location will be used instead of the pin
+•	Actual result: The GPS Location is successfully applied and the obstacle is submitted successfully, however you are sent to a white screen. You can from here select “My Reports” or log out via the logout button
+________________________________________
 ### TS-03: Obstacle Registration with pin - without fields
-- **Input**: Submitting just a pin without any fields
-- **Expected result**: a pin is dropped and the registration can be completed later
-- **Actual result**: Feature not available, you will be asked to fill the fields
-
----
-
+•	Input: Submitting just a pin without any fields
+•	Expected result: a pin is dropped and the registration can be saved as a draft
+•	Actual result: You are asked to either fill out the forms or save the report as a draft
+________________________________________
 ### TS-04: Obstacle Registration - Drag and Drop a pin
 Drag and drop a pin on the map
-- **Expected result**: A pin is dropped on the map
-- **Actual result**: A pin is dropped on the map and the live tracker disappears
-
----
-
+•	Expected result: A pin is dropped on the map
+•	Actual result: A pin is dropped on the map and the live tracker disappears
+________________________________________
 ### TS-05: Verifying the location trackers' accuracy
-Verify the location trackers' accuracy. Three devices were tested after the group noticed a difference in the accuracy of our devices and browsers. 
+Verify the location trackers' accuracy. Three devices were tested after the group noticed a difference in the accuracy of our devices and browsers.
+Expected results:
+•	Tracker inaccuracy does not exceed 50 meters
+Actual results:
+•	iPhone 14 Plus’s accuracy constantly changed between 5-31 Meters
+•	Windows 11 Laptop was tested with Opera GX, giving either 4911 or 22.5 meters and Google Chrome with 128 Meters of inaccuracy
+•	MacBook M1 Pro had an accuracy of 35 Meters
+The iPhone 14 Plus and MacBook's results are satisfactory, while the laptop's range was too unstable. Note that the group did not have any working iPads available, so an iPhone was used as a substitute
+________________________________________
 
-**Expected results**: 
-- Tracker inaccuracy does not exceed 50 meters
+### Admin test scenario
 
-**Actual results**: 
-- iPhone 14 Plus’s accuracy constantly changed between 5-31 Meters
-- Windows 11 Laptop was tested with Opera GX, giving either 4911 or 22.5 meters and Google Chrome with 128 Meters of inaccuracy
-- MacBook M1 Pro had an accuracy of 35 Meters
+Preconditions:
 
-The iPhone 14 Plus and MacBook's results are satisfactory, while the laptop's range was too unstable.
-Note that the group did not have any working iPads available, so an iPhone was used as a substitute
+This test scenario assumes the following: 
+• The admin is logged in to their account  
+
+### TS-01: Approve a report
+•	Input: click **View Details** and click Approve
+•	Expected result: The obstacle's status is set to approved
+•	Actual result: The obstacle's status is set to approved
+
+### TS-02: Reject a report
+•	Input: click **View Details** and click Approve
+•	Expected result: The obstacle's status is set to rejected
+•	Actual result: The obstacle's status is set to rejected
+
+### TS-03: Sort the obstacle reports by status
+•	Input: click the **All statuses** button and click either **Pending Review**, **Approved** or **Rejected**
+•	Expected result: The list of reports only show the selected status
+•	Actual result: The list of reports only show the selected status
+
+### TS-04: Sort the obstacle reports by Organizations
+•	Input: click the **All Organizations** button and click either **Norwergian Air Ambulance**, **Air Force** or **Police**
+•	Expected result: The list of reports are only from the selected organization
+•	Actual result: Only the reports from that organization is shown
+
+### TS-05: Sort the obstacle reports by Obstacle type
+•	Input: click the **All types** button and click either **Tower/Mast**, **Power Line** or **Other**
+•	Expected result: The list of reports are only of that obstacle type
+•	Actual result: Only the reports with that obstacle type are shown
 
 ---
 
 ### TS-01: Successful Login
 **Steps:**
 1. Navigate to `/Account/Login`
-2. Enter email: `admin@navisafe.com`
+2. Enter email: `admin@kartverket.no`
 3. Enter password: `Admin123`
 4. Click "Login"
 
@@ -299,7 +332,7 @@ Note that the group did not have any working iPads available, so an iPhone was u
 ### TS-02: Invalid Data
 **Steps:**
 1. Navigate to `/Account/Login`
-2. Enter email: `admin@navisafe.com`
+2. Enter email: `admin@kartverket.no`
 3. Enter password: `WrongPassword`
 4. Click "Login"
 
@@ -355,6 +388,7 @@ Note that the group did not have any working iPads available, so an iPhone was u
 **Expected Result:** Session cleared, redirected to login page
 
 **Actual Result:** Pass
+
 
 ---
 
