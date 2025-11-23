@@ -206,6 +206,17 @@ Make sure you have:
 
 ## Usage
 
+### Importing Database
+
+In order to set up the accounts you need to import the mariaDatabase SQL Source file:
+1. Clone the repository
+2. Open File explorer and navigate C:\NaviSafe\NaviSafe and find the **mariaDatabase** SQL Source file
+3. Copy the file
+4. Open Phpmyadmin and click Import
+5. Import the file
+
+--- 
+
 ### 1. Login Screen (For Admins)
 Visit http://localhost:8080 to access the login page.
 •	Email: admin@kartverket.no  
