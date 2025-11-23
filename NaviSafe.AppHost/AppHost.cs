@@ -25,6 +25,9 @@ builder.AddProject<Projects.NaviSafe>("navisafe")
 
 builder.AddDockerfile("naviSafe", "../", "NaviSafe/Dockerfile")
     .WithExternalHttpEndpoints()
+    .WithEnvironment("ASPNETCORE_Kestrel__Certificates__Default__Password", "PASSWORD")
+    .WithEnvironment("ASPNETCORE_Kestrel__Certificates__Default__Path", "/app/cert.pfx")
+    .WithEnvironment("ASPNETCORE_HTTPS_PORTS", "8081")
     .WithReference(mariaDatabase) //Creates a link between the web-server container and the database container via a connection string
     .WaitFor(mariaDatabase)
     .WithHttpEndpoint(8080, 8080, "NaviSafeHTTP")
