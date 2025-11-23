@@ -16,6 +16,7 @@ public class HomeController : Controller
         this.config = config;
     }
 
+    [Authorize]
     public IActionResult Index()
     {
         return View();

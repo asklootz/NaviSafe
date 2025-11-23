@@ -6,37 +6,44 @@ public class UserStorage
     {
         public string UserId { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-        public string FullName { get; set; } = string.Empty;
+
+        // Split first/last to match userInfo table
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+
+        // Organization number (foreign key to `organisation.orgNr`)
+        public int OrgNr { get; set; }
+
+        // Role code matching `userRole.roleID` (e.g. "ADM", "PIL")
+        public string RoleID { get; set; } = string.Empty;
+
         public string PhoneNumber { get; set; } = string.Empty;
-        public string StreetAddress { get; set; } = string.Empty;
-        public string City { get; set; } = string.Empty;
-        public string PostalCode { get; set; } = string.Empty;
-        public string Country { get; set; } = string.Empty;
+
         public DateTime RegisteredDate { get; set; }
-        
-        public string FullAddress => $"{StreetAddress}, {PostalCode} {City}, {Country}";
+
+        // compatibility convenience
+        public string FullName => string.IsNullOrWhiteSpace($"{FirstName} {LastName}".Trim()) ? string.Empty : $"{FirstName} {LastName}".Trim();
     }
 
     private static readonly Dictionary<string, UserData> Users = new()
     {
-        { 
-            "admin@navisafe.com", 
-            new UserData 
-            { 
-                UserId = "admin-001",
-                Password = "Admin123", 
-                FullName = "Administrator",
-                PhoneNumber = "+47 123 45 678",
-                StreetAddress = "Tollbodgata 50",
-                City = "Kristiansand",
-                PostalCode = "4614",
-                Country = "Norway",
+        {
+            "admin@navisafe.com",
+            new UserData
+            {
+                UserId = "1",
+                Password = "Admin123",
+                FirstName = "Yonathan",
+                LastName = "Admin",
+                PhoneNumber = "40000000",
+                OrgNr = 1,
+                RoleID = "ADM",
                 RegisteredDate = DateTime.UtcNow
-            } 
+            }
         }
     };
 
-    public bool UserExists(string email) => 
+    public bool UserExists(string email) =>
         Users.ContainsKey(email.ToLower());
 
     public bool ValidateUser(string email, string password)
@@ -45,30 +52,30 @@ public class UserStorage
         return user?.Password == password;
     }
 
-    public string RegisterUser(string email, string password, string fullName, 
-        string phoneNumber, string streetAddress, string city, string postalCode, string country)
+    // Updated registration method to match userInfo fields
+    public string RegisterUser(string email, string password,
+        string firstName, string lastName, string phoneNumber, int orgNr, string roleId)
     {
         if (UserExists(email))
             return string.Empty;
 
-        var userId = Guid.NewGuid().ToString();
-        
+        var userId = (Users.Count + 1).ToString();
+
         Users[email.ToLower()] = new UserData
         {
             UserId = userId,
             Password = password,
-            FullName = fullName,
+            FirstName = firstName,
+            LastName = lastName,
             PhoneNumber = phoneNumber,
-            StreetAddress = streetAddress,
-            City = city,
-            PostalCode = postalCode,
-            Country = country,
+            OrgNr = orgNr,
+            RoleID = roleId,
             RegisteredDate = DateTime.UtcNow
         };
 
         return userId;
     }
 
-    public UserData? GetUserInfo(string email) => 
+    public UserData? GetUserInfo(string email) =>
         Users.TryGetValue(email.ToLower(), out var user) ? user : null;
 }
