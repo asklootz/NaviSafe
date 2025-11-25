@@ -107,13 +107,10 @@ var sqlScript = $$"""
                   --
                   
                   INSERT INTO `userAuth` (`userID`, `username`, `passHash`, `passSalt`) VALUES
-                  (1, 'Yonathan (Admin)', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8uQ8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8u'),
-                  (2, 'NLA_pilot1', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8uQ8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8u'),
-                  (3, 'NLA_pilot2', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8uQ8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8u'),
-                  (4, 'LUFT_pilot1', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8uQ8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8u'),
-                  (5, 'LUFT_pilot2', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8uQ8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8u'),
-                  (6, 'PHT_pilot1', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8uQ8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8u'),
-                  (7, 'PHT_pilot2', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8uQ8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8Q8', '$2b$12$wH8Q8Q8Q8Q8Q8Q8Q8Q8Q8u');
+                  (1, 'admin@kartverket.no', '$2a$12$Ba.jhfeB6LIpCqRIIxEbh.MA.9EbftVLvPbwC8WJ/5WSiu4Rsrlci', '$2a$12$Ba.jhfeB6LIpCqRIIxEbh.'),
+                  (2, 'pilot@nla.no', '$2a$12$S9.2S.LWO8yBqSN9SvzOO.UUxu8KeluJ0yJZ2Aw1lGUaoWSk/YOTW', '$2a$12$S9.2S.LWO8yBqSN9SvzOO.'),
+                  (3, 'pilot@forsvaret.no', '$2a$12$m88vO3/D3M1oJlBOYT01DuiD9gTawkd/N6SIXKsLzh5ZJYhU3kWh.', '$2a$12$m88vO3/D3M1oJlBOYT01Du'),
+                  (4, 'pilot@politiet.no', '$2a$12$qLHFfrGcnL6YgU0wptsUouKRWYP85tXWfnSffEYRMFmCkJ0j7lOxi', '$2a$12$qLHFfrGcnL6YgU0wptsUou');
                   
                   -- --------------------------------------------------------
                   
@@ -141,13 +138,11 @@ var sqlScript = $$"""
                   --
                   
                   INSERT INTO `userInfo` (`userID`, `firstName`, `lastName`, `email`, `phone`, `orgNr`, `roleID`, `creationDate`) VALUES
-                  (1, 'Yonathan', 'Admin', 'yonathan@kartverket.no', '40000000', 1, 'ADM', '2025-11-08 15:57:19'),
-                  (2, 'NLA', 'Pilot1', 'pilot1@nla.no', '41000001', 2, 'PIL', '2025-11-08 15:57:19'),
-                  (3, 'NLA', 'Pilot2', 'pilot2@nla.no', '41000002', 2, 'PIL', '2025-11-08 15:57:19'),
-                  (4, 'LUFT', 'Pilot1', 'pilot1@luftforsvaret.no', '42000003', 3, 'PIL', '2025-11-08 15:57:19'),
-                  (5, 'LUFT', 'Pilot2', 'pilot2@luftforsvaret.no', '42000004', 3, 'PIL', '2025-11-08 15:57:19'),
-                  (6, 'PHT', 'Pilot1', 'pilot1@pht.no', '43000005', 4, 'PIL', '2025-11-08 15:57:19'),
-                  (7, 'PHT', 'Pilot2', 'pilot2@pht.no', '43000006', 4, 'PIL', '2025-11-08 15:57:19');
+                  (1, 'Yonathan', 'Admin', 'admin@kartverket.no', '40000000', 1, 'ADM', ' 2025-11-21 02:56:46'),
+                  (2, 'Ola', 'Nordmann', 'pilot@nla.no', '41000001', 2, 'PIL', '2025-11-21 02:59:18'),
+                  (3, 'Kari', 'Nordmann', 'pilot@forsvaret.no', '41000002', 3, 'PIL', ' 2025-11-21 03:06:35'),
+                  (4, 'Die', 'Polizie', 'pilot@politiet.no', '42000003', 4, 'PIL', '2025-11-21 03:11:09');
+                  
                   
                   -- --------------------------------------------------------
                   
