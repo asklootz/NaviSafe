@@ -54,6 +54,18 @@
     border-color: var(--ns-indigo-hover);
 }
 
+.btn-yellow {
+    color: #000000;
+    background-color: #fffc78;
+    border-color: #fffc78;
+}
+.btn-yellow:hover,
+.btn-yellow:focus {
+    color: #000000;
+    background-color: #dbd86e;
+    border-color: #dbd86e;
+}
+
 .btn-report{
     background-color: #ffffff;
     border-color: #ffffff;
