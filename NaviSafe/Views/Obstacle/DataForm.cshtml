@@ -200,6 +200,18 @@
         lc.getContainer().id = "locate-button";
         lc.start();
 
+        // Also start the browser geolocation explicitly to ensure 'locationfound' events fire
+        try {
+            map.locate({ watch: true, setView: false, enableHighAccuracy: true, timeout: 10000, maximumAge: 5000 });
+        } catch (ex) {
+            console.warn('map.locate failed', ex);
+        }
+
+        // show geolocation errors in console and notify user if needed
+        map.on('locationerror', function(ev) {
+            console.warn('locationerror', ev);
+        });
+
         // State flags
         let useLiveData = true;
         let markerPlaced = false;
@@ -217,17 +229,24 @@
             };
 
             const json = JSON.stringify(feature);
-            document.getElementById('GeometryGeoJson').value = json;
-            document.getElementById('MarkerCoordinatesJSON').value = json;
+
+            const geoEl = document.getElementById('GeometryGeoJson');
+            if (geoEl) geoEl.value = json;
+            const previewEl = document.getElementById('MarkerCoordinatesJSON');
+            if (previewEl) previewEl.value = json;
 
             // Update lat/lng inputs (format to 6 decimals)
-            document.getElementById('Latitude').value = lat.toFixed ? lat.toFixed(6) : lat;
-            document.getElementById('Longitude').value = lng.toFixed ? lng.toFixed(6) : lng;
+            const latEl = document.getElementById('Latitude');
+            const lngEl = document.getElementById('Longitude');
+            if (latEl) latEl.value = (typeof lat === 'number' && isFinite(lat)) ? lat.toFixed(6) : String(lat);
+            if (lngEl) lngEl.value = (typeof lng === 'number' && isFinite(lng)) ? lng.toFixed(6) : String(lng);
 
-            // place a marker in drawnItems for visual feedback
-            drawnItems.clearLayers();
-            const m = L.marker([lat, lng]);
-            drawnItems.addLayer(m);
+            // // place a marker in drawnItems for visual feedback
+            // try {
+            //     drawnItems.clearLayers();
+            //     const m = L.marker([lat, lng]);
+            //     drawnItems.addLayer(m);
+            // } catch (ex) { /* ignore */ }
         }
 
         map.on('locationfound', function(e) {
@@ -247,7 +266,8 @@
             };
             let liveCoordinatesJSONString = JSON.stringify(LiveCoordinatesJSON);
             let liveCoordinates = "Lat: " + lat + "\nLng: " + lng + "\nAccuracy: " + radius + "m" + "\nJSON: " + liveCoordinatesJSONString;
-            document.getElementById("LiveCoordinates").value = liveCoordinates;
+            const liveEl = document.getElementById("LiveCoordinates");
+            if (liveEl) liveEl.value = liveCoordinates;
 
             // update the lat/lng fields and geometry
             updateFromLatLng(lat, lng, radius, 'live');
