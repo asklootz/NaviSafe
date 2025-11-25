@@ -29,7 +29,7 @@ USE `mariaDatabase`;
 -- Table structure for table `organisation`
 --
 
-DROP TABLE IF EXISTS `organisation`;
+-- DROP TABLE IF EXISTS `organisation`;
 CREATE TABLE IF NOT EXISTS `organisation` (
   `orgNr` int(11) NOT NULL AUTO_INCREMENT,
   `orgName` varchar(255) NOT NULL,
@@ -52,7 +52,7 @@ INSERT INTO `organisation` (`orgNr`, `orgName`) VALUES
 -- Table structure for table `reporting`
 --
 
-DROP TABLE IF EXISTS `reporting`;
+-- DROP TABLE IF EXISTS `reporting`;
 CREATE TABLE IF NOT EXISTS `reporting` (
   `regID` int(11) NOT NULL AUTO_INCREMENT,
   `lat` float NOT NULL,
@@ -86,7 +86,7 @@ INSERT INTO `reporting` (`regID`, `lat`, `lon`, `altitude`, `accuracy`, `shortDe
 -- Table structure for table `userAuth`
 --
 
-DROP TABLE IF EXISTS `userAuth`;
+-- DROP TABLE IF EXISTS `userAuth`;
 CREATE TABLE IF NOT EXISTS `userAuth` (
   `userID` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(70) NOT NULL,
@@ -114,7 +114,7 @@ INSERT INTO `userAuth` (`userID`, `username`, `passHash`, `passSalt`) VALUES
 -- Table structure for table `userInfo`
 --
 
-DROP TABLE IF EXISTS `userInfo`;
+-- DROP TABLE IF EXISTS `userInfo`;
 CREATE TABLE IF NOT EXISTS `userInfo` (
   `userID` int(11) NOT NULL,
   `firstName` varchar(255) DEFAULT NULL,
@@ -148,7 +148,7 @@ INSERT INTO `userInfo` (`userID`, `firstName`, `lastName`, `email`, `phone`, `or
 -- Table structure for table `userRole`
 --
 
-DROP TABLE IF EXISTS `userRole`;
+-- DROP TABLE IF EXISTS `userRole`;
 CREATE TABLE IF NOT EXISTS `userRole` (
   `roleID` char(3) NOT NULL,
   `rolePermissions` enum('ADMIN','PILOT') NOT NULL,

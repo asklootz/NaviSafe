@@ -3,6 +3,7 @@ using Aspire.Hosting.ApplicationModel;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
+// Initial SQL script to create the database schema and seed data based on "mariaDatabase.sql"
 var sqlScript = $$"""
                   -- phpMyAdmin SQL Dump
                   -- version 5.2.3
@@ -35,7 +36,7 @@ var sqlScript = $$"""
                   -- Table structure for table `organisation`
                   --
                   
-                  DROP TABLE IF EXISTS `organisation`;
+                  -- DROP TABLE IF EXISTS `organisation`;
                   CREATE TABLE IF NOT EXISTS `organisation` (
                     `orgNr` int(11) NOT NULL AUTO_INCREMENT,
                     `orgName` varchar(255) NOT NULL,
@@ -58,7 +59,7 @@ var sqlScript = $$"""
                   -- Table structure for table `reporting`
                   --
                   
-                  DROP TABLE IF EXISTS `reporting`;
+                  -- DROP TABLE IF EXISTS `reporting`;
                   CREATE TABLE IF NOT EXISTS `reporting` (
                     `regID` int(11) NOT NULL AUTO_INCREMENT,
                     `lat` float NOT NULL,
@@ -92,7 +93,7 @@ var sqlScript = $$"""
                   -- Table structure for table `userAuth`
                   --
                   
-                  DROP TABLE IF EXISTS `userAuth`;
+                  -- DROP TABLE IF EXISTS `userAuth`;
                   CREATE TABLE IF NOT EXISTS `userAuth` (
                     `userID` int(11) NOT NULL AUTO_INCREMENT,
                     `username` varchar(70) NOT NULL,
@@ -120,7 +121,7 @@ var sqlScript = $$"""
                   -- Table structure for table `userInfo`
                   --
                   
-                  DROP TABLE IF EXISTS `userInfo`;
+                  -- DROP TABLE IF EXISTS `userInfo`;
                   CREATE TABLE IF NOT EXISTS `userInfo` (
                     `userID` int(11) NOT NULL,
                     `firstName` varchar(255) DEFAULT NULL,
@@ -205,7 +206,6 @@ var mariaContainer = builder.AddMySql("mariaContainer", null, 3307)
 
 var mariaDatabase = mariaContainer.AddDatabase("mariaDatabase")
     .WithCreationScript(sqlScript); //Path to the initial SQL script to create the database schema and seed data
-
 //2 choices of how to run the web-server - ONLY CHOOSE ONE:
 
 //To run on the web-server locally on your machine via AppHost - Should only be used for development with "Hot Reload"
