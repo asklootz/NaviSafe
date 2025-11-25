@@ -38,7 +38,7 @@
                 <div class="card-body p-4">
                     <header class="mb-3">
                         <h1 class="fs-3 fw-semibold mb-1 text-center" >Obstacle Registration Form</h1>
-                        <p class="text-secondary mb-0 text-center">Fields with * must be filled</p>
+                        <p class="text-decoration-underline mb-0 text-center">Fields with <span class="text-danger">*</span> must be filled</p>
                     </header>
 
                     <form asp-action="DataForm" method="post" class="">
@@ -122,10 +122,6 @@
                             <input type="hidden" asp-for="GeometryGeoJson" id="GeometryGeoJson"/>
 
                             <div class="mt-3">
-                                <label for="MarkerCoordinatesJSON" class="form-label">Coordinates Preview</label>
-                                <textarea id="MarkerCoordinatesJSON" class="form-control form-control-sm" rows="3" readonly placeholder="Draw on the map to see coordinates here..."></textarea>
-                                <label for="LiveCoordinates" class="form-label mt-2">Live coordinates</label>
-                                <textarea id="LiveCoordinates" class="form-control form-control-sm" rows="4" readonly placeholder="Your live coordinates will appear here..."></textarea>
 
                                 <!-- New separate latitude/longitude inputs -->
                                 <div class="row mt-2 g-2">
