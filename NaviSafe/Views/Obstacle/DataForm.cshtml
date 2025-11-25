@@ -134,11 +134,66 @@
 
                             <div class="col-12 mt-4">
                                 <label asp-for="ObstacleHeight" class="form-label formLabel">Obstacle Height (feet):</label>
-                                <input asp-for="ObstacleHeight" type="number" step="0.01" min="0" class="form-control formTextField" placeholder="e.g., 2.5" />
-                                <span asp-validation-for="ObstacleHeight" class="text-danger small"></span>
+                                <div class="row g-2 align-items-center">
+                                    <div class="col-6">
+                                        <input asp-for="ObstacleHeight" type="number" step="0.01" min="0" class="form-control formTextField" placeholder="e.g., 2.5" />
+                                        <span asp-validation-for="ObstacleHeight" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-3 text-center">
+                                        <button type="button" class="btn btn-primary btn-img w-100" id="openCameraButton">
+                                            <i class="bi bi-camera-fill"></i> Camera
+                                        </button>
+                                        <input type="file" id="cameraInput" accept="image/*" capture="camera" style="display: none;" />
+                                    </div>
+                                    <div class="col-3 text-center">
+                                        <button type="button" class="btn btn-secondary btn-img w-100" id="uploadImageButton">
+                                            <i class="bi bi-upload"></i> Upload
+                                        </button>
+                                        <input type="file" id="uploadImageInput" accept="image/*" style="display: none;" />
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-12 text-center">
+                                        <img id="imagePreview" src="#" alt="Image Preview" style="display: none; max-width: 100%; max-height: 300px; border: 1px solid #ccc; border-radius: 10px;" />
+                                    </div>
+                                </div>
                             </div>
-                            
-                            
+
+                        <script>
+                            document.getElementById('uploadImageButton').addEventListener('click', function () {
+                                document.getElementById('uploadImageInput').click();
+                            });
+
+                            document.getElementById('openCameraButton').addEventListener('click', function () {
+                                document.getElementById('cameraInput').click();
+                            });
+
+                            function displayImagePreview(file) {
+                                const reader = new FileReader();
+                                reader.onload = function (e) {
+                                    const preview = document.getElementById('imagePreview');
+                                    preview.src = e.target.result;
+                                    preview.style.display = 'block';
+                                };
+                                reader.readAsDataURL(file);
+                            }
+
+                            document.getElementById('uploadImageInput').addEventListener('change', function (event) {
+                                const file = event.target.files[0];
+                                if (file) {
+                                    console.log('Image uploaded:', file.name);
+                                    displayImagePreview(file);
+                                }
+                            });
+
+                            document.getElementById('cameraInput').addEventListener('change', function (event) {
+                                const file = event.target.files[0];
+                                if (file) {
+                                    console.log('Picture taken:', file.name);
+                                    displayImagePreview(file);
+                                }
+                            });
+                        </script>
                         </div>
                         <div class="mt-4">
                             <div class="row mt-3 g-2">
@@ -202,61 +257,29 @@
             const locateBtn = document.getElementById('locate-button');
             if (!locateBtn) return;
             locateBtn.addEventListener('click', function () {
-                console.log('Locate button clicked: clearing markers and resetting state.');
-
                 // allow live location to be used again
                 markerPlaced = false;
                 manualOverride = false;
-
-                // remove existing marker(s)
-                try {
-                    drawnItems.clearLayers();
-                    console.log('All markers cleared.');
-                } catch (ex) {
-                    console.warn('Failed to clear markers', ex);
-                }
+                try { drawnItems.clearLayers(); } catch (ex) { }
 
                 // ensure locate/watch is running
                 try {
-                    if (lc && typeof lc.start === 'function') lc.start();
-                    map.locate({ watch: true, setView: true, enableHighAccuracy: true });
-                    console.log('GPS tracking re-enabled.');
-                } catch (ex) {
-                    console.warn('Failed to restart locate', ex);
-                }
+                    lc.start();
+                    map.locate({ watch: true, setView: false, enableHighAccuracy: true });
+                } catch (ex) { console.warn('Failed to restart locate', ex); }
             });
         })();
 
-        map.on('locationfound', function(e) {
-            console.log('Location found:', e);
+        // Also start the browser geolocation explicitly to ensure 'locationfound' events fire
+        try {
+            map.locate({ watch: true, setView: false, enableHighAccuracy: true, timeout: 10000, maximumAge: 5000 });
+        } catch (ex) {
+            console.warn('map.locate failed', ex);
+        }
 
-            // Clear existing markers and reset state
-            try {
-                drawnItems.clearLayers();
-                console.log('Existing markers cleared on location found.');
-            } catch (ex) {
-                console.warn('Failed to clear markers on location found', ex);
-            }
-
-            markerPlaced = false;
-
-            let lat = e.latlng.lat;
-            let lng = e.latlng.lng;
-            let radius = e.accuracy;
-            let altitude = e.latlng.alt;
-
-            let LiveCoordinatesJSON = {
-                "type": "Feature",
-                "geometry": { "type": "Point", "coordinates": [lng, lat] },
-                "properties": { "accuracy": radius, "altitude": altitude }
-            };
-            let liveCoordinatesJSONString = JSON.stringify(LiveCoordinatesJSON);
-            let liveCoordinates = "Lat: " + lat + "\nLng: " + lng + "\nAccuracy: " + radius + "m" + "\nJSON: " + liveCoordinatesJSONString;
-            const liveEl = document.getElementById("LiveCoordinates");
-            if (liveEl) liveEl.value = liveCoordinates;
-
-            // update the lat/lng fields and geometry
-            updateFromLatLng(lat, lng, radius, 'live');
+        // show geolocation errors in console and notify user if needed
+        map.on('locationerror', function(ev) {
+            console.warn('locationerror', ev);
         });
 
         // State flags

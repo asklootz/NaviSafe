@@ -9,6 +9,12 @@
     background-color: #bde3ff;
 }
 
+.btn-img {
+    font-weight: 700;
+    font-size: 2rem;
+    min-height: 5.5rem;
+}
+
 /* Navbar logo size (replaces Tailwind h-8 w-8) */
 .brand-logo{
     width: 4rem;
