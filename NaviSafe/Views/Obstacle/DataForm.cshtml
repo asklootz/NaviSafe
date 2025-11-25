@@ -19,6 +19,12 @@
         <div class="container-fluid">
             <img src="~/NaviSafeIcon.svg" alt="NaviSafe Logo" class="brand-logo me-2"/>
             <div class="text-center"><a class="navbar-brand fw-semibold " asp-area="" asp-controller="Home" asp-action="Index">NaviSafe</a><br/><a class="navbar-brand">New Registration</a></div>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                </div>
+            <div class="align-content-md-center">
+                <h1 class="fs-3 fw-semibold mb-1 text-center">Obstacle Registration Form</h1>
+                <p class="text-decoration-underline mb-0 text-center">Fields with <span class="text-danger">*</span> must be filled</p>
+            </div>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -26,7 +32,7 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     
             </div>
-            <button class="btn btn-report fs-3"><i class="bi bi-list fs-2 me-3"></i>My Registrations</button>
+            <button class="btn btn-report fs-3" type="button"><i class="bi bi-list fs-2 me-3"></i>My Registrations</button>
         </div>
     </nav>
 </header>
@@ -36,10 +42,10 @@
         <div class="col-12 ">
             <div class="card card-ns shadow-sm">
                 <div class="card-body p-4">
-                    <header class="mb-3">
+                    @* <header class="mb-3">
                         <h1 class="fs-3 fw-semibold mb-1 text-center" >Obstacle Registration Form</h1>
                         <p class="text-decoration-underline mb-0 text-center">Fields with <span class="text-danger">*</span> must be filled</p>
-                    </header>
+                    </header> *@
 
                     <form asp-action="DataForm" method="post" class="">
                         <div class="row g-4">
@@ -134,14 +140,15 @@
                             
                             
                         </div>
-                        <div class="pt-2">
-                            <button type="submit" class="btn btn-yellow">
-                                    Save as Draft
-                            </button>
-                            <button type="submit" class="btn btn-indigo">
-                                Submit Data
-                            </button>
-                            
+                        <div class="mt-4">
+                            <div class="row mt-3 g-2">
+                                <div class="col-6">
+                                    <button type="submit" class="btn btn-yellow w-100"> <i class="bi bi-pencil-square"></i> Save as Draft</button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-green w-100"> <i class="bi bi-check-circle-fill"></i> Submit Data</button>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -271,61 +278,8 @@
         });
         map.addControl(drawControl);
 
-        var customMarkerControl = L.Control.extend({
-            options: {
-                position: 'topleft' // Position of the control on the map
-            },
+        
 
-            onAdd: function(map) {
-                var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
-                container.innerHTML = '<button title="Draw Custom Marker" class="custom-marker-button"></button>';
-
-                L.DomEvent.disableClickPropagation(container);
-                L.DomEvent.on(container, 'click', function() {
-                    map.once('click', function(e) {
-                        // stop live tracking and mark that a marker has been placed
-                        lc.stop();
-                        markerPlaced = true;
-                        manualOverride = false;
-
-                        // create marker and add to drawnItems so edit controls work the same as draw plugin
-                        var m = L.marker(e.latlng, {
-                            icon: L.icon({
-                                iconUrl: '/NaviSafeIcon.png',
-                                iconSize: [32, 32],
-                                iconAnchor: [16, 32]
-                            })
-                        });
-
-                        drawnItems.clearLayers();
-                        drawnItems.addLayer(m);
-
-                        // update geometry and inputs using central helper
-                        updateFromLatLng(e.latlng.lat, e.latlng.lng, null, 'marker');
-
-                        // also store the full GeoJSON for the marker (compatible with draw plugin)
-                        try {
-                            var geo = m.toGeoJSON();
-                            var geoStr = JSON.stringify(geo);
-                            var geoEl = document.getElementById('GeometryGeoJson');
-                            var previewEl = document.getElementById('MarkerCoordinatesJSON');
-                            if (geoEl) geoEl.value = geoStr;
-                            if (previewEl) previewEl.value = geoStr;
-                        } catch (ex) { /* ignore */ }
-
-                        // ensure Latitude/Longitude inputs are set (defensive)
-                        var latEl = document.getElementById('Latitude');
-                        var lngEl = document.getElementById('Longitude');
-                        if (latEl) latEl.value = (e.latlng.lat).toFixed(6);
-                        if (lngEl) lngEl.value = (e.latlng.lng).toFixed(6);
-                    });
-                });
-
-                return container;
-            }
-        });
-
-        map.addControl(new customMarkerControl());
 
         map.on(L.Draw.Event.CREATED, function (e) {
             // When a marker is drawn, stop live tracking and use marker coordinates
