@@ -174,7 +174,7 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
 
     <script>
         let map = L.map('map').setView([58.163137,8.002106], 13);
@@ -197,16 +197,66 @@
         lc.getContainer().id = "locate-button";
         lc.start();
 
-        // Also start the browser geolocation explicitly to ensure 'locationfound' events fire
-        try {
-            map.locate({ watch: true, setView: false, enableHighAccuracy: true, timeout: 10000, maximumAge: 5000 });
-        } catch (ex) {
-            console.warn('map.locate failed', ex);
-        }
+        // When user activates the locate control, resume live updates and clear marker/manual overrides
+        (function() {
+            const locateBtn = document.getElementById('locate-button');
+            if (!locateBtn) return;
+            locateBtn.addEventListener('click', function () {
+                console.log('Locate button clicked: clearing markers and resetting state.');
 
-        // show geolocation errors in console and notify user if needed
-        map.on('locationerror', function(ev) {
-            console.warn('locationerror', ev);
+                // allow live location to be used again
+                markerPlaced = false;
+                manualOverride = false;
+
+                // remove existing marker(s)
+                try {
+                    drawnItems.clearLayers();
+                    console.log('All markers cleared.');
+                } catch (ex) {
+                    console.warn('Failed to clear markers', ex);
+                }
+
+                // ensure locate/watch is running
+                try {
+                    if (lc && typeof lc.start === 'function') lc.start();
+                    map.locate({ watch: true, setView: true, enableHighAccuracy: true });
+                    console.log('GPS tracking re-enabled.');
+                } catch (ex) {
+                    console.warn('Failed to restart locate', ex);
+                }
+            });
+        })();
+
+        map.on('locationfound', function(e) {
+            console.log('Location found:', e);
+
+            // Clear existing markers and reset state
+            try {
+                drawnItems.clearLayers();
+                console.log('Existing markers cleared on location found.');
+            } catch (ex) {
+                console.warn('Failed to clear markers on location found', ex);
+            }
+
+            markerPlaced = false;
+
+            let lat = e.latlng.lat;
+            let lng = e.latlng.lng;
+            let radius = e.accuracy;
+            let altitude = e.latlng.alt;
+
+            let LiveCoordinatesJSON = {
+                "type": "Feature",
+                "geometry": { "type": "Point", "coordinates": [lng, lat] },
+                "properties": { "accuracy": radius, "altitude": altitude }
+            };
+            let liveCoordinatesJSONString = JSON.stringify(LiveCoordinatesJSON);
+            let liveCoordinates = "Lat: " + lat + "\nLng: " + lng + "\nAccuracy: " + radius + "m" + "\nJSON: " + liveCoordinatesJSONString;
+            const liveEl = document.getElementById("LiveCoordinates");
+            if (liveEl) liveEl.value = liveCoordinates;
+
+            // update the lat/lng fields and geometry
+            updateFromLatLng(lat, lng, radius, 'live');
         });
 
         // State flags
