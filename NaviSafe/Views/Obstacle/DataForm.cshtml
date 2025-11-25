@@ -106,17 +106,7 @@
                                         <i class="bi bi-geo-fill"></i>
                                         <span>Provide Coordinates <span class="text-danger">*</span></span>
                                     </label>
-                                <div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" id="liveOption" name="dataSource" value="live" checked>
-                                        <label class="form-check-label" for="liveOption">Live data</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" id="markerOption" name="dataSource" value="marker">
-                                        <label class="form-check-label" for="markerOption">Marker data</label>
-                                    </div>
-                                </div>
-                            </div>
+                             </div>
 
                             <div id="map" class="map-container col-12"></div>
                             <input type="hidden" asp-for="GeometryGeoJson" id="GeometryGeoJson"/>
@@ -126,11 +116,11 @@
                                 <!-- New separate latitude/longitude inputs -->
                                 <div class="row mt-2 g-2">
                                     <div class="col-6">
-                                        <label for="Latitude" class="form-label formLabel">Latitude</label>
+                                            <label for="Latitude" class="form-label formLabel">Latitude <span class="text-danger">*</span></label>
                                         <input type="text" id="Latitude" class="form-control formTextField" placeholder="Latitude" />
                                     </div>
                                     <div class="col-6">
-                                        <label for="Longitude" class="form-label formLabel">Longitude</label>
+                                            <label for="Longitude" class="form-label formLabel">Longitude <span class="text-danger">*</span></label>
                                         <input type="text" id="Longitude" class="form-control formTextField" placeholder="Longitude" />
                                     </div>
                                 </div>
@@ -213,7 +203,6 @@
         });
 
         // State flags
-        let useLiveData = true;
         let markerPlaced = false;
         let manualOverride = false;
 
@@ -240,18 +229,11 @@
             const lngEl = document.getElementById('Longitude');
             if (latEl) latEl.value = (typeof lat === 'number' && isFinite(lat)) ? lat.toFixed(6) : String(lat);
             if (lngEl) lngEl.value = (typeof lng === 'number' && isFinite(lng)) ? lng.toFixed(6) : String(lng);
-
-            // // place a marker in drawnItems for visual feedback
-            // try {
-            //     drawnItems.clearLayers();
-            //     const m = L.marker([lat, lng]);
-            //     drawnItems.addLayer(m);
-            // } catch (ex) { /* ignore */ }
         }
 
         map.on('locationfound', function(e) {
-            // only update if using live data and no marker placed and user didn't manually override
-            if (!useLiveData || markerPlaced || manualOverride) return;
+            // only update if no marker placed and user didn't manually override
+            if (markerPlaced || manualOverride) return;
 
             drawnItems.clearLayers();
             let lat = e.latlng.lat;
@@ -301,9 +283,8 @@
                 L.DomEvent.disableClickPropagation(container);
                 L.DomEvent.on(container, 'click', function() {
                     map.once('click', function(e) {
-                        // stop live tracking and use this explicit marker
+                        // stop live tracking and mark that a marker has been placed
                         lc.stop();
-                        useLiveData = false;
                         markerPlaced = true;
                         manualOverride = false;
 
@@ -351,7 +332,6 @@
             drawnItems.clearLayers();
             let layer = e.layer;
             lc.stop();
-            useLiveData = false;
             markerPlaced = true;
             manualOverride = false; // marker is explicit placement
 
@@ -378,23 +358,6 @@
             }
         });
 
-        // Radio handling
-        document.getElementById('liveOption').addEventListener('change', function () {
-            useLiveData = true;
-            manualOverride = false;
-            markerPlaced = false;
-            lc.start();
-            drawnItems.clearLayers();
-            document.getElementById('GeometryGeoJson').value = "";
-            document.getElementById('MarkerCoordinatesJSON').value = "";
-        });
-
-        document.getElementById('markerOption').addEventListener('change', function () {
-            useLiveData = false;
-            lc.stop();
-            // allow user to draw a marker or type coordinates
-        });
-
         // Coordinate inputs: if user edits them manually we stop live tracking and use those coords
         const latInput = document.getElementById('Latitude');
         const lngInput = document.getElementById('Longitude');
@@ -405,7 +368,6 @@
 
             if (isFinite(latVal) && isFinite(lngVal)) {
                 manualOverride = true;
-                useLiveData = false;
                 markerPlaced = false;
                 lc.stop();
                 // place marker and update geometry
