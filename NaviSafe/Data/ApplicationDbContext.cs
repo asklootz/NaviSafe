@@ -29,14 +29,14 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.LongDesc).HasColumnName("longDesc").HasMaxLength(1000);
             entity.Property(e => e.Lat).HasColumnName("lat").IsRequired();
             entity.Property(e => e.Lon).HasColumnName("lon").IsRequired();
-            entity.Property(e => e.Altitude).HasColumnName("altitude").IsRequired();
+            entity.Property(e => e.Altitude).HasColumnName("altitude");
             entity.Property(e => e.IsSent).HasColumnName("isSent").IsRequired();
             entity.Property(e => e.State).HasColumnName("state").HasMaxLength(10).IsRequired();
             entity.Property(e => e.UserID).HasColumnName("userID").IsRequired();
             entity.Property(e => e.Accuracy).HasColumnName("accuracy");
             entity.Property(e => e.Img).HasColumnName("img");
             // creationDate is handled by DB default current_timestamp(), do not set here
-            //entity.Property(e => e.GeometryGeoJson).HasColumnName("geometryGeoJson");
+            entity.Property(e => e.GeoJSON).HasColumnName("geoJSON");
         });
 
         builder.Entity<UserAuth>(entity =>
@@ -133,10 +133,11 @@ public class ObstacleData
     public string? LongDesc { get; set; }
     public float Lat { get; set; }
     public float Lon { get; set; }
-    public float Altitude { get; set; }
+    public float? Altitude { get; set; }
     public bool IsSent { get; set; } = false; // e.g. draft / not sent
     public string State { get; set; } = "PENDING"; // default state
     public int UserID { get; set; } // foreign key to userInfo.userID
     public int? Accuracy { get; set; }
     public byte[]? Img { get; set; }
+    public string? GeoJSON { get; set; }
 }

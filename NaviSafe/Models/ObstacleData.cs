@@ -16,11 +16,12 @@ public class ObstacleDataForm
 
     public float? lon { get; set; } = null;
     
+    public string? geoJSON { get; set; } = null;
+    
     //[Required(ErrorMessage = "Obstacle height is required")]
     [Range(0.1, 100.0, ErrorMessage = "Height must be between 0.1 and 100.0 meters")]
     public float? altitude { get; set; } = null;
     
-    public string rejectComment { get; set; } = "Pending";
+    public string state { get; set; } = "Pending";
     
-    public string? GeometryGeoJson { get; set; }
 }

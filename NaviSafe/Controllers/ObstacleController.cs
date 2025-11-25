@@ -82,14 +82,15 @@ public class ObstacleController : Controller
             LongDesc = string.IsNullOrWhiteSpace(model.longDesc) ? null : model.longDesc,
             Lat = model.lat.Value,
             Lon = model.lon.Value,
-            Altitude = model.altitude.Value,
+            Altitude = model.altitude.HasValue ? model.altitude.Value : 0,
 
             // Required DB columns
             IsSent = false,
             State = "PENDING",
             UserID = userId,
             Accuracy = null,
-            Img = null
+            Img = null,
+            GeoJSON = model.geoJSON
         };
 
         _db.Obstacles.Add(entity);

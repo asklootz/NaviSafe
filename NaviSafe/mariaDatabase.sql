@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS `reporting` (
   `rejectComment` varchar(255) DEFAULT NULL,
   `userID` int(11) NOT NULL,
   `creationDate` timestamp NOT NULL DEFAULT current_timestamp(),
+  `geoJSON` JSON DEFAULT NULL,
   PRIMARY KEY (`regID`),
   KEY `userID` (`userID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
