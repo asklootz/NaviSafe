@@ -325,9 +325,18 @@
                         // also store the full GeoJSON for the marker (compatible with draw plugin)
                         try {
                             var geo = m.toGeoJSON();
-                            document.getElementById('GeometryGeoJson').value = JSON.stringify(geo);
-                            document.getElementById('MarkerCoordinatesJSON').value = JSON.stringify(geo);
+                            var geoStr = JSON.stringify(geo);
+                            var geoEl = document.getElementById('GeometryGeoJson');
+                            var previewEl = document.getElementById('MarkerCoordinatesJSON');
+                            if (geoEl) geoEl.value = geoStr;
+                            if (previewEl) previewEl.value = geoStr;
                         } catch (ex) { /* ignore */ }
+
+                        // ensure Latitude/Longitude inputs are set (defensive)
+                        var latEl = document.getElementById('Latitude');
+                        var lngEl = document.getElementById('Longitude');
+                        if (latEl) latEl.value = (e.latlng.lat).toFixed(6);
+                        if (lngEl) lngEl.value = (e.latlng.lng).toFixed(6);
                     });
                 });
 
@@ -351,13 +360,21 @@
             let geoJsonString = JSON.stringify(geoJsonData);
 
             // Set the hidden geojson (use layer's geojson for accuracy)
-            document.getElementById('GeometryGeoJson').value = geoJsonString;
-            document.getElementById('MarkerCoordinatesJSON').value = geoJsonString;
+            var geoEl = document.getElementById('GeometryGeoJson');
+            var previewEl = document.getElementById('MarkerCoordinatesJSON');
+            if (geoEl) geoEl.value = geoJsonString;
+            if (previewEl) previewEl.value = geoJsonString;
 
             // update lat/lng inputs using central helper so marker visuals and inputs stay in sync
-            if (layer.getLatLng) {
+            if (typeof layer.getLatLng === 'function') {
                 const latlng = layer.getLatLng();
                 updateFromLatLng(latlng.lat, latlng.lng, null, 'marker');
+
+                // explicitly set Latitude/Longitude inputs as well
+                var latInputEl = document.getElementById('Latitude');
+                var lngInputEl = document.getElementById('Longitude');
+                if (latInputEl) latInputEl.value = (latlng.lat).toFixed(6);
+                if (lngInputEl) lngInputEl.value = (latlng.lng).toFixed(6);
             }
         });
 
