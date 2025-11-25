@@ -14,10 +14,30 @@ public class ApplicationDbContext : DbContext
     public DbSet<UserInfo> UserInfo { get; set; } = null!;
     public DbSet<Organisation> Organisation { get; set; } = null!;
     public DbSet<UserRole> UserRole { get; set; } = null!;
-
+   //public DbSet<Reporting> Reporting { get; set; } = null!;
+    public DbSet<ObstacleData> Obstacles { get; set; } = null!;
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+        
+        builder.Entity<ObstacleData>(entity =>
+        {
+            entity.ToTable("reporting");
+            entity.HasKey(e => e.regID);
+            entity.Property(e => e.regID).HasColumnName("regID");
+            entity.Property(e => e.ShortDesc).HasColumnName("shortDesc").HasMaxLength(100).IsRequired();
+            entity.Property(e => e.LongDesc).HasColumnName("longDesc").HasMaxLength(1000);
+            entity.Property(e => e.Lat).HasColumnName("lat").IsRequired();
+            entity.Property(e => e.Lon).HasColumnName("lon").IsRequired();
+            entity.Property(e => e.Altitude).HasColumnName("altitude").IsRequired();
+            entity.Property(e => e.IsSent).HasColumnName("isSent").IsRequired();
+            entity.Property(e => e.State).HasColumnName("state").HasMaxLength(10).IsRequired();
+            entity.Property(e => e.UserID).HasColumnName("userID").IsRequired();
+            entity.Property(e => e.Accuracy).HasColumnName("accuracy");
+            entity.Property(e => e.Img).HasColumnName("img");
+            // creationDate is handled by DB default current_timestamp(), do not set here
+            //entity.Property(e => e.GeometryGeoJson).HasColumnName("geometryGeoJson");
+        });
 
         builder.Entity<UserAuth>(entity =>
         {
@@ -93,4 +113,30 @@ public class UserRole
     public string RoleID { get; set; } = null!;
     public string RolePermissions { get; set; } = null!;
     public string? PermissionsDescription { get; set; }
+}
+
+public class Reporting
+{
+    public int? regID { get; set; }
+    public string ShortDesc { get; set; } = null!;
+    public string? LongDesc { get; set; }
+    public float Lat { get; set; }
+    public float Lon { get; set; }
+    public float Altitude { get; set; }
+    
+}
+
+public class ObstacleData
+{
+    public int? regID { get; set; }
+    public string ShortDesc { get; set; } = null!;
+    public string? LongDesc { get; set; }
+    public float Lat { get; set; }
+    public float Lon { get; set; }
+    public float Altitude { get; set; }
+    public bool IsSent { get; set; } = false; // e.g. draft / not sent
+    public string State { get; set; } = "PENDING"; // default state
+    public int UserID { get; set; } // foreign key to userInfo.userID
+    public int? Accuracy { get; set; }
+    public byte[]? Img { get; set; }
 }

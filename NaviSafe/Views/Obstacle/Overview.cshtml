@@ -1,5 +1,4 @@
-﻿@model NaviSafe.Models.ObstacleData
-
+﻿@model NaviSafe.Models.ObstacleDataForm
 @{
     ViewData["Title"] = "Overview";
 }
@@ -14,15 +13,15 @@
         <dl class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="sm:col-span-1">
                 <dt class="text-sm font-medium text-gray-600">Obstacle Name</dt>
-                <dd class="mt-1 text-base text-gray-900 break-words">@Model.ObstacleName</dd>
+                <dd class="mt-1 text-base text-gray-900 break-words">@Model.shortDesc</dd>
             </div>
             <div class="sm:col-span-1">
                 <dt class="text-sm font-medium text-gray-600">Height (m)</dt>
-                <dd class="mt-1 text-base text-gray-900">@Model.ObstacleHeight</dd>
+                <dd class="mt-1 text-base text-gray-900">@Model.longDesc</dd>
             </div>
             <div class="sm:col-span-1">
                 <dt class="text-sm font-medium text-gray-600">Description</dt>
-                <dd class="mt-1 text-base text-gray-900 break-words sm:col-span-3">@Model.ObstacleDescription</dd>
+                <dd class="mt-1 text-base text-gray-900 break-words sm:col-span-3">@Model.altitude</dd>
             </div>
         </dl>
 

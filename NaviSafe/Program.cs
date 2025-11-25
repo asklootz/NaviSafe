@@ -1,3 +1,4 @@
+using System.Globalization;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -7,8 +8,19 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using NaviSafe.Data;
 using System.Linq;
+using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
+var enUs = new CultureInfo("en-US");
+CultureInfo.DefaultThreadCurrentCulture = enUs;
+CultureInfo.DefaultThreadCurrentUICulture = enUs;
+var supportedCultures = new[] { enUs };
+var requestLocalizationOptions = new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture(enUs),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+};
 
 builder.AddServiceDefaults();
 
@@ -25,6 +37,7 @@ var connectionString =
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+    options.EnableSensitiveDataLogging();
 });
 
 // Configure OpenTelemetry
@@ -93,7 +106,7 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseSession();
-
+app.UseRequestLocalization(requestLocalizationOptions);
 app.UseAuthentication();
 
 // Redirect unauthenticated users to the Login page for protected URLs
