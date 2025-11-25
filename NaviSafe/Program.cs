@@ -21,7 +21,6 @@ var connectionString =
     ?? builder.Configuration.GetConnectionString("navisafe")
     ?? throw new InvalidOperationException("Connection string not found. Verify AppHost configured the DB reference.");
 
-builder.AddMySqlDataSource("mariaDatabase");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {

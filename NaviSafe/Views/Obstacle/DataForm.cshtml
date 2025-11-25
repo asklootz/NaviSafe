@@ -9,27 +9,26 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="~/css/obstacle-form.css" />
 </head>
 <body class="page-bg">
 <header>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-transparent container-fluid">
-            <div class="container-fluid">
-                <img src="~/NaviSafeIcon.svg" alt="NaviSafe Logo" class="brand-logo me-2"/>
-                <div class="text-center"><a class="navbar-brand fw-semibold " asp-area="" asp-controller="Home" asp-action="Index">NaviSafe</a><br/><a class="navbar-brand">New Registration</a></div>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-transparent container-fluid">
+        <div class="container-fluid">
+            <img src="~/NaviSafeIcon.svg" alt="NaviSafe Logo" class="brand-logo me-2"/>
+            <div class="text-center"><a class="navbar-brand fw-semibold " asp-area="" asp-controller="Home" asp-action="Index">NaviSafe</a><br/><a class="navbar-brand">New Registration</a></div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     
-                </div>
-                <button class="btn btn-report "><img src="~/list-icon.svg" alt="List Icon" class=""/> My Registrations</button>
             </div>
-        </nav>
-    </header>
+            <button class="btn btn-report fs-3"><i class="bi bi-list fs-2 me-3"></i>My Registrations</button>
+        </div>
+    </nav>
 </header>
 
 <section class="container-fluid my-4">
@@ -45,20 +44,56 @@
                     <form asp-action="DataForm" method="post" class="">
                         <div class="row g-4">
                             <div class="col-12">
-                                <label asp-for="ObstacleName" class="form-label formLabel">Obst acle Type* :</label>
+                                <label asp-for="ObstacleName" class="form-label formLabel">
+                                    <i class="bi bi-tag-fill"></i>
+                                    <span>Obstacle Type <span class="text-danger">*</span></span>
+                                </label>
                                 <div class="position-relative">
                                     <input asp-for="ObstacleName"
                                            id="ObstacleName"
                                            class="form-control formTextField"
                                            autocomplete="off"
-                                           placeholder="e.g., Tower, Tree" />
-                                    <div id="ObstacleNameMenu" class="dropdown-menu w-100 shadow-sm border-black" style="max-height:600px;"></div>
+                                           placeholder="e.g., Tower, Tree, etc..." />
+                                    @* <div id="ObstacleNameMenu" class="dropdown-menu w-100 shadow-sm border-black" style="max-height:600px;"></div> *@
+                                
+
+                  
+                                <!-- Custom Autocomplete Dropdown -->
+                                <div id="ObstacleNameDropdown" class="autocomplete-dropdown" style="display: none;">
+                                    <div class="autocomplete-item" data-value="Building">
+                                        <i class="bi bi-building-fill fs-2 me-3"></i>
+                                        <span class="fs-5 fw-bold">Building</span>
+                                    </div>
+                                    <div class="autocomplete-item" data-value="Tree">
+                                        <i class="bi bi-tree-fill text-success fs-2 me-3"></i>
+                                        <span class="fs-5 fw-bold">Tree</span>
+                                    </div>
+                                    <div class="autocomplete-item" data-value="Tower">
+                                        <i class="bi bi-broadcast-pin text-danger fs-2 me-3"></i>
+                                        <span class="fs-5 fw-bold">Tower</span>
+                                    </div>
+                                    <div class="autocomplete-item" data-value="Power Line">
+                                        <i class="bi bi-lightning-charge-fill text-warning fs-2 me-3"></i>
+                                        <span class="fs-5 fw-bold">Power Line</span>
+                                    </div>
+                                    <div class="autocomplete-item" data-value="Wind Turbine">
+                                        <i class="bi bi-fan fs-2 me-3"></i>
+                                        <span class="fs-5 fw-bold">Wind Turbine</span>
+                                    </div>
+                                    <div class="autocomplete-item" data-value="Other">
+                                        <i class="bi bi-three-dots text-muted fs-2 me-3"></i>
+                                        <span class="fs-5 fw-bold">Other</span>
+                                    </div>
+                                    </div>
                                 </div>
-                                <span asp-validation-for="ObstacleName" class="text-danger small"></span>
                             </div>
+                                <span asp-validation-for="ObstacleName" class="text-danger small"></span>
                             
                             <div class="mt-4">
-                                <label asp-for="ObstacleDescription" class="form-label formLabel">Full Description:</label>
+                                <label asp-for="ObstacleDescription" class="form-label formLabel">
+                                    <i class="bi bi-info-lg"></i>
+                                    <span>Obstacle Type</span>
+                                   </label>
                                 <textarea asp-for="ObstacleDescription" rows="4" class="form-control formTextField"  placeholder="Describe the obstacle, materials, location, etc."></textarea>
                                 <span asp-validation-for="ObstacleDescription" class="text-danger small"></span>
                             </div>
@@ -67,7 +102,10 @@
                             
                             
                             <div class="d-flex align-items-center justify-content-between mb-2">
-                                <label class="form-label mb-0 formLabel">Provide coordinates* :</label>
+                                    <label class="form-label mb-0 formLabel">
+                                        <i class="bi bi-geo-fill"></i>
+                                        <span>Provide Coordinates <span class="text-danger">*</span></span>
+                                    </label>
                                 <div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" id="liveOption" name="dataSource" value="live" checked>
@@ -136,6 +174,10 @@
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
     <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
     <script>
         let map = L.map('map').setView([58.163137,8.002106], 13);
@@ -321,100 +363,117 @@
 
     </script>
     
-    <script>
-        // Suggestions source (add more as needed, icons will need to be added too)
-const obstacleSuggestions = [
-  'Tree','Building','Pole','Tower','Crane', 'PowerLine'
-];
+<script>
+function setupObstacleNameAutocomplete() {
+    const $input = $('#ObstacleName');
+    const $dropdown = $('#ObstacleNameDropdown');
+    const $items = $('.autocomplete-item');
 
-const obstacleIcons = {
-    'Tree' : '~/tree-icon.svg',
-    'Building' : '~/building-icon.svg',
-    'Pole' : '~/pole-icon.svg',
-    'Tower' : '~/tower-icon.svg',
-    'Crane' : '~/crane-icon.svg',
-    'PowerLine' : '~/powerline-icon.svg'
-}
+    // Show dropdown on focus
+    $input.on('focus', function() {
+    $dropdown.show().addClass('show');
+    filterAutocompleteItems(''); // Show all items
+    });
 
-const input = document.getElementById('ObstacleName');
+    // Filter items as user types
+    $input.on('input', function() {
+    const searchText = $(this).val().toLowerCase();
+    filterAutocompleteItems(searchText);
+    });
 
-const menu = document.getElementById('ObstacleNameMenu');
-
-let activeIndex = -1;
-
-function openMenu() { menu.classList.add('show'); }
-        
-function closeMenu() { menu.classList.remove('show'); activeIndex = -1; }
-        
-function renderMenu(items) {
-  menu.innerHTML = '';
-  if (!items.length) { closeMenu(); return; }
-  items.forEach((text) => {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'dropdown-item';
-    btn.textContent = text;
-    btn.addEventListener('mousedown', (e) => { e.preventDefault(); select(text); });
-    menu.appendChild(btn);
-  });
-  openMenu();
-}
-
-function select(text) {
-  input.value = text;
-  closeMenu();
-}
-
-function currentItems() {
-  return Array.from(menu.querySelectorAll('.dropdown-item, .dropdownoptions'));
-}
-
-function setActive(i) {
-  const items = currentItems();
-  items.forEach((el, idx) => el.classList.toggle('active', idx === i));
-  const active = items[i];
-  if (active) active.scrollIntoView({ block: 'nearest' });
-}
-
-input.addEventListener('input', () => {
-  const q = input.value.trim().toLowerCase();
-  if (!q) { closeMenu(); return; }
-  const matches = obstacleSuggestions
-    .filter(s => s.toLowerCase().includes(q))
-    .slice(0, 8);
-  renderMenu(matches);
-});
-
-
-input.addEventListener('keydown', (e) => {
-  if (!menu.classList.contains('show')) return;
-  const items = currentItems();
-  if (!items.length) return;
-
-  if (e.key === 'ArrowDown') {
-    e.preventDefault();
-    activeIndex = (activeIndex + 1) % items.length;
-    setActive(activeIndex);
-  } else if (e.key === 'ArrowUp') {
-    e.preventDefault();
-    activeIndex = (activeIndex - 1 + items.length) % items.length;
-    setActive(activeIndex);
-  } else if (e.key === 'Enter') {
-    if (activeIndex >= 0) {
-      e.preventDefault();
-      items[activeIndex].dispatchEvent(new Event('mousedown'));
+    // Hide dropdown when clicking outside
+    $(document).on('click', function(e) {
+    if (!$(e.target).closest('#ObstacleName, #ObstacleNameDropdown').length) {
+        $dropdown.hide().removeClass('show');
     }
-  } else if (e.key === 'Escape') {
-    closeMenu();
-  }
-});
+    });
 
-input.addEventListener('blur', () => setTimeout(closeMenu, 150));
-document.addEventListener('click', (e) => {
-  if (!menu.contains(e.target) && e.target !== input) closeMenu();
-});
+    // Select item on click
+    $items.on('click', function() {
+    const value = $(this).data('value');
+    $input.val(value);
+    $dropdown.hide().removeClass('show');
 
-if (input.value === 'Tree') {
-    input.value = 'Tree';
+    // Visual feedback
+    $input.addClass('border-success');
+    setTimeout(function() {
+        $input.removeClass('border-success');
+    }, 1000);
+
+    // Focus next field (height)
+    $('#obstacleHeight').focus();
+    });
+
+    // Handle keyboard navigation
+    let highlightedIndex = -1;
+
+    $input.on('keydown', function(e) {
+    const $visibleItems = $items.filter(':visible');
+
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        highlightedIndex = Math.min(highlightedIndex + 1, $visibleItems.length - 1);
+        updateHighlight($visibleItems);
+    } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        highlightedIndex = Math.max(highlightedIndex - 1, 0);
+        updateHighlight($visibleItems);
+    } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (highlightedIndex >= 0 && highlightedIndex < $visibleItems.length) {
+        $visibleItems.eq(highlightedIndex).click();
+        }
+    } else if (e.key === 'Escape') {
+        $dropdown.hide().removeClass('show');
+    }
+    });
+
+    function filterAutocompleteItems(searchText) {
+    let visibleCount = 0;
+
+    $items.each(function() {
+        const itemText = $(this).data('value').toLowerCase();
+
+        if (itemText.includes(searchText)) {
+        $(this).show();
+        visibleCount++;
+        } else {
+        $(this).hide();
+        }
+    });
+
+    // Show dropdown if there are visible items
+    if (visibleCount > 0 && $input.is(':focus')) {
+        $dropdown.show().addClass('show');
+    } else if (visibleCount === 0) {
+        $dropdown.hide().removeClass('show');
+    }
+
+    // Reset highlight
+    highlightedIndex = -1;
+    $items.removeClass('highlighted');
+    }
+
+    function updateHighlight($visibleItems) {
+    $items.removeClass('highlighted');
+    if (highlightedIndex >= 0 && highlightedIndex < $visibleItems.length) {
+        $visibleItems.eq(highlightedIndex).addClass('highlighted');
+
+        // Scroll highlighted item into view
+        const $highlighted = $visibleItems.eq(highlightedIndex);
+        const dropdownScrollTop = $dropdown.scrollTop();
+        const dropdownHeight = $dropdown.height();
+        const itemTop = $highlighted.position().top;
+        const itemHeight = $highlighted.outerHeight();
+
+        if (itemTop < 0) {
+        $dropdown.scrollTop(dropdownScrollTop + itemTop);
+        } else if (itemTop + itemHeight > dropdownHeight) {
+        $dropdown.scrollTop(dropdownScrollTop + itemTop + itemHeight - dropdownHeight);
+        }
+    }
+    }
 }
+
+    setupObstacleNameAutocomplete();
 </script>
