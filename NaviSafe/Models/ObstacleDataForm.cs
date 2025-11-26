@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace NaviSafe.Models;
 
@@ -19,11 +20,13 @@ public class ObstacleDataForm
     public string? geoJSON { get; set; } = null;
     
     //[Required(ErrorMessage = "Obstacle height is required")]
-    [Range(0.1, 100.0, ErrorMessage = "Height must be between 0.1 and 100.0 meters")]
+    [Range(0.1, 1000.0, ErrorMessage = "Height must be between 0.1 and 100.0 meters")]
     public float? altitude { get; set; } = null;
     
     public string state { get; set; } = "Pending";
     
     public bool isSent { get; set; } = false;
-    
+
+    // Property to bind uploaded image file from the form
+    public IFormFile? ImageFile { get; set; }
 }

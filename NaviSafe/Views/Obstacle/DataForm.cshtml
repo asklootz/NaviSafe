@@ -47,7 +47,7 @@
                         <p class="text-decoration-underline mb-0 text-center">Fields with <span class="text-danger">*</span> must be filled</p>
                     </header> *@
 
-                    <form asp-action="DataForm" method="post" class="" >@Html.AntiForgeryToken()
+                    <form asp-action="DataForm" method="post" enctype="multipart/form-data" class="">@Html.AntiForgeryToken()
                         <div class="row g-4">
                             <div class="col-12">
                                 <label asp-for="shortDesc" class="form-label formLabel">
@@ -98,7 +98,7 @@
                             <div class="mt-4">
                                 <label asp-for="longDesc" class="form-label formLabel">
                                     <i class="bi bi-info-lg"></i>
-                                    <span>Obstacle Type</span>
+                                    <span>Obstacle Description</span>
                                    </label>
                                 <textarea asp-for="longDesc" rows="4" class="form-control formTextField"  placeholder="Describe the obstacle, materials, location, etc."></textarea>
                                 @* <span asp-validation-for="longDesc" class="text-danger small"></span> *@
@@ -106,7 +106,7 @@
                             
                             
                             
-                            
+                        
                             <div class="d-flex align-items-center justify-content-between mb-2">
                                     <label class="form-label mb-0 formLabel">
                                         <i class="bi bi-geo-fill"></i>
@@ -143,23 +143,26 @@
                                         <button type="button" class="btn btn-primary btn-img w-100" id="openCameraButton">
                                             <i class="bi bi-camera-fill"></i> Camera
                                         </button>
-                                        <input type="file" id="cameraInput" accept="image/*" capture="camera" style="display: none;" />
+                                        <input type="file" id="cameraInput" name="ImageFile" accept="image/*" capture="camera" style="display: none;" />
                                     </div>
                                     <div class="col-3 text-center">
                                         <button type="button" class="btn btn-secondary btn-img w-100" id="uploadImageButton">
                                             <i class="bi bi-upload"></i> Upload
                                         </button>
-                                        <input type="file" id="uploadImageInput" accept="image/*" style="display: none;" />
+                                        <input type="file" id="uploadImageInput" name="ImageFile" accept="image/*" style="display: none;" />
                                     </div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-12 text-center">
                                         <img id="imagePreview" src="#" alt="Image Preview" style="display: none; max-width: 100%; max-height: 300px; border: 1px solid #ccc; border-radius: 10px;" />
+                                        <p id="imageInfo" style="display: none; color: #6c757d; font-size: 0.9em; margin-top: 0.5rem;"></p>
                                     </div>
                                 </div>
                             </div>
 
                         <script>
+                            let selectedFile = null;
+
                             document.getElementById('uploadImageButton').addEventListener('click', function () {
                                 document.getElementById('uploadImageInput').click();
                             });
@@ -169,29 +172,44 @@
                             });
 
                             function displayImagePreview(file) {
+                                selectedFile = file;
                                 const reader = new FileReader();
                                 reader.onload = function (e) {
                                     const preview = document.getElementById('imagePreview');
+                                    const info = document.getElementById('imageInfo');
+                                    
                                     preview.src = e.target.result;
                                     preview.style.display = 'block';
+                                    
+                                    // Show file info
+                                    const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+                                    info.textContent = `File: ${file.name} (${sizeInMB} MB)`;
+                                    info.style.display = 'block';
                                 };
                                 reader.readAsDataURL(file);
                             }
 
+                            function handleFileSelection(inputElement, file) {
+                                if (file) {
+                                    console.log('Image selected:', file.name);
+                                    displayImagePreview(file);
+                                    
+                                    // Clear the other input to prevent conflicts
+                                    const otherInput = inputElement.id === 'uploadImageInput' ? 
+                                        document.getElementById('cameraInput') : 
+                                        document.getElementById('uploadImageInput');
+                                    otherInput.value = '';
+                                }
+                            }
+
                             document.getElementById('uploadImageInput').addEventListener('change', function (event) {
                                 const file = event.target.files[0];
-                                if (file) {
-                                    console.log('Image uploaded:', file.name);
-                                    displayImagePreview(file);
-                                }
+                                handleFileSelection(this, file);
                             });
 
                             document.getElementById('cameraInput').addEventListener('change', function (event) {
                                 const file = event.target.files[0];
-                                if (file) {
-                                    console.log('Picture taken:', file.name);
-                                    displayImagePreview(file);
-                                }
+                                handleFileSelection(this, file);
                             });
                         </script>
                         </div>

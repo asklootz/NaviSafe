@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using NaviSafe.Data;
 using NaviSafe.Models;
 using System.Security.Claims;
@@ -25,30 +25,7 @@ public class ObstacleController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    // public async Task<IActionResult> DataForm(NaviSafe.Models.ObstacleDataForm model)
-    // {
-    //     if (!ModelState.IsValid)
-    //     {
-    //         return View(model);
-    //     }
-    //
-    //     var entity = new ObstacleData()
-    //     {
-    //         regID = null,
-    //         ShortDesc = model.shortDesc,
-    //         LongDesc = model.longDesc,
-    //         Lat = model.lat,
-    //         Lon = model.lon,
-    //         Altitude = model.altitude
-    //     };
-    //
-    //     _db.Obstacles.Add(entity);
-    //     await _db.SaveChangesAsync();
-    //
-    //     // Redirect or show confirmation
-    //     return RedirectToAction("Index", "Home");
-    // }
-    public async Task<IActionResult> DataForm(NaviSafe.Models.ObstacleDataForm model)
+    public async Task<IActionResult> DataForm(NaviSafe.Models.ObstacleDataForm model, string? submitAction)
     {
         if (!ModelState.IsValid)
         {
@@ -56,7 +33,6 @@ public class ObstacleController : Controller
                 ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
             return View(model);
         }
-            // return View(model);
 
         // Resolve current user id (session or claim). Must be a valid user Id present in userInfo.
         var userIdStr = HttpContext.Session.GetString("UserId") 
@@ -75,10 +51,30 @@ public class ObstacleController : Controller
             return View(model);
         }
         
-        var isSent = string.Equals("submitAction", "sent", StringComparison.OrdinalIgnoreCase);
-        var state = isSent ? true : false;
+        var isSent = string.Equals(submitAction, "sent", StringComparison.OrdinalIgnoreCase);
 
-        var entity = new ObstacleData()
+        // Handle image upload
+        byte[]? imageBytes = null;
+        if (model.ImageFile != null && model.ImageFile.Length > 0)
+        {
+            try
+            {
+                using var ms = new MemoryStream();
+                await model.ImageFile.CopyToAsync(ms);
+                imageBytes = ms.ToArray();
+                
+                _logger.LogInformation("Image uploaded successfully. Size: {Size} bytes, Type: {ContentType}", 
+                    imageBytes.Length, model.ImageFile.ContentType);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to read uploaded image");
+                ModelState.AddModelError(string.Empty, "Failed to read uploaded image.");
+                return View(model);
+            }
+        }
+
+        var entity = new NaviSafe.Data.ObstacleData()
         {
             regID = null,
             ShortDesc = model.shortDesc,
@@ -88,11 +84,11 @@ public class ObstacleController : Controller
             Altitude = model.altitude.HasValue ? model.altitude.Value : 0,
 
             // Required DB columns
-            IsSent = state,
+            IsSent = isSent,
             State = "PENDING",
             UserID = userId,
             Accuracy = null,
-            Img = null,
+            Img = imageBytes, // Save the uploaded image bytes
             GeoJSON = model.geoJSON
         };
 
@@ -101,7 +97,8 @@ public class ObstacleController : Controller
         try
         {
             await _db.SaveChangesAsync();
-            _logger.LogInformation("Obstacle saved regID={RegID} by user {UserId}", entity.regID, userId);
+            _logger.LogInformation("Obstacle saved regID={RegID} by user {UserId} with image: {HasImage}", 
+                entity.regID, userId, imageBytes != null);
         }
         catch (Exception ex)
         {
@@ -113,5 +110,31 @@ public class ObstacleController : Controller
         }
 
         return RedirectToAction("Index", "Home");
+    }
+
+    /// <summary>
+    /// Action to serve images stored in the database
+    /// </summary>
+    [HttpGet]
+    public async Task<IActionResult> GetImage(int id)
+    {
+        try
+        {
+            var obstacle = await _db.Obstacles.FindAsync(id);
+            
+            if (obstacle?.Img == null || obstacle.Img.Length == 0)
+            {
+                return NotFound("Image not found");
+            }
+
+            // Return the image as a file result
+            // Note: You might want to store the content type in the database as well
+            return File(obstacle.Img, "image/jpeg");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving image for obstacle {Id}", id);
+            return StatusCode(500, "Error retrieving image");
+        }
     }
 }

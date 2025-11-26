@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using NaviSafe.Models;
 using Microsoft.AspNetCore.Authorization;
+using NaviSafe.Data;
 
 namespace NaviSafe.Controllers;
 
@@ -9,11 +10,13 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly IConfiguration config;
+    private readonly ApplicationDbContext _context;
 
-    public HomeController(ILogger<HomeController> logger, IConfiguration config)
+    public HomeController(ILogger<HomeController> logger, IConfiguration config, ApplicationDbContext context)
     {
         _logger = logger;
         this.config = config;
+        _context = context;
     }
 
     [Authorize]
@@ -30,7 +33,8 @@ public class HomeController : Controller
     [Authorize(Roles = "ADM")]
     public IActionResult AdminDashboard()
     {
-               return View();
+        var reports = _context.Obstacles.ToList();
+        return View(reports);
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
