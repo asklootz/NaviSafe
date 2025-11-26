@@ -3,6 +3,9 @@ using NaviSafe.Data;
 using NaviSafe.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+
 namespace NaviSafe.Controllers;
 
 public class ObstacleController : Controller
@@ -109,7 +112,146 @@ public class ObstacleController : Controller
             return View(model);
         }
 
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Overview");
+    }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> Overview()
+    {
+        var userIdStr = HttpContext.Session.GetString("UserId") 
+                        ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        
+        if (!int.TryParse(userIdStr, out var userId))
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        var reports = await _db.Obstacles
+            .Where(o => o.UserID == userId)
+            .ToListAsync();
+        
+        // Order in memory since CreationDate might be a computed property
+        reports = reports.OrderByDescending(o => o.CreationDate).ToList();
+
+        return View(reports);
+    }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> EditDraft(int id)
+    {
+        var userIdStr = HttpContext.Session.GetString("UserId") 
+                        ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        
+        if (!int.TryParse(userIdStr, out var userId))
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        var obstacle = await _db.Obstacles.FindAsync(id);
+        
+        if (obstacle == null || obstacle.UserID != userId)
+        {
+            return NotFound();
+        }
+
+        if (obstacle.IsSent)
+        {
+            return RedirectToAction("Overview");
+        }
+
+        var model = new ObstacleDataForm
+        {
+            shortDesc = obstacle.ShortDesc,
+            longDesc = obstacle.LongDesc,
+            lat = obstacle.Lat,
+            lon = obstacle.Lon,
+            altitude = obstacle.Altitude,
+            geoJSON = obstacle.GeoJSON
+        };
+
+        ViewBag.EditingId = id;
+        return View("DataForm", model);
+    }
+
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdateDraft(int id, ObstacleDataForm model, string? submitAction)
+    {
+        var userIdStr = HttpContext.Session.GetString("UserId") 
+                        ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        
+        if (!int.TryParse(userIdStr, out var userId))
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            ViewBag.EditingId = id;
+            return View("DataForm", model);
+        }
+
+        var obstacle = await _db.Obstacles.FindAsync(id);
+        
+        if (obstacle == null || obstacle.UserID != userId || obstacle.IsSent)
+        {
+            return NotFound();
+        }
+
+        obstacle.ShortDesc = model.shortDesc;
+        obstacle.LongDesc = model.longDesc;
+        obstacle.Lat = model.lat ?? obstacle.Lat;
+        obstacle.Lon = model.lon ?? obstacle.Lon;
+        obstacle.Altitude = model.altitude ?? obstacle.Altitude;
+        obstacle.GeoJSON = model.geoJSON;
+        obstacle.IsSent = string.Equals(submitAction, "sent", StringComparison.OrdinalIgnoreCase);
+
+        // Handle image upload
+        if (model.ImageFile != null && model.ImageFile.Length > 0)
+        {
+            try
+            {
+                using var ms = new MemoryStream();
+                await model.ImageFile.CopyToAsync(ms);
+                obstacle.Img = ms.ToArray();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to read uploaded image");
+            }
+        }
+
+        await _db.SaveChangesAsync();
+        return RedirectToAction("Overview");
+    }
+
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteDraft(int id)
+    {
+        var userIdStr = HttpContext.Session.GetString("UserId") 
+                        ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        
+        if (!int.TryParse(userIdStr, out var userId))
+        {
+            return Json(new { success = false, message = "Not authenticated" });
+        }
+
+        var obstacle = await _db.Obstacles.FindAsync(id);
+        
+        if (obstacle == null || obstacle.UserID != userId || obstacle.IsSent)
+        {
+            return Json(new { success = false, message = "Cannot delete this report" });
+        }
+
+        _db.Obstacles.Remove(obstacle);
+        await _db.SaveChangesAsync();
+
+        return Json(new { success = true });
     }
 
     /// <summary>

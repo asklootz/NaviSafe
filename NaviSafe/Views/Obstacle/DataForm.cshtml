@@ -32,7 +32,7 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     
             </div>
-            <button class="btn btn-report fs-3" type="button"><i class="bi bi-list fs-2 me-3"></i>My Registrations</button>
+            <button class="btn btn-report fs-3" type="button" onclick="window.location.href='@Url.Action("Overview", "Obstacle")'"><i class="bi bi-list fs-2 me-3"></i>My Registrations</button>
         </div>
     </nav>
 </header>
@@ -47,7 +47,17 @@
                         <p class="text-decoration-underline mb-0 text-center">Fields with <span class="text-danger">*</span> must be filled</p>
                     </header> *@
 
-                    <form asp-action="DataForm" method="post" enctype="multipart/form-data" class="">@Html.AntiForgeryToken()
+                    @{
+                        var isEditing = ViewBag.EditingId != null;
+                        var formAction = isEditing ? "UpdateDraft" : "DataForm";
+                    }
+                    
+                    <form asp-action="@formAction" method="post" enctype="multipart/form-data" class="">
+                        @Html.AntiForgeryToken()
+                        @if (isEditing)
+                        {
+                            <input type="hidden" name="id" value="@ViewBag.EditingId" />
+                        }
                         <div class="row g-4">
                             <div class="col-12">
                                 <label asp-for="shortDesc" class="form-label formLabel">
