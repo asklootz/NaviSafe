@@ -130,6 +130,10 @@
             cursor: pointer;
             min-height: 3.5rem;
         }
+        
+        .nav-item{
+            list-style: none;
+        }
 
         .btn-edit {
             background-color: var(--ns-indigo);
@@ -212,6 +216,15 @@
             padding: 20px 0;
         }
 
+        .btn-logout {
+            
+            color: #000000;
+            font-weight: 700;
+            min-height: 4rem;
+            font-size: 1.5rem;
+            padding: 12px 30px;
+        }
+
         .page-title {
             font-size: 3rem;
             font-weight: 700;
@@ -269,14 +282,22 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 </div>
-                <a href="@Url.Action("DataForm", "Obstacle")" class="btn btn-report fs-3">
+                <li class="nav-item me-3 nav-item">
+                    <form action="/Account/Logout" method="post" style="display: inline;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-logout bg-danger fs-3">
+                            <i class="bi bi-box-arrow-right fs-2 me-3"></i> Logout
+                        </button>
+                    </form>
+                </li>
+                <a href="@Url.Action("DataForm", "Obstacle")" class="btn btn-new-report fs-3">
                     <i class="bi bi-plus-circle fs-2 me-3"></i>New Registration
                 </a>
             </div>
         </nav>
     </header>
 
-    <section class="container-fluid my-4">
+    <section class="container-fluid mb-4">
         <div class="row justify-content-center">
             <div class="col-12">
                 @if (!Model.Any())
@@ -343,7 +364,7 @@
                                     </div>
                                     <div class="report-field">
                                         <span class="field-label">Submitted</span>
-                                        <span class="field-value">@report.CreationDate.ToString("MMM dd, yyyy")</span>
+                                        <span class="field-value">@report.CreationDate.ToString("dd MMM, yyyy")</span>
                                     </div>
                                 </div>
 

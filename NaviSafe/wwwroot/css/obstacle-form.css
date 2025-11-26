@@ -13,6 +13,7 @@
     font-weight: 700;
     font-size: 2rem;
     min-height: 5.5rem;
+    color: #ffffff;
 }
 
 /* Navbar logo size (replaces Tailwind h-8 w-8) */
@@ -49,7 +50,7 @@
 
 /* Primary green button */
 .btn-green {
-    color: #000000;
+    color: #ffffff;
     font-weight: 700;
     background-color: #23b600;
     border-color: #23b600;
@@ -58,29 +59,30 @@
 }
 .btn-green:hover,
 .btn-green:focus {
-    color: #000000;
+    color: #ffffff;
     background-color: #1e9a00;
     border-color: #1e9a00;
 }
 
 .btn-yellow {
-    color: #000000;
+    color: #ffffff;
     font-weight: 700;
-    background-color: #fffc78;
-    border-color: #fffc78;
+    background-color: #413d38;
+    border-color: #413d38;
     min-height: 5.5rem;
     font-size: 2rem;
 }
-.btn-yellow:hover,
-.btn-yellow:focus {
-    color: #000000;
-    background-color: #dbd86e;
-    border-color: #dbd86e;
-}
+    .btn-yellow:hover,
+    .btn-yellow:focus {
+        color: #ffffff;
+        background-color: #46331b;
+        border-color: #46331b;
+    }
 
 .btn-report {
-    background-color: #ffffff;
-    border-color: #ffffff;
+    color: #ffffff;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: none;
     height: 4rem;
     font-weight: 750;
     max-width: 20rem;
