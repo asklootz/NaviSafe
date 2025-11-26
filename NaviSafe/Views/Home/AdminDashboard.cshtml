@@ -2,3 +2,36 @@
 ViewData["Title"] = "Admin Dashboard";
 Layout = null;
 }
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="~/css/obstacle-form.css" />
+</head>
+
+<body class="page-bg">
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-transparent container-fluid">
+        <div class="container-fluid">
+            <img src="~/NaviSafeIcon.svg" alt="NaviSafe Logo" class="brand-logo me-2"/>
+            <div class="text-center"><a class="navbar-brand fw-semibold " asp-area="" asp-controller="Home" asp-action="Index">NaviSafe</a><br/><a class="navbar-brand">New Regis ration</a></div>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+            </div>
+            <div class="align-content-md-center">
+                <h1 class="fs-3 fw-semibold mb-1 text-center">NaviSafe Admin Pagem</h1>
+                <p class="text-decoration-underline mb-0 text-center">Fields with <span class="text-danger">*</span> must be filled</p>
+            </div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    
+            </div>
+            @* <button class="btn btn-report fs-3" type="button"><i class="bi bi-list fs-2 me-3"></i>My Registrations</button> *@
+        </div>
+    </nav>
+</header>
+</body>

@@ -24,4 +24,6 @@ public class ObstacleDataForm
     
     public string state { get; set; } = "Pending";
     
+    public bool isSent { get; set; } = false;
+    
 }

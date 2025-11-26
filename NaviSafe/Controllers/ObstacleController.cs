@@ -74,6 +74,9 @@ public class ObstacleController : Controller
             ModelState.AddModelError(string.Empty, "Coordinates missing.");
             return View(model);
         }
+        
+        var isSent = string.Equals("submitAction", "sent", StringComparison.OrdinalIgnoreCase);
+        var state = isSent ? true : false;
 
         var entity = new ObstacleData()
         {
@@ -85,7 +88,7 @@ public class ObstacleController : Controller
             Altitude = model.altitude.HasValue ? model.altitude.Value : 0,
 
             // Required DB columns
-            IsSent = false,
+            IsSent = state,
             State = "PENDING",
             UserID = userId,
             Accuracy = null,
