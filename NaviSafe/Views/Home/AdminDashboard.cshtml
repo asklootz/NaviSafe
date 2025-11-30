@@ -33,6 +33,11 @@
         }
         
         .page-bg { background: #f8f9fa; }
+
+        /* New styles for clickable statistic cards */
+        .stat-card { cursor: pointer; transition: transform 0.12s ease, box-shadow 0.12s ease; }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 6px 18px rgba(0,0,0,0.08); }
+        .stat-card.active { outline: 3px solid rgba(13,110,253,0.12); box-shadow: 0 8px 22px rgba(13,110,253,0.12); }
     </style>
 </head>
 
@@ -73,7 +78,7 @@
     <main class="container-fluid py-5 mt-5">
         <div class="row mb-4">
             <div class="col-md-3">
-                <div class="card">
+                <div class="card stat-card" data-status="ALL" role="button" title="Show all reports">
                     <div class="card-body">
                         <h6 class="text-muted">Total Submitted Reports</h6>
                         <h2>@Model.Count()</h2>
@@ -81,7 +86,7 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card">
+                <div class="card stat-card" data-status="PENDING" role="button" title="Show pending reports">
                     <div class="card-body">
                         <h6 class="text-muted">Pending Review</h6>
                         <h2 class="text-warning">@Model.Count(m => m.Report.State == "PENDING")</h2>
@@ -89,15 +94,15 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card">
+                <div class="card stat-card" data-status="APPROVED" role="button" title="Show approved reports">
                     <div class="card-body">
                         <h6 class="text-muted">Approved</h6>
-                        <h2 class="text-success">@Model.Count(m => m.Report.State == "APPROVED" || m.Report.State == "APPROVED")</h2>
+                        <h2 class="text-success">@Model.Count(m => m.Report.State == "APPROVED" || m.Report.State == "SENT")</h2>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card">
+                <div class="card stat-card" data-status="REJECTED" role="button" title="Show rejected reports">
                     <div class="card-body">
                         <h6 class="text-muted">Rejected</h6>
                         <h2 class="text-danger">@Model.Count(m => m.Report.State == "REJECTED")</h2>
@@ -130,21 +135,19 @@
                             {
                                 var report = item.Report;
                                 var reporter = item.Reporter;
-                                <tr>
+                                <tr data-state="@report.State">
                                     <td>@report.regID</td>
                                     <td>@report.ShortDesc</td>
                                     <td>@(string.IsNullOrEmpty(report.LongDesc) ? "No description" : (report.LongDesc.Length > 50 ? report.LongDesc.Substring(0, 50) + "..." : report.LongDesc))</td>
                                     <td>@(reporter != null ? (reporter.FirstName + " " + reporter.LastName) : "Unknown")</td>
-@*                                     <td>@report.Lat.ToString("F6")</td>
-                                    <td>@report.Lon.ToString("F6")</td> *@
                                     <td>
-                                        <span class="badge @(report.State == "PENDING" ? "bg-warning" : (report.State == "APPROVED" || report.State == "APPROVED") ? "bg-success" : "bg-danger")">
+                                        <span class="badge @(report.State == "PENDING" ? "bg-warning" : (report.State == "APPROVED" || report.State == "SENT") ? "bg-success" : "bg-danger")">
                                             @report.State
                                         </span>
                                     </td>
                                     <td>@report.CreationDate.ToString("yyyy-MM-dd HH:mm:ss")</td>
                                     <td>
-                                        @if (report.Img != null && report.Img.Length > 0)
+                                        @if (!string.IsNullOrEmpty(report.Img))
                                         {
                                             <a href="@report.Img" target="_blank" class="btn btn-sm btn-outline-info">
                                                 <i class="bi bi-image"></i> View
@@ -232,6 +235,26 @@
             let currentReportId = null;
             
             console.log('Reports data:', reports); // Debug log
+
+            // Filter table rows when a stat card is clicked
+            $('.stat-card').on('click', function () {
+                $('.stat-card').removeClass('active');
+                $(this).addClass('active');
+
+                const status = $(this).data('status');
+                if (!status || status === 'ALL') {
+                    $('#reportsTable tbody tr').show();
+                } else {
+                    $('#reportsTable tbody tr').each(function () {
+                        const rowState = $(this).data('state');
+                        if (String(rowState) === String(status)) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                }
+            });
 
             // View Report Details - use server-side reporter values stored in button data attributes
             $('.view-report').on('click', function () {
