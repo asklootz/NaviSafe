@@ -13,11 +13,13 @@ public class ObstacleController : Controller
     
     private readonly ApplicationDbContext _db;
     private readonly ILogger<ObstacleController> _logger;
+    private readonly IWebHostEnvironment _env;
     
-    public ObstacleController(ApplicationDbContext db, ILogger<ObstacleController> logger)
+    public ObstacleController(ApplicationDbContext db, ILogger<ObstacleController> logger, IWebHostEnvironment env)
     {
         _db = db;
         _logger = logger;
+        _env = env;
     }
     
     [HttpGet]
@@ -56,23 +58,35 @@ public class ObstacleController : Controller
         
         var isSent = string.Equals(submitAction, "sent", StringComparison.OrdinalIgnoreCase);
 
-        // Handle image upload
-        byte[]? imageBytes = null;
+        // Handle image upload - save to wwwroot/images and store relative path in DB
+        string? savedRelativePath = null;
         if (model.ImageFile != null && model.ImageFile.Length > 0)
         {
             try
             {
-                using var ms = new MemoryStream();
-                await model.ImageFile.CopyToAsync(ms);
-                imageBytes = ms.ToArray();
-                
-                _logger.LogInformation("Image uploaded successfully. Size: {Size} bytes, Type: {ContentType}", 
-                    imageBytes.Length, model.ImageFile.ContentType);
+                var webRoot = _env.WebRootPath ?? Path.Combine(_env.ContentRootPath, "wwwroot");
+                var imagesFolder = Path.Combine(webRoot, "images");
+                if (!Directory.Exists(imagesFolder)) Directory.CreateDirectory(imagesFolder);
+
+                var ext = Path.GetExtension(model.ImageFile.FileName);
+                if (string.IsNullOrEmpty(ext)) ext = ".jpg";
+
+                var fileName = $"{userId}_{DateTime.UtcNow:yyyyMMddTHHmmssfff}{ext}";
+                var destPath = Path.Combine(imagesFolder, fileName);
+
+                using (var stream = System.IO.File.Create(destPath))
+                {
+                    await model.ImageFile.CopyToAsync(stream);
+                }
+
+                savedRelativePath = "/images/" + fileName;
+
+                _logger.LogInformation("Saved uploaded image to {Path} for user {UserId}", destPath, userId);
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Failed to read uploaded image");
-                ModelState.AddModelError(string.Empty, "Failed to read uploaded image.");
+                _logger.LogWarning(ex, "Failed to save uploaded image");
+                ModelState.AddModelError(string.Empty, "Failed to save uploaded image.");
                 return View(model);
             }
         }
@@ -91,7 +105,7 @@ public class ObstacleController : Controller
             State = "PENDING",
             UserID = userId,
             Accuracy = null,
-            Img = imageBytes, // Save the uploaded image bytes
+            Img = savedRelativePath, // store relative path (or null)
             GeoJSON = model.geoJSON
         };
 
@@ -100,8 +114,8 @@ public class ObstacleController : Controller
         try
         {
             await _db.SaveChangesAsync();
-            _logger.LogInformation("Obstacle saved regID={RegID} by user {UserId} with image: {HasImage}", 
-                entity.regID, userId, imageBytes != null);
+            _logger.LogInformation("Obstacle saved regID={RegID} by user {UserId} with image path: {Path}", 
+                entity.regID, userId, savedRelativePath);
         }
         catch (Exception ex)
         {
@@ -209,18 +223,46 @@ public class ObstacleController : Controller
         obstacle.GeoJSON = model.geoJSON;
         obstacle.IsSent = string.Equals(submitAction, "sent", StringComparison.OrdinalIgnoreCase);
 
-        // Handle image upload
+        // Handle image upload - replace existing file if present
         if (model.ImageFile != null && model.ImageFile.Length > 0)
         {
             try
             {
-                using var ms = new MemoryStream();
-                await model.ImageFile.CopyToAsync(ms);
-                obstacle.Img = ms.ToArray();
+                var webRoot = _env.WebRootPath ?? Path.Combine(_env.ContentRootPath, "wwwroot");
+                var imagesFolder = Path.Combine(webRoot, "images");
+                if (!Directory.Exists(imagesFolder)) Directory.CreateDirectory(imagesFolder);
+
+                // delete old file if exists and is within images folder
+                if (!string.IsNullOrEmpty(obstacle.Img))
+                {
+                    try
+                    {
+                        var oldRel = obstacle.Img.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+                        var oldPhysical = Path.Combine(webRoot, oldRel);
+                        if (System.IO.File.Exists(oldPhysical)) System.IO.File.Delete(oldPhysical);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Failed to delete old image while updating obstacle {Id}", id);
+                    }
+                }
+
+                var ext = Path.GetExtension(model.ImageFile.FileName);
+                if (string.IsNullOrEmpty(ext)) ext = ".jpg";
+
+                var fileName = $"{userId}_{DateTime.UtcNow:yyyyMMddTHHmmssfff}{ext}";
+                var destPath = Path.Combine(imagesFolder, fileName);
+
+                using (var stream = System.IO.File.Create(destPath))
+                {
+                    await model.ImageFile.CopyToAsync(stream);
+                }
+
+                obstacle.Img = "/images/" + fileName;
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Failed to read uploaded image");
+                _logger.LogWarning(ex, "Failed to save uploaded image while updating");
             }
         }
 
@@ -248,6 +290,22 @@ public class ObstacleController : Controller
             return Json(new { success = false, message = "Cannot delete this report" });
         }
 
+        // delete file if present
+        if (!string.IsNullOrEmpty(obstacle.Img))
+        {
+            try
+            {
+                var webRoot = _env.WebRootPath ?? Path.Combine(_env.ContentRootPath, "wwwroot");
+                var rel = obstacle.Img.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+                var phys = Path.Combine(webRoot, rel);
+                if (System.IO.File.Exists(phys)) System.IO.File.Delete(phys);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to delete image file for obstacle {Id}", id);
+            }
+        }
+
         _db.Obstacles.Remove(obstacle);
         await _db.SaveChangesAsync();
 
@@ -255,7 +313,7 @@ public class ObstacleController : Controller
     }
 
     /// <summary>
-    /// Action to serve images stored in the database
+    /// Serve image by redirecting to its stored relative path so static file middleware handles delivery
     /// </summary>
     [HttpGet]
     public async Task<IActionResult> GetImage(int id)
@@ -263,15 +321,11 @@ public class ObstacleController : Controller
         try
         {
             var obstacle = await _db.Obstacles.FindAsync(id);
-            
-            if (obstacle?.Img == null || obstacle.Img.Length == 0)
-            {
+            if (obstacle == null || string.IsNullOrEmpty(obstacle.Img))
                 return NotFound("Image not found");
-            }
 
-            // Return the image as a file result
-            // Note: You might want to store the content type in the database as well
-            return File(obstacle.Img, "image/jpeg");
+            // obstacle.Img contains a relative path such as "/images/123_20251118T153000.jpg"
+            return Redirect(obstacle.Img);
         }
         catch (Exception ex)
         {

@@ -380,10 +380,10 @@
                                 {
                                     <div class="report-field mt-3">
                                         <span class="field-label mb-2">Image</span>
-                                        <img src="@Url.Action("GetImage", "Obstacle", new { id = report.regID })" 
+                                        <img src="@report.Img" 
                                              alt="Obstacle image" 
                                              class="report-image-preview" 
-                                             onclick="window.open('@Url.Action("GetImage", "Obstacle", new { id = report.regID })', '_blank')" />
+                                             onclick="window.open('@report.Img', '_blank')" />
                                     </div>
                                 }
                             </div>

@@ -146,7 +146,7 @@
                                     <td>
                                         @if (report.Img != null && report.Img.Length > 0)
                                         {
-                                            <a href="@Url.Action("GetImage", "Obstacle", new { id = report.regID })" target="_blank" class="btn btn-sm btn-outline-info">
+                                            <a href="@report.Img" target="_blank" class="btn btn-sm btn-outline-info">
                                                 <i class="bi bi-image"></i> View
                                             </a>
                                         }

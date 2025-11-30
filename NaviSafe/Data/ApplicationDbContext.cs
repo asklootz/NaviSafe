@@ -34,7 +34,8 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.State).HasColumnName("state").HasMaxLength(10).IsRequired();
             entity.Property(e => e.UserID).HasColumnName("userID").IsRequired();
             entity.Property(e => e.Accuracy).HasColumnName("accuracy");
-            entity.Property(e => e.Img).HasColumnName("img");
+            // img now stores the relative path to the image (e.g. '/images/123_20251118.jpg')
+            entity.Property(e => e.Img).HasColumnName("img").HasMaxLength(255);
             // creationDate is handled by DB default current_timestamp(), do not set here
             entity.Property(e => e.CreationDate).HasColumnName("creationDate").HasDefaultValueSql("current_timestamp()");
             entity.Property(e => e.GeoJSON).HasColumnName("geoJSON");
@@ -139,7 +140,8 @@ public class ObstacleData
     public string State { get; set; } = "PENDING"; // default state
     public int UserID { get; set; } // foreign key to userInfo.userID
     public int? Accuracy { get; set; }
-    public byte[]? Img { get; set; }
+    // store path relative to web root, e.g. "/images/123_20251118T153000.jpg"
+    public string? Img { get; set; }
     public string? GeoJSON { get; set; }
     public DateTime CreationDate { get; set; }
 }
