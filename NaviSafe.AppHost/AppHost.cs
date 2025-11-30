@@ -198,8 +198,9 @@ var mariaContainer = builder.AddMySql("mariaContainer", null, 3307)
     .WithImage("mariadb:11.8")
     .WithContainerName("mariaContainer")
     .WithDataBindMount(source: "../MariaDB/Data") //Code to create a bind mount to a local folder
-    .WithPhpMyAdmin()
-    .WithOtlpExporter(); //Creates a phpMyAdmin container linked to the database container for easy management
+    .WithPhpMyAdmin(ff =>   //Creates a phpMyAdmin container linked to the database container for easy management
+        { ff.WithHostPort(7447);}) //Sets a custom host port for phpMyAdmin, otherwise a random exposed port is assigned
+    .WithOtlpExporter(); 
 
 var mariaDatabase = mariaContainer.AddDatabase("mariaDatabase")
     .WithCreationScript(sqlScript); //Path to the initial SQL script to create the database schema and seed data
