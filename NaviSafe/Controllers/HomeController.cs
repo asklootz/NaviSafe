@@ -134,7 +134,8 @@ public class HomeController : Controller
 
             // Update the report status
             report.State = newStatus;
-            
+            report.RejectComment = reason;
+
             // Log the admin action (you might want to create an AdminActions table for this)
             _logger.LogInformation("Admin updated report {ReportId} status to {NewStatus}. Reason: {Reason}", 
                 reportId, newStatus, reason);
