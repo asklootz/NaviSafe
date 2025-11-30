@@ -81,10 +81,10 @@ public class ObstacleController : Controller
         {
             regID = null,
             ShortDesc = model.shortDesc,
-            LongDesc = string.IsNullOrWhiteSpace(model.longDesc) ? null : model.longDesc,
+            LongDesc = string.IsNullOrEmpty(model.longDesc) ? null : model.longDesc,
             Lat = model.lat.Value,
             Lon = model.lon.Value,
-            Altitude = model.altitude.HasValue ? model.altitude.Value : 0,
+            Altitude = model.altitude.HasValue ? model.altitude.Value : null,
 
             // Required DB columns
             IsSent = isSent,
