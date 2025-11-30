@@ -1,4 +1,4 @@
-﻿@model IEnumerable<NaviSafe.Data.ObstacleData>
+﻿@model IEnumerable<NaviSafe.Models.AdminReportViewModel>
 
 @{
     ViewData["Title"] = "Admin Dashboard";
@@ -76,7 +76,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h6 class="text-muted">Total Submitted Reports</h6>
-                        <h2>@Model.Count(r => r.IsSent)</h2>
+                        <h2>@Model.Count()</h2>
                     </div>
                 </div>
             </div>
@@ -84,7 +84,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h6 class="text-muted">Pending Review</h6>
-                        <h2 class="text-warning">@Model.Count(r => r.IsSent && r.State == "PENDING")</h2>
+                        <h2 class="text-warning">@Model.Count(m => m.Report.State == "PENDING")</h2>
                     </div>
                 </div>
             </div>
@@ -92,7 +92,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h6 class="text-muted">Approved</h6>
-                        <h2 class="text-success">@Model.Count(r => r.IsSent && (r.State == "APPROVED" || r.State == "SENT"))</h2>
+                        <h2 class="text-success">@Model.Count(m => m.Report.State == "APPROVED" || m.Report.State == "SENT")</h2>
                     </div>
                 </div>
             </div>
@@ -100,7 +100,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h6 class="text-muted">Rejected</h6>
-                        <h2 class="text-danger">@Model.Count(r => r.IsSent && r.State == "REJECTED")</h2>
+                        <h2 class="text-danger">@Model.Count(m => m.Report.State == "REJECTED")</h2>
                     </div>
                 </div>
             </div>
@@ -121,13 +121,16 @@
                                 <th>Latitude</th>
                                 <th>Longitude</th>
                                 <th>Status</th>
+                                <th>Reporter</th>
                                 <th>Image</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var report in Model.Where(r => r.IsSent))
+                            @foreach (var item in Model)
                             {
+                                var report = item.Report;
+                                var reporter = item.Reporter;
                                 <tr>
                                     <td>@report.regID</td>
                                     <td>@report.ShortDesc</td>
@@ -139,6 +142,7 @@
                                             @report.State
                                         </span>
                                     </td>
+                                    <td>@(reporter != null ? (reporter.FirstName + " " + reporter.LastName) : "Unknown")</td>
                                     <td>
                                         @if (report.Img != null && report.Img.Length > 0)
                                         {
@@ -152,7 +156,14 @@
                                         }
                                     </td>
                                     <td>
-                                        <button class="btn btn-sm btn-primary view-report" data-id="@report.regID">
+                                        <button class="btn btn-sm btn-primary view-report"
+                                                data-id="@report.regID"
+                                                data-userid="@report.UserID"
+                                                data-user-firstname="@(reporter?.FirstName ?? "Unknown")"
+                                                data-user-lastname="@(reporter?.LastName ?? "User")"
+                                                data-user-email="@(reporter?.Email ?? "")"
+                                                data-user-phone="@(reporter?.Phone ?? "Not available")"
+                                                data-user-org="@item.OrganizationName">
                                             <i class="bi bi-eye"></i> View Details
                                         </button>
                                     </td>
@@ -215,68 +226,43 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         $(document).ready(function () {
-            // Get reports data with proper property names
-            const reports = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Where(r => r.IsSent)));
+            // Get reports data (serialize only report objects for map/lookup)
+            const reports = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(m => m.Report)));
             let mapInstance = null;
             let currentReportId = null;
             
             console.log('Reports data:', reports); // Debug log
 
-            // View Report Details
-                    $('.view-report').on('click', function () {
-            const reportId = $(this).data('id');
-            const userId = $(this).data('userid'); // Get the userID
-            currentReportId = reportId;
+            // View Report Details - use server-side reporter values stored in button data attributes
+            $('.view-report').on('click', function () {
+                const $btn = $(this);
+                const reportId = $btn.data('id');
+                currentReportId = reportId;
 
-            const selectedReport = reports.find(r => r.regID === reportId);
+                const selectedReport = reports.find(r => r.regID === reportId);
 
-            if (selectedReport) {
-                showReportDetailsLoading();
-                fetchUserDetails(userId, function(userInfo) {
+                // Build userInfo object from data attributes (server-side provided)
+                const userInfo = {
+                    UserID: $btn.data('userid'),
+                    FirstName: $btn.data('user-firstname'),
+                    LastName: $btn.data('user-lastname'),
+                    Email: $btn.data('user-email'),
+                    Phone: $btn.data('user-phone'),
+                    OrganizationName: $btn.data('user-org')
+                };
+
+                if (selectedReport) {
+                    showReportDetailsLoading();
+                    // Use server-side userInfo directly
                     showReportDetailsFull(selectedReport, userInfo);
-                });
-            }
-        });
+                }
+            });
 
             function showReportDetailsLoading() {
                 const loadingHtml = '<div class="text-center p-5"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-3">Loading report details...</p></div>';
                 $('#reportDetails').html(loadingHtml);
                 $('#reportDetailModal').modal('show');
             }
-
-                    function fetchUserDetails(userId, callback) {
-            $.ajax({
-                url: '/Home/GetUserDetails',
-                method: 'GET',
-                data: { userId: userId },
-                success: function(response) {
-                    if (response.success) {
-                        callback(response.userInfo);
-                    } else {
-                        console.error(response.message);
-                        callback({
-                            UserID: userId,
-                            FirstName: "Unknown",
-                            LastName: "User",
-                            Email: `user${userId}@@navisafe.com`,
-                            Phone: "Not available",
-                            OrganizationName: "Unknown Organization"
-                        });
-                    }
-                },
-                error: function() {
-                    console.error("Error fetching user details");
-                    callback({
-                        UserID: userId,
-                        FirstName: "Unknown",
-                        LastName: "User",
-                        Email: `user${userId}@@navisafe.com`,
-                        Phone: "Not available",
-                        OrganizationName: "Unknown Organization"
-                    });
-                }
-            });
-        }
 
             function showReportDetailsFull(selectedReport, userInfo) {
                 // Handle case sensitivity for JSON properties
@@ -329,15 +315,15 @@
                     html += '</div></div>';
                 }
 
-                // Reporter Card
+                // Reporter Card (server-side data)
                 html += '<div class="card">';
                 html += '<div class="card-header"><h6><i class="bi bi-person"></i> Reporter Information</h6></div>';
                 html += '<div class="card-body">';
                 html += '<dl class="row">';
-                html += '<dt class="col-sm-4">Name:</dt><dd class="col-sm-8">' + userInfo.FirstName + ' ' + userInfo.LastName + '</dd>';
-                html += '<dt class="col-sm-4">Email:</dt><dd class="col-sm-8"><a href="mailto:' + userInfo.Email + '">' + userInfo.Email + '</a></dd>';
-                html += '<dt class="col-sm-4">Phone:</dt><dd class="col-sm-8">' + (userInfo.Phone !== 'Not available' ? '<a href="tel:' + userInfo.Phone + '">' + userInfo.Phone + '</a>' : userInfo.Phone) + '</dd>';
-                html += '<dt class="col-sm-4">Organization:</dt><dd class="col-sm-8">' + userInfo.OrganizationName + '</dd>';
+                html += '<dt class="col-sm-4">Name:</dt><dd class="col-sm-8">' + (userInfo.FirstName || 'Unknown') + ' ' + (userInfo.LastName || '') + '</dd>';
+                html += '<dt class="col-sm-4">Email:</dt><dd class="col-sm-8"><a href="mailto:' + (userInfo.Email || '') + '">' + (userInfo.Email || '') + '</a></dd>';
+                html += '<dt class="col-sm-4">Phone:</dt><dd class="col-sm-8">' + (userInfo.Phone && userInfo.Phone !== 'Not available' ? '<a href="tel:' + userInfo.Phone + '">' + userInfo.Phone + '</a>' : (userInfo.Phone || 'Not available')) + '</dd>';
+                html += '<dt class="col-sm-4">Organization:</dt><dd class="col-sm-8">' + (userInfo.OrganizationName || 'Unknown Organization') + '</dd>';
                 html += '</dl></div></div>';
 
                 html += '</div>'; // End left column

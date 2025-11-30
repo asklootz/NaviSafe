@@ -36,6 +36,7 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.Accuracy).HasColumnName("accuracy");
             entity.Property(e => e.Img).HasColumnName("img");
             // creationDate is handled by DB default current_timestamp(), do not set here
+            entity.Property(e => e.CreationDate).HasColumnName("creationDate").HasDefaultValueSql("current_timestamp()");
             entity.Property(e => e.GeoJSON).HasColumnName("geoJSON");
         });
 
