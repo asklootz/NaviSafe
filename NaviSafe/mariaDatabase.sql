@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `reporting` (
   `accuracy` int(11) DEFAULT NULL,
   `shortDesc` varchar(50) DEFAULT NULL,
   `longDesc` varchar(255) DEFAULT NULL,
-  `img` mediumblob DEFAULT NULL,
+  `img` varchar(100) DEFAULT NULL,
   `isSent` bool NOT NULL,
   `state` enum('SENT','PENDING','REJECTED') NOT NULL,
   `rejectComment` varchar(255) DEFAULT NULL,
