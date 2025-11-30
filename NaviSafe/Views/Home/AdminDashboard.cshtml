@@ -92,7 +92,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h6 class="text-muted">Approved</h6>
-                        <h2 class="text-success">@Model.Count(m => m.Report.State == "APPROVED" || m.Report.State == "SENT")</h2>
+                        <h2 class="text-success">@Model.Count(m => m.Report.State == "APPROVED" || m.Report.State == "APPROVED")</h2>
                     </div>
                 </div>
             </div>
@@ -138,7 +138,7 @@
                                     <td>@report.Lat.ToString("F6")</td>
                                     <td>@report.Lon.ToString("F6")</td>
                                     <td>
-                                        <span class="badge @(report.State == "PENDING" ? "bg-warning" : (report.State == "APPROVED" || report.State == "SENT") ? "bg-success" : "bg-danger")">
+                                        <span class="badge @(report.State == "PENDING" ? "bg-warning" : (report.State == "APPROVED" || report.State == "APPROVED") ? "bg-success" : "bg-danger")">
                                             @report.State
                                         </span>
                                     </td>
@@ -358,8 +358,7 @@
                 html += '<label for="newStatus" class="form-label"><strong>Change Status:</strong></label>';
                 html += '<select class="form-select" id="newStatus">';
                 html += '<option value="">-- Select Status --</option>';
-                html += '<option value="APPROVED"' + (state === 'APPROVED' ? ' selected' : '') + '>✅ Approved</option>';
-                html += '<option value="SENT"' + (state === 'SENT' ? ' selected' : '') + '>📤 Sent/Published</option>';
+                html += '<option value="APPROVED"' + (state === 'APPROVED' ? ' selected' : '') + '>✅ Approved/Published</option>';
                 html += '<option value="REJECTED"' + (state === 'REJECTED' ? ' selected' : '') + '>❌ Rejected</option>';
                 html += '<option value="PENDING"' + (state === 'PENDING' ? ' selected' : '') + '>⏳ Pending Review</option>';
                 html += '</select></div>';
@@ -497,7 +496,7 @@
                 switch (state) {
                     case 'PENDING': return '#ffc107';
                     case 'APPROVED': return '#28a745';
-                    case 'SENT': return '#28a745';
+                    case 'APPROVED': return '#28a745';
                     case 'REJECTED': return '#dc3545';
                     default: return '#6c757d';
                 }
@@ -507,7 +506,7 @@
                 switch (state) {
                     case 'PENDING': return 'bg-warning';
                     case 'APPROVED': return 'bg-success';
-                    case 'SENT': return 'bg-success';
+                    case 'APPROVED': return 'bg-success';
                     case 'REJECTED': return 'bg-danger';
                     default: return 'bg-secondary';
                 }

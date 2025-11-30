@@ -70,7 +70,7 @@ var sqlScript = $$$"""
                     `longDesc` varchar(255) DEFAULT NULL,
                     `img` varchar(100) DEFAULT NULL,
                     `isSent` bool NOT NULL,
-                    `state` enum('SENT','PENDING','REJECTED') NOT NULL,
+                    `state` enum('APPROVED','PENDING','REJECTED') NOT NULL,
                     `rejectComment` varchar(255) DEFAULT NULL,
                     `userID` int(11) NOT NULL,
                     `creationDate` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -86,7 +86,7 @@ var sqlScript = $$$"""
                   INSERT INTO `reporting` (`regID`, `lat`, `lon`, `altitude`, `accuracy`, `shortDesc`, `longDesc`, `img`, `isSent`, `state`, `rejectComment`, `userID`, `creationDate`, `geoJSON`) VALUES
                   (1, 59.1816, 7.55859, 69, NULL, 'Jesus', 'Our lord and saviour', '/images/TallJesus.jpg', true, 'REJECTED', 'He is not real >:(', 4, '2025-11-26 12:24:46', '{"type":"Feature","geometry":{"type":"Point","coordinates":[7.558593750000001,59.18155722094256]},"properties":{"source":"marker"}}'),
                   (2, 58.1465, 7.99509, 420, NULL, 'Tree', 'Jolly good christmas tree', '/images/Tree.jpg', true, 'PENDING', 'Will approve if sender is on the nice list ;D', 2, '2025-11-26 12:06:44', '{"type":"Feature","geometry":{"type":"Point","coordinates":[7.9950857162475595,58.14652207802879]},"properties":{"source":"marker"}}'),
-                  (3, 58.8027, 5.67667, 666, NULL, 'CatZilla', 'Giant scary killer kitty cat', '/images/CatZilla.jpeg', true, 'SENT', 'Oh hell yeah! Pspspspspsps :3', 3, '2025-11-26 12:38:38', '{"type":"Feature","geometry":{"type":"Point","coordinates":[5.676675438880921,58.80270370916149]},"properties":{"source":"marker"}}');
+                  (3, 58.8027, 5.67667, 666, NULL, 'CatZilla', 'Giant scary killer kitty cat', '/images/CatZilla.jpeg', true, 'APPROVED', 'Oh hell yeah! Pspspspspsps :3', 3, '2025-11-26 12:38:38', '{"type":"Feature","geometry":{"type":"Point","coordinates":[5.676675438880921,58.80270370916149]},"properties":{"source":"marker"}}');
                   
                   
                   -- --------------------------------------------------------
@@ -206,13 +206,13 @@ var mariaDatabase = mariaContainer.AddDatabase("mariaDatabase")
 //2 choices of how to run the web-server - ONLY CHOOSE ONE:
 
 //To run on the web-server locally on your machine via AppHost - Should only be used for development with "Hot Reload"
-/*
+
 builder.AddProject<Projects.NaviSafe>("navisafe")
     .WithReference(mariaDatabase) //Creates a link between the web-server container and the database container via a connection string
-    .WaitFor(mariaDatabase);*/
+    .WaitFor(mariaDatabase);
 
 //To run the web-server on a Docker container
-
+/*
 builder.AddDockerfile("naviSafe", "../", "NaviSafe/Dockerfile")
     .WithExternalHttpEndpoints()
     .WithBindMount(source: "../NaviSafe/wwwroot/images", target: "/app/wwwroot/images") //Bind mount for persistent image storage
@@ -223,7 +223,7 @@ builder.AddDockerfile("naviSafe", "../", "NaviSafe/Dockerfile")
     .WaitFor(mariaDatabase)
     .WithHttpEndpoint(8080, 8080, "NaviSafeHTTP")
     .WithHttpsEndpoint(8081, 8081, "NaviSafeHTTPS")
-    .WithOtlpExporter();
+    .WithOtlpExporter();*/
 
 
 
