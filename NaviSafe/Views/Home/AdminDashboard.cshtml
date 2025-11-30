@@ -118,10 +118,9 @@
                                 <th>ID</th>
                                 <th>Type</th>
                                 <th>Description</th>
-                                <th>Latitude</th>
-                                <th>Longitude</th>
-                                <th>Status</th>
                                 <th>Reporter</th>
+                                <th>Status</th>
+                                <th>Date</th>
                                 <th>Image</th>
                                 <th>Action</th>
                             </tr>
@@ -135,14 +134,15 @@
                                     <td>@report.regID</td>
                                     <td>@report.ShortDesc</td>
                                     <td>@(string.IsNullOrEmpty(report.LongDesc) ? "No description" : (report.LongDesc.Length > 50 ? report.LongDesc.Substring(0, 50) + "..." : report.LongDesc))</td>
-                                    <td>@report.Lat.ToString("F6")</td>
-                                    <td>@report.Lon.ToString("F6")</td>
+                                    <td>@(reporter != null ? (reporter.FirstName + " " + reporter.LastName) : "Unknown")</td>
+@*                                     <td>@report.Lat.ToString("F6")</td>
+                                    <td>@report.Lon.ToString("F6")</td> *@
                                     <td>
                                         <span class="badge @(report.State == "PENDING" ? "bg-warning" : (report.State == "APPROVED" || report.State == "APPROVED") ? "bg-success" : "bg-danger")">
                                             @report.State
                                         </span>
                                     </td>
-                                    <td>@(reporter != null ? (reporter.FirstName + " " + reporter.LastName) : "Unknown")</td>
+                                    <td>@report.CreationDate.ToString("yyyy-MM-dd HH:mm:ss")</td>
                                     <td>
                                         @if (report.Img != null && report.Img.Length > 0)
                                         {
