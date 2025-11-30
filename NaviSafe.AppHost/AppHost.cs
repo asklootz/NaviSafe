@@ -197,6 +197,7 @@ var mariaContainer = builder.AddMySql("mariaContainer", null, 3307)
     .WithImage("mariadb:11.8")
     .WithContainerName("mariaContainer")
     .WithDataBindMount(source: "../MariaDB/Data") //Code to create a bind mount to a local folder
+    .WithBindMount(source: "../MariaDB/Img", target: "/mnt/img") //Code to create a named volume for persistent data
     .WithPhpMyAdmin()
     .WithOtlpExporter(); //Creates a phpMyAdmin container linked to the database container for easy management
 
