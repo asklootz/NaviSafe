@@ -23,12 +23,14 @@ public class ObstacleController : Controller
     }
     
     [HttpGet]
+    [Authorize]
     public ActionResult DataForm()
     {
         return View(new ObstacleDataForm());
     }
 
     [HttpPost]
+    [Authorize]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DataForm(NaviSafe.Models.ObstacleDataForm model, string? submitAction)
     {
@@ -126,7 +128,7 @@ public class ObstacleController : Controller
             return View(model);
         }
 
-        return RedirectToAction("Overview");
+        return RedirectToAction("Dataform");
     }
 
     [HttpGet]
