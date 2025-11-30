@@ -62,6 +62,14 @@
                             </button>
                         </li>
                         <li class="nav-item">
+                            <form action="/Obstacle/Dataform" method="post" style="display: inline;">
+                            @Html.AntiForgeryToken()
+                                <button class="btn btn-outline-success btn-sm me-2">
+                                    <i class="bi bi-geo-alt"></i> New rapport
+                                </button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
                             <form action="/Account/Logout" method="post" style="display: inline;">
                                 @Html.AntiForgeryToken()
                                 <button type="submit" class="btn btn-outline-danger btn-sm">

@@ -32,6 +32,18 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     
             </div>
+                @* show Admin Dashboard button only for users in role ADM *@
+                @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("ADM"))
+                {
+                    <div >
+                        <form action="/Home/AdminDashboard" method="post" style="display: inline;">
+                            @Html.AntiForgeryToken()
+                            <a type="button" asp-area="" asp-controller="Home" asp-action="AdminDashboard" class="btn btn-admin btn-success fs-3 me-2">
+                                <i class="bi align-content-center bi-person-workspace fs-2 me-3"></i> Admin Dashboard
+                            </a>
+                        </form>
+                    </div>
+                }
             <button class="btn btn-report fs-3" type="button" onclick="window.location.href='@Url.Action("Overview", "Obstacle")'"><i class="bi bi-list fs-2 me-3"></i>My Registrations</button>
         </div>
     </nav>

@@ -263,6 +263,14 @@
             .report-title {
                 font-size: 1.5rem;
             }
+
+            .btn-admin {
+                color: #ffffff;
+                border-color: none;
+                height: 4rem;
+                font-weight: 750;
+                max-width: 20rem;
+            }
         }
     </style>
 </head>
@@ -293,6 +301,18 @@
                 <a href="@Url.Action("DataForm", "Obstacle")" class="btn btn-new-report fs-3">
                     <i class="bi bi-plus-circle fs-2 me-3"></i>New Registration
                 </a>
+                @* show Admin Dashboard button only for users in role ADM *@
+                @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("ADM"))
+                {
+                    <div>
+                        <form action="/Home/AdminDashboard" method="post" style="display: inline;">
+                            @Html.AntiForgeryToken()
+                            <a type="button" asp-area="" asp-controller="Home" asp-action="AdminDashboard" class="btn btn-admin btn-success fs-3 ms-3 me-2">
+                                <i class="bi align-content-center bi-person-workspace fs-2 me-3"></i> Admin Dashboard
+                            </a>
+                        </form>
+                    </div>
+                }
             </div>
         </nav>
     </header>

@@ -93,6 +93,13 @@
     border-color: #a7adaf;
     color: #fff;
 }
+.btn-admin {
+    color: #ffffff;
+    border-color: none;
+    height: 4rem;
+    font-weight: 750;
+    max-width: 20rem;
+}
 
 .formLabel{
     font-weight: bold;
