@@ -34,8 +34,18 @@ public class HomeController : Controller
     [Authorize(Roles = "ADM")]
     public IActionResult AdminDashboard()
     {
-        var reports = _context.Obstacles.ToList();
-        return View(reports);
+        // Load obstacles with reporter info and organization name for server-side rendering
+        var list = _context.Obstacles
+            .Where(o => o.IsSent)
+            .Select(o => new AdminReportViewModel
+            {
+                Report = o,
+                Reporter = _context.UserInfo.FirstOrDefault(u => u.UserID == o.UserID),
+                OrganizationName = _context.Organisation.Where(org => org.OrgNr == _context.UserInfo.Where(u => u.UserID == o.UserID).Select(u => u.OrgNr).FirstOrDefault()).Select(org => org.OrgName).FirstOrDefault() ?? string.Empty
+            })
+            .ToList();
+
+        return View(list);
     }
 
     [HttpGet]

@@ -140,5 +140,5 @@ public class ObstacleData
     public int? Accuracy { get; set; }
     public byte[]? Img { get; set; }
     public string? GeoJSON { get; set; }
-    public DateTime CreationDate { get;  }
+    public DateTime CreationDate { get; set; }
 }
