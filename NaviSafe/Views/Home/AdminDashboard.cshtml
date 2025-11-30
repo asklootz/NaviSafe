@@ -299,6 +299,7 @@
                 // Handle case sensitivity for JSON properties
                 const reportId = selectedReport.regID || selectedReport.RegID;
                 const shortDesc = selectedReport.shortDesc || selectedReport.ShortDesc;
+                const rejectComment = selectedReport.rejectComment || selectedReport.RejectComment;
                 const longDesc = selectedReport.longDesc || selectedReport.LongDesc;
                 const altitude = selectedReport.altitude || selectedReport.Altitude;
                 const state = selectedReport.state || selectedReport.State;
@@ -383,7 +384,7 @@
                 html += '<div class="card-body">';
                 html += '<div class="mb-3">';
                 html += '<label for="adminReason" class="form-label"><strong>Reason for Decision:</strong> <span class="text-danger">*</span></label>';
-                html += '<textarea class="form-control" id="adminReason" rows="3" placeholder="Enter reason for your decision..."></textarea>';
+                html += '<textarea class="form-control" id="adminReason" rows="3" placeholder="'+(rejectComment || 'Enter reason for your decision...')+'"></textarea>';
                 html += '</div>';
                 html += '<div class="mb-3">';
                 html += '<label for="newStatus" class="form-label"><strong>Change Status:</strong></label>';

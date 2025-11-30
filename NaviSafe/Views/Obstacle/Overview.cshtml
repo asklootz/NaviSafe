@@ -503,28 +503,38 @@
         function viewDetails(reportId) {
             const reports = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
             const report = reports.find(r => r.regID === reportId);
+            const lat = report.Lat;
+            const lon = report.Lon;
+            const longDesc = report.LongDesc;
+            const img = report.Img;
+            const shortDesc = report.ShortDesc;
+            const regID = report.regID;
+            const altitude = report.Altitude;
+            const state = report.State;
+            const creationDate = report.CreationDate;
+            const rejectComment = report.rejectComment;
             
             if (!report) return;
             
             let html = '<div class="p-3">';
             html += '<dl class="row">';
-            html += '<dt class="col-sm-4 formLabel">Report ID:</dt><dd class="col-sm-8 fs-5">#' + report.regID + '</dd>';
-            html += '<dt class="col-sm-4 formLabel">Type:</dt><dd class="col-sm-8 fs-5">' + report.shortDesc + '</dd>';
-            html += '<dt class="col-sm-4 formLabel">Height:</dt><dd class="col-sm-8 fs-5">' + (report.altitude || 'N/A') + ' feet</dd>';
-            html += '<dt class="col-sm-4 formLabel">Status:</dt><dd class="col-sm-8 fs-5">' + report.state + '</dd>';
-            html += '<dt class="col-sm-4 formLabel">Coordinates:</dt><dd class="col-sm-8 fs-5">' + report.lat.toFixed(6) + ', ' + report.lon.toFixed(6) + '</dd>';
-            html += '<dt class="col-sm-4 formLabel">Submitted:</dt><dd class="col-sm-8 fs-5">' + new Date(report.creationDate).toLocaleDateString() + '</dd>';
+            html += '<dt class="col-sm-4 formLabel">Report ID:</dt><dd class="col-sm-8 fs-5">#' + regID + '</dd>';
+            html += '<dt class="col-sm-4 formLabel">Type:</dt><dd class="col-sm-8 fs-5">' + shortDesc + '</dd>';
+            html += '<dt class="col-sm-4 formLabel">Height:</dt><dd class="col-sm-8 fs-5">' + (altitude || 'N/A') + ' feet</dd>';
+            html += '<dt class="col-sm-4 formLabel">Status:</dt><dd class="col-sm-8 fs-5">' + state + '</dd>';
+            html += '<dt class="col-sm-4 formLabel">Rejection Comment:</dt><dd class="col-sm-8 fs-5">' + (rejectComment || 'N/A') + '</dd>';           html += '<dt class="col-sm-4 formLabel">Coordinates:</dt><dd class="col-sm-8 fs-5">' + parseFloat(lat).toFixed(6) + ', ' + parseFloat(lon).toFixed(6) + '</dd>';
+            html += '<dt class="col-sm-4 formLabel">Submitted:</dt><dd class="col-sm-8 fs-5">' + new Date(creationDate).toLocaleDateString() + '</dd>';
             
-            if (report.longDesc) {
-                html += '<dt class="col-sm-4 formLabel">Description:</dt><dd class="col-sm-8 fs-5">' + report.longDesc + '</dd>';
+            if (longDesc != null) {
+                html += '<dt class="col-sm-4 formLabel">Description:</dt><dd class="col-sm-8 fs-5">' + longDesc + '</dd>';
             }
             
             html += '</dl>';
             
-            if (report.img && report.img.length > 0) {
+            if (img && img.length > 0) {
                 html += '<div class="mt-3">';
                 html += '<h6 class="formLabel">Image</h6>';
-                html += '<img src="/Obstacle/GetImage/' + report.regID + '" class="img-fluid rounded" style="max-height: 300px; border: 3px solid var(--ns-gray-200);" />';
+                html += '<img src="/Obstacle/GetImage/' + regID + '" class="img-fluid rounded" style="max-height: 300px; border: 3px solid var(--ns-gray-200);" />';
                 html += '</div>';
             }
             

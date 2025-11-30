@@ -105,6 +105,7 @@ public class ObstacleController : Controller
             // Required DB columns
             IsSent = isSent,
             State = "PENDING",
+            RejectComment = string.IsNullOrEmpty(model.rejectComment) ? null : model.rejectComment,
             UserID = userId,
             Accuracy = null,
             Img = savedRelativePath, // store relative path (or null)

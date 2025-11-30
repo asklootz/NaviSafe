@@ -27,6 +27,8 @@ public class ObstacleDataForm
     
     public bool isSent { get; set; } = false;
 
+    public string? rejectComment { get; set; } = null;
+
     // Property to bind uploaded image file from the form
     public IFormFile? ImageFile { get; set; }
 }

@@ -32,6 +32,7 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.Altitude).HasColumnName("altitude");
             entity.Property(e => e.IsSent).HasColumnName("isSent").IsRequired();
             entity.Property(e => e.State).HasColumnName("state").HasMaxLength(10).IsRequired();
+            entity.Property(e => e.RejectComment).HasColumnName("rejectComment");
             entity.Property(e => e.UserID).HasColumnName("userID").IsRequired();
             entity.Property(e => e.Accuracy).HasColumnName("accuracy");
             // img now stores the relative path to the image (e.g. '/images/123_20251118.jpg')
@@ -139,6 +140,7 @@ public class ObstacleData
     public bool IsSent { get; set; } = false; // e.g. draft / not sent
     public string State { get; set; } = "PENDING"; // default state
     public int UserID { get; set; } // foreign key to userInfo.userID
+    public string? RejectComment { get; set; } 
     public int? Accuracy { get; set; }
     // store path relative to web root, e.g. "/images/123_20251118T153000.jpg"
     public string? Img { get; set; }
