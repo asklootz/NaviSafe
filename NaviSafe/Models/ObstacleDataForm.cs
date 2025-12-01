@@ -33,4 +33,7 @@ public class ObstacleDataForm
 
     // Property to bind uploaded image file from the form
     public IFormFile? ImageFile { get; set; }
+
+    // When editing an existing draft, hold the currently stored image path so the view can show a preview
+    public string? ExistingImagePath { get; set; }
 }

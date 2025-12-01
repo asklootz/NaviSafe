@@ -320,6 +320,10 @@
     <section class="container-fluid mb-4">
         <div class="row justify-content-center">
             <div class="col-12">
+                <div class="form-check form-switch form fs-1">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Oldest report first</label>
+                </div>
                 @if (!Model.Any())
                 {
                     <div class="empty-state">
@@ -335,9 +339,10 @@
                 }
                 else
                 {
+                    <div id="reportsContainer">
                     @foreach (var report in Model)
                     {
-                        <div class="report-card card-ns">
+                        <div class="report-card card-ns" data-regid="@report.regID">
                             <div class="report-header">
                                 <h3 class="report-title">@report.ShortDesc</h3>
                                 <div>
@@ -430,10 +435,11 @@
                             </div>
                         </div>
                     }
-                }
-            </div>
-        </div>
-    </section>
+                    </div>
+                 }
+             </div>
+         </div>
+     </section>
 
     <!-- Map Modal -->
     <div class="modal fade" id="mapModal" tabindex="-1">
@@ -568,6 +574,33 @@
                 }
             });
         }
+
+        // Sorting helper for report cards
+        function sortReportCards(ascending) {
+            const container = document.getElementById('reportsContainer');
+            if (!container) return;
+            // get NodeList -> array
+            const cards = Array.from(container.querySelectorAll('.report-card'));
+            cards.sort(function(a, b) {
+                const aId = parseInt(a.getAttribute('data-regid') || '0', 10);
+                const bId = parseInt(b.getAttribute('data-regid') || '0', 10);
+                return ascending ? (aId - bId) : (bId - aId);
+            });
+            // append in sorted order
+            cards.forEach(c => container.appendChild(c));
+        }
+
+        // Wire up the checkbox to control sort order
+        document.addEventListener('DOMContentLoaded', function () {
+            const checkbox = document.getElementById('flexSwitchCheckDefault');
+            if (checkbox) {
+                // initial sort according to current state
+                sortReportCards(checkbox.checked);
+                checkbox.addEventListener('change', function () {
+                    sortReportCards(this.checked);
+                });
+            }
+        });
     </script>
 
     @Html.AntiForgeryToken()
