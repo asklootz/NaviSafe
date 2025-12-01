@@ -17,27 +17,24 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
-        .custom-marker {
-            background: transparent !important;
-            border: none !important;
-        }
-        
-        .custom-marker div {
-            animation: pulse 2s infinite;
-        }
-        
-        @@keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        
+        .custom-marker { background: transparent !important; border: none !important; }
+        .custom-marker div { animation: pulse 2s infinite; }
+        @@keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
         .page-bg { background: #f8f9fa; }
 
         /* New styles for clickable statistic cards */
         .stat-card { cursor: pointer; transition: transform 0.12s ease, box-shadow 0.12s ease; }
         .stat-card:hover { transform: translateY(-4px); box-shadow: 0 6px 18px rgba(0,0,0,0.08); }
         .stat-card.active { outline: 3px solid rgba(13,110,253,0.12); box-shadow: 0 8px 22px rgba(13,110,253,0.12); }
+
+        /* sortable header styles */
+        th.sortable { cursor: pointer; user-select: none; }
+        th.sortable .sort-indicator { margin-left: 6px; font-size: 0.8em; opacity: 0.7; }
+        th.sortable.asc .sort-indicator::after { content: '▲'; }
+        th.sortable.desc .sort-indicator::after { content: '▼'; }
+
+        /* small input in header */
+        th .header-search { margin-top: 6px; }
     </style>
 </head>
 
@@ -57,24 +54,16 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <button class="btn btn-outline-primary btn-sm me-2" id="mapButton">
-                                <i class="bi bi-map"></i> Show Map View
-                            </button>
+                            <button class="btn btn-outline-primary btn-sm me-2" id="mapButton"><i class="bi bi-map"></i> Show Map View</button>
                         </li>
                         <li class="nav-item">
-                            <form action="/Obstacle/Dataform" method="post" style="display: inline;">
-                            @Html.AntiForgeryToken()
-                                <button class="btn btn-outline-success btn-sm me-2">
-                                    <i class="bi bi-geo-alt"></i> New rapport
-                                </button>
+                            <form action="/Obstacle/Dataform" method="post" style="display: inline;">@Html.AntiForgeryToken()
+                                <button class="btn btn-outline-success btn-sm me-2"><i class="bi bi-geo-alt"></i> New rapport</button>
                             </form>
                         </li>
                         <li class="nav-item">
-                            <form action="/Account/Logout" method="post" style="display: inline;">
-                                @Html.AntiForgeryToken()
-                                <button type="submit" class="btn btn-outline-danger btn-sm">
-                                    <i class="bi bi-box-arrow-right"></i> Logout
-                                </button>
+                            <form action="/Account/Logout" method="post" style="display: inline;">@Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-box-arrow-right"></i> Logout</button>
                             </form>
                         </li>
                     </ul>
@@ -85,55 +74,28 @@
 
     <main class="container-fluid py-5 mt-5">
         <div class="row mb-4">
-            <div class="col-md-3">
-                <div class="card stat-card" data-status="ALL" role="button" title="Show all reports">
-                    <div class="card-body">
-                        <h6 class="text-muted">Total Submitted Reports</h6>
-                        <h2>@Model.Count()</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card stat-card" data-status="PENDING" role="button" title="Show pending reports">
-                    <div class="card-body">
-                        <h6 class="text-muted">Pending Review</h6>
-                        <h2 class="text-warning">@Model.Count(m => m.Report.State == "PENDING")</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card stat-card" data-status="APPROVED" role="button" title="Show approved reports">
-                    <div class="card-body">
-                        <h6 class="text-muted">Approved</h6>
-                        <h2 class="text-success">@Model.Count(m => m.Report.State == "APPROVED" || m.Report.State == "SENT")</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card stat-card" data-status="REJECTED" role="button" title="Show rejected reports">
-                    <div class="card-body">
-                        <h6 class="text-muted">Rejected</h6>
-                        <h2 class="text-danger">@Model.Count(m => m.Report.State == "REJECTED")</h2>
-                    </div>
-                </div>
-            </div>
+            <div class="col-md-3"><div class="card stat-card" data-status="ALL"><div class="card-body"><h6 class="text-muted">Total Submitted Reports</h6><h2>@Model.Count()</h2></div></div></div>
+            <div class="col-md-3"><div class="card stat-card" data-status="PENDING"><div class="card-body"><h6 class="text-muted">Pending Review</h6><h2 class="text-warning">@Model.Count(m => m.Report.State == "PENDING")</h2></div></div></div>
+            <div class="col-md-3"><div class="card stat-card" data-status="APPROVED"><div class="card-body"><h6 class="text-muted">Approved</h6><h2 class="text-success">@Model.Count(m => m.Report.State == "APPROVED" || m.Report.State == "SENT")</h2></div></div></div>
+            <div class="col-md-3"><div class="card stat-card" data-status="REJECTED"><div class="card-body"><h6 class="text-muted">Rejected</h6><h2 class="text-danger">@Model.Count(m => m.Report.State == "REJECTED")</h2></div></div></div>
         </div>
 
         <div class="card">
-            <div class="card-header bg-light">
-                <h5 class="mb-0">Submitted Obstacle Reports</h5>
-            </div>
+            <div class="card-header bg-light"><h5 class="mb-0">Submitted Obstacle Reports</h5></div>
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-hover mb-0" id="reportsTable">
                         <thead class="table-light">
                             <tr>
-                                <th>ID</th>
+                                <th class="sortable" data-sort="id">ID <span class="sort-indicator"></span></th>
                                 <th>Type</th>
                                 <th>Description</th>
-                                <th>Reporter</th>
+                                <th>
+                                    @* Reporter *@
+                                    <div class="header-search"><input id="reporterSearch" type="search" class="form-control form-control-sm" placeholder="Reporter" aria-label="Search reporter name" /></div>
+                                </th>
                                 <th>Status</th>
-                                <th>Date</th>
+                                <th class="sortable" data-sort="date">Date <span class="sort-indicator"></span></th>
                                 <th>Image</th>
                                 <th>Action</th>
                             </tr>
@@ -143,23 +105,20 @@
                             {
                                 var report = item.Report;
                                 var reporter = item.Reporter;
-                                <tr data-state="@report.State">
+                                var reporterName = reporter != null ? (reporter.FirstName + " " + reporter.LastName) : "Unknown";
+                                <tr data-state="@report.State" data-id="@report.regID" data-date="@report.CreationDate.ToString("o")" data-reporter="@reporterName.ToLower()">
                                     <td>@report.regID</td>
                                     <td>@report.ShortDesc</td>
                                     <td>@(string.IsNullOrEmpty(report.LongDesc) ? "No description" : (report.LongDesc.Length > 50 ? report.LongDesc.Substring(0, 50) + "..." : report.LongDesc))</td>
-                                    <td>@(reporter != null ? (reporter.FirstName + " " + reporter.LastName) : "Unknown")</td>
+                                    <td>@reporterName</td>
                                     <td>
-                                        <span class="badge @(report.State == "PENDING" ? "bg-warning" : (report.State == "APPROVED" || report.State == "SENT") ? "bg-success" : "bg-danger")">
-                                            @report.State
-                                        </span>
+                                        <span class="badge @(report.State == "PENDING" ? "bg-warning" : (report.State == "APPROVED" || report.State == "SENT") ? "bg-success" : "bg-danger")">@report.State</span>
                                     </td>
                                     <td>@report.CreationDate.ToString("yyyy-MM-dd HH:mm:ss")</td>
                                     <td>
                                         @if (!string.IsNullOrEmpty(report.Img))
                                         {
-                                            <a href="@report.Img" target="_blank" class="btn btn-sm btn-outline-info">
-                                                <i class="bi bi-image"></i> View
-                                            </a>
+                                            <a href="@report.Img" target="_blank" class="btn btn-sm btn-outline-info"><i class="bi bi-image"></i> View</a>
                                         }
                                         else
                                         {
@@ -167,14 +126,7 @@
                                         }
                                     </td>
                                     <td>
-                                        <button class="btn btn-sm btn-primary view-report"
-                                                data-id="@report.regID"
-                                                data-userid="@report.UserID"
-                                                data-user-firstname="@(reporter?.FirstName ?? "Unknown")"
-                                                data-user-lastname="@(reporter?.LastName ?? "User")"
-                                                data-user-email="@(reporter?.Email ?? "")"
-                                                data-user-phone="@(reporter?.Phone ?? "Not available")"
-                                                data-user-org="@item.OrganizationName">
+                                        <button class="btn btn-sm btn-primary view-report" data-id="@report.regID" data-userid="@report.UserID" data-user-firstname="@(reporter?.FirstName ?? "Unknown")" data-user-lastname="@(reporter?.LastName ?? "User")" data-user-email="@(reporter?.Email ?? "")" data-user-phone="@(reporter?.Phone ?? "Not available")" data-user-org="@item.OrganizationName">
                                             <i class="bi bi-eye"></i> View Details
                                         </button>
                                     </td>
@@ -237,32 +189,64 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         $(document).ready(function () {
-            // Get reports data (serialize only report objects for map/lookup)
             const reports = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(m => m.Report)));
             let mapInstance = null;
             let currentReportId = null;
-            
-            console.log('Reports data:', reports); // Debug log
 
-            // Filter table rows when a stat card is clicked
+            function applyFilters() {
+                const activeCard = $('.stat-card.active');
+                const activeStatus = activeCard.length ? activeCard.data('status') : 'ALL';
+                const searchVal = ($('#reporterSearch').val() || '').toString().toLowerCase().trim();
+
+                $('#reportsTable tbody tr').each(function () {
+                    const $tr = $(this);
+                    const rowState = $tr.data('state');
+                    const rowReporter = ($tr.data('reporter') || '').toString().toLowerCase();
+
+                    const statusMatch = !activeStatus || activeStatus === 'ALL' || String(rowState) === String(activeStatus);
+                    const searchMatch = !searchVal || rowReporter.indexOf(searchVal) !== -1;
+
+                    if (statusMatch && searchMatch) $tr.show(); else $tr.hide();
+                });
+            }
+
             $('.stat-card').on('click', function () {
                 $('.stat-card').removeClass('active');
                 $(this).addClass('active');
-
-                const status = $(this).data('status');
-                if (!status || status === 'ALL') {
-                    $('#reportsTable tbody tr').show();
-                } else {
-                    $('#reportsTable tbody tr').each(function () {
-                        const rowState = $(this).data('state');
-                        if (String(rowState) === String(status)) {
-                            $(this).show();
-                        } else {
-                            $(this).hide();
-                        }
-                    });
-                }
+                applyFilters();
             });
+
+            $('#reporterSearch').on('input', function () {
+                applyFilters();
+            });
+
+            // Sorting
+            function sortReportsTable(key, direction) {
+                const $tbody = $('#reportsTable tbody');
+                const $rows = $tbody.find('tr').toArray();
+                $rows.sort(function(a, b) {
+                    const aVal = $(a).data(key);
+                    const bVal = $(b).data(key);
+                    if (key === 'id') return (parseInt(aVal) || 0) - (parseInt(bVal) || 0);
+                    if (key === 'date') return new Date(aVal) - new Date(bVal);
+                    return 0;
+                });
+                if (direction === 'desc') $rows.reverse();
+                $tbody.empty().append($rows);
+                $('#reportsTable thead th.sortable').removeClass('asc desc');
+                $('#reportsTable thead th.sortable[data-sort="' + key + '"]').addClass(direction);
+            }
+
+            $('#reportsTable thead').on('click', 'th.sortable', function() {
+                const $th = $(this);
+                const key = $th.data('sort');
+                const current = $th.hasClass('asc') ? 'asc' : ($th.hasClass('desc') ? 'desc' : null);
+                let next = 'desc'; if (current === 'desc') next = 'asc';
+                sortReportsTable(key, next);
+            });
+
+            // initial sort: descending by ID
+            sortReportsTable('id', 'desc');
 
             // View Report Details - use server-side reporter values stored in button data attributes
             $('.view-report').on('click', function () {
@@ -329,7 +313,7 @@
                 } else {
                     html += '<dt class="col-sm-4">Coordinates:</dt><dd class="col-sm-8">Not available</dd>';
                 }
-                
+
                 html += '<dt class="col-sm-4">Accuracy (m):</dt><dd class="col-sm-8">' + (accuracy || 'N/A') + '</dd>' ;
                 html += '<dt class="col-sm-4">Description:</dt><dd class="col-sm-8">' + (longDesc || 'No description') + '</dd>';
                 html += '</dl></div></div>';
@@ -469,8 +453,6 @@
                         mapInstance = L.map('mapContainer').setView([65.0, 13.0], 6);
                         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapInstance);
 
-                        console.log('Adding markers for', reports.length, 'reports'); // Debug log
-
                         let validReports = [];
                         
                         reports.forEach(report => {
@@ -482,8 +464,6 @@
                             const longDesc = report.longDesc || report.LongDesc;
                             const reportId = report.regID || report.RegID;
                             const img = report.img || report.Img;
-                            
-                            console.log('Processing report:', reportId, 'with coordinates:', lat, lon); // Debug log
                             
                             if (lat && lon && !isNaN(lat) && !isNaN(lon)) {
                                 const markerColor = getMarkerColor(state);
@@ -508,21 +488,14 @@
                                 
                                 marker.bindPopup(popup);
                                 validReports.push([parseFloat(lat), parseFloat(lon)]);
-                                
-                                console.log('Added marker at:', lat, lon); // Debug log
-                            } else {
-                                console.log('Skipping report with invalid coordinates:', reportId, lat, lon); // Debug log
-                            }
+                            } 
                         });
 
                         // Fit map to show all markers if there are any valid reports
                         if (validReports.length > 0) {
                             const group = new L.featureGroup(validReports.map(coord => L.marker(coord)));
                             mapInstance.fitBounds(group.getBounds().pad(0.1));
-                            console.log('Fitted bounds for', validReports.length, 'valid reports'); // Debug log
-                        } else {
-                            console.log('No valid reports with coordinates found'); // Debug log
-                        }
+                        } 
                     }
                 }, 300);
             });
@@ -532,7 +505,6 @@
                 switch (state) {
                     case 'PENDING': return '#ffc107';
                     case 'APPROVED': return '#28a745';
-                    case 'APPROVED': return '#28a745';
                     case 'REJECTED': return '#dc3545';
                     default: return '#6c757d';
                 }
@@ -541,7 +513,6 @@
             function getStatusBadgeClass(state) {
                 switch (state) {
                     case 'PENDING': return 'bg-warning';
-                    case 'APPROVED': return 'bg-success';
                     case 'APPROVED': return 'bg-success';
                     case 'REJECTED': return 'bg-danger';
                     default: return 'bg-secondary';
