@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace NaviSafe.Controllers;
 
+[Authorize]
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using NaviSafe.Data;
 using NaviSafe.Models;
 using System.Security.Claims;
@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace NaviSafe.Controllers;
 
+[Authorize]
 public class ObstacleController : Controller
 {
     
