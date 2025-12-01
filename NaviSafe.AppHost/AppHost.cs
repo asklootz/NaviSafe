@@ -90,7 +90,7 @@ var sqlScriptOld = $$$"""
                   (1, 59.1816, 7.55859, 69, NULL, 'Jesus', 'Our lord and saviour', '/images/TallJesus.jpg', true, 'REJECTED', 'He is not real >:(', 4, '2025-11-26 12:24:46', '{"type":"Feature","geometry":{"type":"Point","coordinates":[7.558593750000001,59.18155722094256]},"properties":{"source":"marker"}}'),
                   (2, 58.1465, 7.99509, 420, NULL, 'Tree', 'Jolly good christmas tree', '/images/Tree.jpg', true, 'PENDING', 'Will approve if sender is on the nice list ;D', 2, '2025-11-26 12:06:44', '{"type":"Feature","geometry":{"type":"Point","coordinates":[7.9950857162475595,58.14652207802879]},"properties":{"source":"marker"}}'),
                   (3, 58.8027, 5.67667, 666, NULL, 'CatZilla', 'Giant scary killer kitty cat', '/images/CatZilla.jpeg', true, 'APPROVED', 'Oh hell yeah! Pspspspspsps :3', 3, '2025-11-26 12:38:38', '{"type":"Feature","geometry":{"type":"Point","coordinates":[5.676675438880921,58.80270370916149]},"properties":{"source":"marker"}}')
-                  (4, 58.9403, 5.70661, 210, 89, 'Ullanhaugstårnet', 'Admins can also make registrations', '/images/1_20251201T154634318.webp', true, 'I am admin, I wanna approve my own stuff', 1, '2025-12-01 16:52:03', '{"type":"Feature","geometry":{"type":"Point","coordinates":[6.973571777343751,59.13156769674785]},"properties":{"source":"marker"}}')
+                  (4, 58.9403, 5.70661, 210, 89, 'Ullanhaugstï¿½rnet', 'Admins can also make registrations', '/images/1_20251201T154634318.webp', true, 'I am admin, I wanna approve my own stuff', 1, '2025-12-01 16:52:03', '{"type":"Feature","geometry":{"type":"Point","coordinates":[6.973571777343751,59.13156769674785]},"properties":{"source":"marker"}}')
                   (5, 59.1316, 6.97357, 500, NULL, 'A really tall pole', NULL, NULL, 1, 'PENDING', NULL, 2, '2025-12-01 15:52:03', '{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[6.973571777343751,59.13156769674785]},\"properties\":{\"source\":\"marker\"}}'),
                   (6, 58.1456, 7.99904, 89.99, 94, 'Building', 'A new skyscraper', NULL, 1, 'PENDING', NULL, 2, '2025-12-01 15:52:59', '{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[7.99903605465667,58.14561409530386]},\"properties\":{\"source\":\"live\"}}'),
                   (7, 58.1458, 7.99921, NULL, 128, 'Tree', 'I think I MAYBE saw a tree, gonna save as draft for now', '/images/3_20251201T161020672.webp', 0, 'PENDING', NULL, 3, '2025-12-01 16:10:20', '{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[7.999210622317597,58.14578929828326]},\"properties\":{\"source\":\"live\"}}'),
@@ -208,22 +208,24 @@ var mariaContainer = builder.AddMySql("mariaContainer", null, 3307)
     .WithImage("mariadb:11.8")
     .WithContainerName("mariaContainer")
     .WithDataBindMount(source: "../MariaDB/Data") //Code to create a bind mount to a local folder
-    .WithPhpMyAdmin(ff =>   //Creates a phpMyAdmin container linked to the database container for easy management
-        { ff.WithHostPort(7447);}) //Sets a custom host port for phpMyAdmin, otherwise a random exposed port is assigned
+    .WithPhpMyAdmin(php =>   //Creates a phpMyAdmin container linked to the database container for easy management
+        { php.WithHostPort(7447);}) //Sets a custom host port for phpMyAdmin, otherwise a random exposed port is assigned
     .WithOtlpExporter(); 
 
 var mariaDatabase = mariaContainer.AddDatabase("mariaDatabase")
-    .WithCreationScript(testScript); //Path to the initial SQL script to create the database schema and seed data
+    .WithCreationScript(testScript); //Path to the initial SQL script to create the database schema and mock data
+
+
 //2 choices of how to run the web-server - ONLY CHOOSE ONE:
 
 //To run on the web-server locally on your machine via AppHost - Should only be used for development with "Hot Reload"
-
+/*
 builder.AddProject<Projects.NaviSafe>("navisafe")
     .WithReference(mariaDatabase) //Creates a link between the web-server container and the database container via a connection string
-    .WaitFor(mariaDatabase);
+    .WaitFor(mariaDatabase);*/
 
 //To run the web-server on a Docker container
-/*
+
 builder.AddDockerfile("naviSafe", "../", "NaviSafe/Dockerfile")
     .WithExternalHttpEndpoints()
     .WithBindMount(source: "../NaviSafe/wwwroot/images", target: "/app/wwwroot/images") //Bind mount for persistent image storage
@@ -234,7 +236,7 @@ builder.AddDockerfile("naviSafe", "../", "NaviSafe/Dockerfile")
     .WaitFor(mariaDatabase)
     .WithHttpEndpoint(8080, 8080, "NaviSafeHTTP")
     .WithHttpsEndpoint(8081, 8081, "NaviSafeHTTPS")
-    .WithOtlpExporter();*/
+    .WithOtlpExporter();
 
 
 

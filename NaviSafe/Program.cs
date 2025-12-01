@@ -84,14 +84,14 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("IsAdmin", p => p.RequireRole("ADM"));
 });
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/Account/Login";
-        options.LogoutPath = "/Account/Logout";
-        options.ExpireTimeSpan = TimeSpan.FromHours(8);
-        options.SlidingExpiration = true;
-    });
+// builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme) MÅ SJEKKE
+//     .AddCookie(options =>
+//     {
+//         options.LoginPath = "/Account/Login";
+//         options.LogoutPath = "/Account/Logout";
+//         options.ExpireTimeSpan = TimeSpan.FromHours(8);
+//         options.SlidingExpiration = true;
+//     });
 
 
 // Add simple session support for login
@@ -186,31 +186,31 @@ app.MapControllerRoute(
         pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-app.Use(async (context, next) =>
-{
-    // Content Security Policy - prevents XSS attacks
-    context.Response.Headers.Append("Content-Security-Policy", 
-        "default-src 'self'; " +
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.jsdelivr.net https://*.tile.openstreetmap.org; " +
-        "style-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; " +
-        "font-src 'self' data: https://cdn.jsdelivr.net; " +
-        "connect-src 'self' https://*.tile.openstreetmap.org");
-    
-    // Prevent clickjacking
-    context.Response.Headers.Append("X-Frame-Options", "SAMEORIGIN");
-    
-    // Prevent MIME type sniffing
-    context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
-    
-    // XSS Protection (legacy browsers)
-    context.Response.Headers.Append("X-XSS-Protection", "1; mode=block");
-    
-    // Referrer Policy
-    context.Response.Headers.Append("Referrer-Policy", "strict-origin-when-cross-origin");
-
-
-    await next();
-
-});
+// app.Use(async (context, next) => NEED TO FIX ACCESS TO JS_lib
+// {
+//     // Content Security Policy - prevents XSS attacks
+//     context.Response.Headers.Append("Content-Security-Policy", 
+//         "default-src 'self'; " +
+//         "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.jsdelivr.net https://*.tile.openstreetmap.org; " +
+//         "style-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; " +
+//         "font-src 'self' data: https://cdn.jsdelivr.net; " +
+//         "connect-src 'self' https://*.tile.openstreetmap.org");
+//     
+//     // Prevent clickjacking
+//     context.Response.Headers.Append("X-Frame-Options", "SAMEORIGIN");
+//     
+//     // Prevent MIME type sniffing
+//     context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
+//     
+//     // XSS Protection (legacy browsers)
+//     context.Response.Headers.Append("X-XSS-Protection", "1; mode=block");
+//     
+//     // Referrer Policy
+//     context.Response.Headers.Append("Referrer-Policy", "strict-origin-when-cross-origin");
+//
+//
+//     await next();
+//
+// });
 
 app.Run();

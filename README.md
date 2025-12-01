@@ -368,6 +368,120 @@ dotnet restore
 ```
 
 ---
+
+## Security :lock:
+Security measures have been taken to ensure the confidentiality and integrity of the data.\
+We have set up a secure connection between the user and application using TLS encryption (selfsigned certificate).
+
+### User authentication and authorization
+We have set authentication and authorization policies to ensure that only authorized users can access the application.\
+Users can only access the application if they are logged in, and certain features are restricted to specific user roles.\
+Specifically, we have implemented role-based access control (RBAC) to restrict access to certain features based on user roles.\
+User passwords are hashed hashing using ASP.NET Core Identity before being stored in the database. Using algorithmic hashing, with PBKDF2, Argon2, or bcrypt. \
+All passwords are salted and hashed using a random salt. Making sure duplicate passwords will have different hashes.
+
+### Aspire.NET access
+Access to aspire is via a secure connection, using a randomized connection string and TLS encryption.
+
+### MariaDB security
+We have set up a secure connection between the the mariaDB database and the ASP.NET Core application, using a randomized password and connection string.\
+EF Core automatically cleans input from user, making it so that it is never directly sent to the database as SQL queries, preventing SQL injection attacks.\
+The database is therefore not accessible for any regular users username and password.\
+Access to the database is usually either via the ASP.NET Core application or via phpMyAdmin.
+```csharp
+var mariaContainer = builder.AddMySql("mariaContainer", null, 3307)
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithImage("mariadb:11.8")
+    .WithContainerName("mariaContainer")
+    .WithDataBindMount(source: "../MariaDB/Data") //Code to create a bind mount to a local folder
+    .WithPhpMyAdmin(php =>   //Creates a phpMyAdmin container linked to the database container for easy management
+        { php.WithHostPort(7447);}) //Sets a custom host port for phpMyAdmin, otherwise a random exposed port is assigned
+    .WithOtlpExporter();
+```
+phpMyAdmin is also relying on connection string to connect to the database and have users login.
+
+### Image upload security
+We have implemented image upload security to prevent malicious users from uploading unwanted files.
+Image files uploaded by users are stored in a separate folder, and are renamed, checked for file type, max size and had its file signature verified.
+
+File extension and size validation:
+```csharp
+// Allowed image extensions and max size
+private static readonly HashSet<string> AllowedImageExtensions = new(StringComparer.OrdinalIgnoreCase)
+{ ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+
+private const long MaxImageBytes = 5 * 1024 * 1024; // 5 MB
+```
+
+File signature verification:
+```csharp
+// PNG: 89 50 4E 47
+if (header[0] == 0x89 && header[1] == 0x50 && header[2] == 0x4E && header[3] == 0x47) return true;
+// JPEG and JPG: FF D8
+if (header[0] == 0xFF && header[1] == 0xD8) return true;
+// GIF: 'G' 'I' 'F' '8'
+if (header[0] == 0x47 && header[1] == 0x49 && header[2] == 0x46 && header[3] == 0x38) return true;
+// WEBP: 'R' 'I' 'F' 'F' ... 'W' 'E' 'B' 'P'
+if (header[0] == 0x52 && header[1] == 0x49 && header[2] == 0x46 && header[3] == 0x46
+   && header[8] == 0x57 && header[9] == 0x45 && header[10] == 0x42 && header[11] == 0x50) return true;
+
+return false;
+```
+
+File renaming:
+```csharp
+[HttpGet]
+    public async Task<IActionResult> GetImage(int id)
+    {
+        try
+        {
+            var obstacle = await _db.Obstacles.FindAsync(id);
+            if (obstacle == null || string.IsNullOrEmpty(obstacle.Img))
+                return NotFound("Image not found");
+
+            // obstacle.Img contains a relative path such as "/images/123_20251118T153000.jpg"
+            return Redirect(obstacle.Img);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving image for obstacle {Id}", id);
+            return StatusCode(500, "Error retrieving image");
+        }
+    }
+```
+
+### SQL Injection Protection
+We have implemented SQL injection protection to prevent SQL injection attacks.
+Using Entity Framework Core (EF Core) as our Object-Relational Mapper (ORM), we ensure that all database queries are parameterized, effectively mitigating the risk of SQL injection attacks.
+EF Core automatically handles input sanitization, ensuring that user inputs are never directly concatenated into SQL queries.
+
+### XSS Protection
+We have implemented XSS protection to prevent cross-site scripting attacks.
+ASP.NET Razor provides built-in protection against XSS attacks, using the built-in HTML encoding.
+Image files uploaded by users are also protected against XSS attacks. Filenames are sanitized to remove any potentially harmful characters.
+```razorhtmldialect
+<!-- When displaying user content, Razor automatically HTML-encodes by default -->
+<div class="obstacle-item">
+    <h3>@Model.ShortDesc</h3> <!-- Automatically HTML-encoded ✅ -->
+    <p>@Model.LongDesc</p> <!-- Automatically HTML-encoded ✅ -->
+</div>
+
+```
+
+### CSRF Protection
+We have implemented CSRF protection to prevent cross-site request forgery attacks.
+ASP.NET Core provides built-in protection against CSRF attacks, using anti-forgery tokens for POST-requests.
+
+Anti-forgery token implementation in page:
+```razorhtmldialect
+<form action="/Obstacle/Dataform" method="post" style="display: inline;">@Html.AntiForgeryToken()
+   <button class="btn btn-outline-success btn-sm me-2"><i class="bi bi-geo-alt"></i> New rapport</button>
+</form>
+```
+
+
+
+---
 ## Use of external resources
 Thanks to all the different open-source resources that have been used in order to develop NaviSafe, including but not limited to:
 - [Docker Engine](https://www.docker.com/):[Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
@@ -376,4 +490,3 @@ Thanks to all the different open-source resources that have been used in order t
 - Live GPS location services [Leaflet Locate Control v0.85.0](https://github.com/domoritz/leaflet-locatecontrol):[MIT License](https://github.com/domoritz/leaflet-locatecontrol/blob/gh-pages/LICENSE)
 - Interactive map [Leaflet v1.9.4](https://leafletjs.com/):[BSD 2-Clause "Simplified" License](https://github.com/Leaflet/Leaflet/blob/main/LICENSE)
 - Map service provider [OpenStreetMap](https://www.openstreetmap.org/):[Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1.0/)
-- SVG icons from [Iconify Design](https://iconify.design/):[MIT License](https://github.com/iconify/iconify/blob/main/license.txt)
