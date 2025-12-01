@@ -22,7 +22,9 @@ public class ObstacleDataForm
     //[Required(ErrorMessage = "Obstacle height is required")]
     [Range(0.1, 1000.0, ErrorMessage = "Height must be between 0.1 and 1000.0 meters")]
     public float? altitude { get; set; } = null;
-    
+
+    public int? accuracy { get; set; } = null;
+
     public string state { get; set; } = "Pending";
     
     public bool isSent { get; set; } = false;

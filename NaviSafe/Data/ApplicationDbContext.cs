@@ -30,6 +30,7 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.Lat).HasColumnName("lat").IsRequired();
             entity.Property(e => e.Lon).HasColumnName("lon").IsRequired();
             entity.Property(e => e.Altitude).HasColumnName("altitude");
+            entity.Property(e => e.Accuracy).HasColumnName("accuracy");
             entity.Property(e => e.IsSent).HasColumnName("isSent").IsRequired();
             entity.Property(e => e.State).HasColumnName("state").HasMaxLength(10).IsRequired();
             entity.Property(e => e.RejectComment).HasColumnName("rejectComment");

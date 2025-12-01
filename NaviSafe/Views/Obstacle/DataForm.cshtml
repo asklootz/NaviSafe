@@ -138,6 +138,7 @@
 
                             <div id="map" class="map-container col-12"></div>
                             <input type="hidden" asp-for="geoJSON" id="GeometryGeoJson"/>
+                            <input type="hidden" asp-for="accuracy" id="Accuracy"/>
 
                             <div class="mt-3">
 
@@ -353,13 +354,23 @@
 
         map.on('locationfound', function(e) {
             // only update if no marker placed and user didn't manually override
-            if (markerPlaced || manualOverride) return;
+            //if (markerPlaced || manualOverride) return;
 
             drawnItems.clearLayers();
             let lat = e.latlng.lat;
             let lng = e.latlng.lng;
             let radius = e.accuracy;
             let altitude = e.latlng.alt;
+            let accuracy = e.accuracy; // in meters
+             const accEl = document.getElementById('Accuracy');
+            if (accEl) {
+                if (accuracy == null || Number.isNaN(accuracy)) {
+                    accEl.value = '';
+                } else {
+                    // round to nearest integer for model binding
+                    accEl.value = Math.round(accuracy);
+                }
+            }
 
             let LiveCoordinatesJSON = {
                 "type": "Feature",
@@ -370,7 +381,6 @@
             let liveCoordinates = "Lat: " + lat + "\nLng: " + lng + "\nAccuracy: " + radius + "m" + "\nJSON: " + liveCoordinatesJSONString;
             const liveEl = document.getElementById("LiveCoordinates");
             if (liveEl) liveEl.value = liveCoordinates;
-
             // update the lat/lng fields and geometry
             updateFromLatLng(lat, lng, radius, 'live');
         });

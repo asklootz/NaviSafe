@@ -107,7 +107,7 @@ public class ObstacleController : Controller
             State = "PENDING",
             RejectComment = string.IsNullOrEmpty(model.rejectComment) ? null : model.rejectComment,
             UserID = userId,
-            Accuracy = null,
+            Accuracy = model.accuracy,
             Img = savedRelativePath, // store relative path (or null)
             GeoJSON = model.geoJSON
         };
@@ -185,6 +185,7 @@ public class ObstacleController : Controller
             lat = obstacle.Lat,
             lon = obstacle.Lon,
             altitude = obstacle.Altitude,
+            accuracy = obstacle.Accuracy,
             geoJSON = obstacle.GeoJSON
         };
 
@@ -195,7 +196,7 @@ public class ObstacleController : Controller
     [HttpPost]
     [Authorize]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> UpdateDraft(int id, ObstacleDataForm model, string? submitAction)
+    public async Task<IActionResult> UpdateDraft(int id, ObstacleDataForm model, string? submitAction, int radius)
     {
         var userIdStr = HttpContext.Session.GetString("UserId") 
                         ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -223,6 +224,7 @@ public class ObstacleController : Controller
         obstacle.Lat = model.lat ?? obstacle.Lat;
         obstacle.Lon = model.lon ?? obstacle.Lon;
         obstacle.Altitude = model.altitude ?? obstacle.Altitude;
+        obstacle.Accuracy = model.accuracy ?? obstacle.Accuracy ?? radius;
         obstacle.GeoJSON = model.geoJSON;
         obstacle.IsSent = string.Equals(submitAction, "sent", StringComparison.OrdinalIgnoreCase);
 

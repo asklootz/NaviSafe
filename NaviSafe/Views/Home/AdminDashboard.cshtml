@@ -298,9 +298,11 @@
             function showReportDetailsFull(selectedReport, userInfo) {
                 // Handle case sensitivity for JSON properties
                 const reportId = selectedReport.regID || selectedReport.RegID;
+                const creationDate = selectedReport.creationDate || selectedReport.CreationDate;
                 const shortDesc = selectedReport.shortDesc || selectedReport.ShortDesc;
                 const rejectComment = selectedReport.rejectComment || selectedReport.RejectComment;
                 const longDesc = selectedReport.longDesc || selectedReport.LongDesc;
+                const accuracy = selectedReport.accuracy || selectedReport.Accuracy;
                 const altitude = selectedReport.altitude || selectedReport.Altitude;
                 const state = selectedReport.state || selectedReport.State;
                 const lat = selectedReport.lat || selectedReport.Lat;
@@ -317,6 +319,7 @@
                 html += '<div class="card-body">';
                 html += '<dl class="row">';
                 html += '<dt class="col-sm-4">Report ID:</dt><dd class="col-sm-8">#' + reportId + '</dd>';
+                html += '<dt class="col-sm-4">Submitted On:</dt><dd class="col-sm-8">' + new Date(creationDate).toLocaleString() + '</dd>';
                 html += '<dt class="col-sm-4">Type:</dt><dd class="col-sm-8">' + shortDesc + '</dd>';
                 html += '<dt class="col-sm-4">Height:</dt><dd class="col-sm-8">' + (altitude || 'Not specified') + ' feet</dd>';
                 html += '<dt class="col-sm-4">Status:</dt><dd class="col-sm-8"><span class="badge ' + getStatusBadgeClass(state) + '">' + state + '</span></dd>';
@@ -327,6 +330,7 @@
                     html += '<dt class="col-sm-4">Coordinates:</dt><dd class="col-sm-8">Not available</dd>';
                 }
                 
+                html += '<dt class="col-sm-4">Accuracy (m):</dt><dd class="col-sm-8">' + (accuracy || 'N/A') + '</dd>' ;
                 html += '<dt class="col-sm-4">Description:</dt><dd class="col-sm-8">' + (longDesc || 'No description') + '</dd>';
                 html += '</dl></div></div>';
 
