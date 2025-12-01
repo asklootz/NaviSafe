@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `reporting` (
   `accuracy` int(11) DEFAULT NULL,
   `shortDesc` varchar(50) DEFAULT NULL,
   `longDesc` varchar(255) DEFAULT NULL,
-  `img` varchar(100) DEFAULT NULL,
+  `img` varchar(50) DEFAULT NULL,
   `isSent` bool NOT NULL,
   `state` enum('APPROVED','PENDING','REJECTED') NOT NULL,
   `rejectComment` varchar(255) DEFAULT NULL,
@@ -79,7 +79,14 @@ CREATE TABLE IF NOT EXISTS `reporting` (
  INSERT INTO `reporting` (`regID`, `lat`, `lon`, `altitude`, `accuracy`, `shortDesc`, `longDesc`, `img`, `isSent`, `state`, `rejectComment`, `userID`, `creationDate`, `geoJSON`) VALUES
  (1, 59.1816, 7.55859, 69, NULL, 'Jesus', 'Our lord and saviour', '/images/TallJesus.jpg', true, 'REJECTED', 'He is not real >:(', 4, '2025-11-26 12:24:46', '{"type":"Feature","geometry":{"type":"Point","coordinates":[7.558593750000001,59.18155722094256]},"properties":{"source":"marker"}}'),
  (2, 58.1465, 7.99509, 420, NULL, 'Tree', 'Jolly good christmas tree', '/images/Tree.jpg', true, 'PENDING', 'Will approve if sender is on the nice list ;D', 2, '2025-11-26 12:06:44', '{"type":"Feature","geometry":{"type":"Point","coordinates":[7.9950857162475595,58.14652207802879]},"properties":{"source":"marker"}}'),
- (3, 58.8027, 5.67667, 666, NULL, 'CatZilla', 'Giant scary killer kitty cat', '/images/CatZilla.jpeg', true, 'APPROVED', 'Oh hell yeah! Pspspspspsps :3', 3, '2025-11-26 12:38:38', '{"type":"Feature","geometry":{"type":"Point","coordinates":[5.676675438880921,58.80270370916149]},"properties":{"source":"marker"}}');
+ (3, 58.8027, 5.67667, 666, NULL, 'CatZilla', 'Giant scary killer kitty cat', '/images/CatZilla.jpeg', true, 'APPROVED', 'Oh hell yeah! Pspspspspsps :3', 3, '2025-11-26 12:38:38', '{"type":"Feature","geometry":{"type":"Point","coordinates":[5.676675438880921,58.80270370916149]},"properties":{"source":"marker"}}'),
+ (4, 58.9403, 5.70661, 210, 89, 'Ullanhaugstårnet', 'Admins can also make registrations', '/images/1_20251201T154634318.webp', true, 'APPROVED', 'I am admin, I wanna approve my own stuff', 1, '2025-12-01 16:52:03', '{"type":"Feature","geometry":{"type":"Point","coordinates":[6.973571777343751,59.13156769674785]},"properties":{"source":"marker"}}'),
+ (5, 59.1316, 6.97357, 500, NULL, 'A really tall pole', NULL, NULL, 1, 'PENDING', NULL, 2, '2025-12-01 15:52:03', '{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[6.973571777343751,59.13156769674785]},\"properties\":{\"source\":\"marker\"}}'),
+ (6, 58.1456, 7.99904, 89.99, 94, 'Building', 'A new skyscraper', NULL, 1, 'PENDING', NULL, 2, '2025-12-01 15:52:59', '{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[7.99903605465667,58.14561409530386]},\"properties\":{\"source\":\"live\"}}'),
+ (7, 58.1458, 7.99921, NULL, 128, 'Tree', 'I think I MAYBE saw a tree, gonna save as draft for now', '/images/3_20251201T161020672.webp', 0, 'PENDING', NULL, 3, '2025-12-01 16:10:20', '{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[7.999210622317597,58.14578929828326]},\"properties\":{\"source\":\"live\"}}'),
+ (8, 60.3798, 5.19061, 50, NULL, 'Wind Turbine', NULL, '/images/3_20251201T161504426.jpg', 1, 'PENDING', NULL, 3, '2025-12-01 16:15:04', '{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[5.190610885620118,60.379805554936084]},\"properties\":{\"source\":\"marker\"}}'),
+ (9, 58.1456, 7.99904, 77, 94, 'Power Line', 'Powerful powerlines powering everything', '/images/4_20251201T161845457.png', 1, 'PENDING', NULL, 4, '2025-12-01 16:18:45', '{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[7.99903605465667,58.14561409530386]},\"properties\":{\"source\":\"live\"}}'),
+ (10, 70.0206, 22.8516, NULL, NULL, 'Wind Turbine', NULL, NULL, 1, 'PENDING', NULL, 4, '2025-12-01 16:19:31', '{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[22.851562500000004,70.02058730174062]},\"properties\":{\"source\":\"marker\"}}');
                   
 
 -- --------------------------------------------------------
