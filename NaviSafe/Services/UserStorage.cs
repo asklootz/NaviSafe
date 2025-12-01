@@ -69,7 +69,7 @@ public class UserStorage
                 Phone = phoneNumber,
                 OrgNr = orgNr,
                 RoleID = roleId,
-                CreationDate = DateTime.UtcNow
+                CreationDate = DateTime.Now
             };
 
             _db.UserInfo.Add(info);

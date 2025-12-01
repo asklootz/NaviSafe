@@ -73,7 +73,7 @@ public class ObstacleController : Controller
                 var ext = Path.GetExtension(model.ImageFile.FileName);
                 if (string.IsNullOrEmpty(ext)) ext = ".jpg";
 
-                var fileName = $"{userId}_{DateTime.UtcNow:yyyyMMddTHHmmssfff}{ext}";
+                var fileName = $"{userId}_{DateTime.Now:yyyyMMddTHHmmssfff}{ext}";
                 var destPath = Path.Combine(imagesFolder, fileName);
 
                 using (var stream = System.IO.File.Create(destPath))
@@ -255,7 +255,7 @@ public class ObstacleController : Controller
                 var ext = Path.GetExtension(model.ImageFile.FileName);
                 if (string.IsNullOrEmpty(ext)) ext = ".jpg";
 
-                var fileName = $"{userId}_{DateTime.UtcNow:yyyyMMddTHHmmssfff}{ext}";
+                var fileName = $"{userId}_{DateTime.Now:yyyyMMddTHHmmssfff}{ext}";
                 var destPath = Path.Combine(imagesFolder, fileName);
 
                 using (var stream = System.IO.File.Create(destPath))
