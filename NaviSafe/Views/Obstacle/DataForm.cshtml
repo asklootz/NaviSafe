@@ -2,25 +2,25 @@
 
 @{
     ViewData["Title"] = "Registration Form";
+    Layout = null;
 }
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.13.1/font/bootstrap-icons.min.css" integrity="sha512-t7Few9xlddEmgd3oKZQahkNI4dS6l80+eGEzFQiqtyVYdvcSG2D3Iub77R20BdotfRPA9caaRkg1tyaJiPmO0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/lib/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="~/css/obstacle-form.css" />
 </head>
 <body class="page-bg">
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-transparent container-fluid">
         <div class="container-fluid">
-                <a asp-area="" asp-controller="Home" asp-action="Index">
-                    @Html.AntiForgeryToken()
             <img src="~/NaviSafeIcon.svg" alt="NaviSafe Logo" class="brand-logo me-2"/>
-                    <div class="text-center"><a class="navbar-brand fw-semibold " asp-area="" asp-controller="Home" asp-action="Index">NaviSafe</a><br /><a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">New Registration</a></div>
-                </a>
+            <div class="text-center"><a class="navbar-brand fw-semibold " >NaviSafe</a>
+                <br/>
+                <a class="navbar-brand">New Registration</a></div>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 </div>
             <div class="align-content-md-center">
@@ -186,118 +186,7 @@
                                 </div>
                             </div>
 
-                        <script>
-                            let selectedFile = null;
-
-                            // If editing, show existing image preview provided by server
-                            (function initExistingPreview() {
-                                const existingPath = '@(Model.ExistingImagePath ?? string.Empty)';
-                                if (existingPath && existingPath.length > 0) {
-                                    const preview = document.getElementById('imagePreview');
-                                    const info = document.getElementById('imageInfo');
-                                    preview.src = existingPath;
-                                    preview.style.display = 'block';
-                                    info.textContent = 'Existing image attached';
-                                    info.style.display = 'block';
-                                }
-                            })();
-
-                            document.getElementById('uploadImageButton').addEventListener('click', function () {
-                                document.getElementById('uploadImageInput').click();
-                            });
-
-                            document.getElementById('openCameraButton').addEventListener('click', function () {
-                                document.getElementById('cameraInput').click();
-                            });
-
-                            const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-                            const maxFileBytes = 5 * 1024 * 1024; // 5 MB
-
-                            function getFileExtension(name) {
-                                if (!name) return '';
-                                const i = name.lastIndexOf('.');
-                                return i >= 0 ? name.substring(i).toLowerCase() : '';
-                            }
-
-                            function validateImageFile(file) {
-                                if (!file) return 'No file selected.';
-                                if (file.size === 0) return 'File is empty.';
-                                if (file.size > maxFileBytes) return 'File is too large. Max allowed size is 5 MB.';
-                                if (file.type && !file.type.startsWith('image/')) {
-                                    // sometimes camera inputs do not set type; still check extension below
-                                    const ext = getFileExtension(file.name);
-                                    if (!allowedExtensions.includes(ext)) return 'Invalid file type. Allowed types: ' + allowedExtensions.join(', ');
-                                } else {
-                                    const ext = getFileExtension(file.name);
-                                    if (!allowedExtensions.includes(ext)) return 'Invalid file type. Allowed types: ' + allowedExtensions.join(', ');
-                                }
-                                return '';
-                            }
-
-                            function displayImagePreview(file) {
-                                selectedFile = file;
-                                const reader = new FileReader();
-                                reader.onload = function (e) {
-                                    const preview = document.getElementById('imagePreview');
-                                    const info = document.getElementById('imageInfo');
-                                    const err = document.getElementById('imageError');
-                                    if (err) { err.style.display = 'none'; err.textContent = ''; }
-                                    
-                                    preview.src = e.target.result;
-                                    preview.style.display = 'block';
-                                    
-                                    // Show file info
-                                    const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
-                                    info.textContent = `File: ${file.name} (${sizeInMB} MB)`;
-                                    info.style.display = 'block';
-                                };
-                                reader.readAsDataURL(file);
-                            }
-
-                            function handleFileSelection(inputElement, file) {
-                                const errorEl = document.getElementById('imageError');
-                                const preview = document.getElementById('imagePreview');
-                                const info = document.getElementById('imageInfo');
-                                if (!file) {
-                                    // clear
-                                    if (preview) preview.style.display = 'none';
-                                    if (info) info.style.display = 'none';
-                                    if (errorEl) { errorEl.style.display = 'none'; errorEl.textContent = ''; }
-                                    return;
-                                }
-
-                                // validate client-side and show friendly error
-                                const validationMessage = validateImageFile(file);
-                                if (validationMessage) {
-                                    console.warn('Invalid image selected:', validationMessage);
-                                    // clear inputs and preview
-                                    inputElement.value = '';
-                                    const otherInput = inputElement.id === 'uploadImageInput' ? document.getElementById('cameraInput') : document.getElementById('uploadImageInput');
-                                    if (otherInput) otherInput.value = '';
-                                    if (preview) preview.style.display = 'none';
-                                    if (info) info.style.display = 'none';
-                                    if (errorEl) { errorEl.textContent = validationMessage + ' Allowed: ' + allowedExtensions.join(', ') + '. Max size: 5 MB.'; errorEl.style.display = 'block'; }
-                                    selectedFile = null;
-                                    return;
-                                }
-
-                                console.log('Image selected:', file.name);
-                                displayImagePreview(file);
-                                // Clear the other input to prevent conflicts
-                                const otherInput = inputElement.id === 'uploadImageInput' ? document.getElementById('cameraInput') : document.getElementById('uploadImageInput');
-                                if (otherInput) otherInput.value = '';
-                             }
-
-                            document.getElementById('uploadImageInput').addEventListener('change', function (event) {
-                                const file = event.target.files[0];
-                                handleFileSelection(this, file);
-                            });
-
-                            document.getElementById('cameraInput').addEventListener('change', function (event) {
-                                const file = event.target.files[0];
-                                handleFileSelection(this, file);
-                            });
-                        </script>
+                        
                         </div>
                         <div class="mt-4">
                             <div class="row mt-3 g-2">
@@ -320,21 +209,145 @@
     <partial name="_ValidationScriptsPartial"/>
 
     <link rel="stylesheet" href="~/lib/leaflet/dist/leaflet.css" crossorigin=""/>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" 
+    integrity="sha512-gc3xjCmIy673V6MyOAZhIW93xhM9ei1I+gLbmFjUHIjocENRsLX/QUE1htk5q1XV2D/iie/VQ8DXI6Vu8bexvQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <script src="~/lib/leaflet/dist/leaflet.js" crossorigin=""></script>
-    <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"
+        integrity="sha512-ozq8xQKq6urvuU6jNgkfqAmT7jKN2XumbrX1JiB3TnF7tI48DPI4Gy1GXKD/V3EExgAs1V+pRO7vwtS1LHg0Gw=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer">
+    </script>
 
     <link rel="stylesheet" href="~/lib/leaflet-locatecontrol-0.85.0/leaflet-locatecontrol-0.85.0/dist/L.Control.Locate.mapbox.min.css"/>
     <script src="~/lib/leaflet-locatecontrol-0.85.0/leaflet-locatecontrol-0.85.0/dist/L.Control.Locate.min.js"></script>
     
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
-    <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.EasyButton/2.4.0/easy-button.css" 
+    integrity="sha512-aiVWmB2G8oV+XfHo1CR6hEAxzCl48Lrl3UBzQ6P+BEMkT8qY1tGecdQx6x/X8i9cCVrwQU9ipsOsZlNkRh9n7w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.EasyButton/2.4.0/easy-button.js" 
+    integrity="sha512-nMxgrgYu7vo/LNe5NFHZOIkwbodaU13UdYiDoDCuo3P2sryEyffrk1R3c2tFGbZ83AqaMbO19yhKnVgHztuqAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js" integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.21.0/jquery.validate.min.js" 
+    ntegrity="sha512-KFHXdr2oObHKI9w4Hv1XPKc898mE4kgYx58oqsc/JqqdLMDI4YjOLzom+EMlW8HFUd0QfjfAvxSL6sEq/a42fQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.js" 
+    integrity="sha512-F49kv+wpQXPPk83WZgrqcw/A72douvETfmyZJ1tRELBVhDEm1aXH1FOUDjP0KJzgJKZY+w3RGeOiIBQq3tddqA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+<script>
+    let selectedFile = null;
+
+    // If editing, show existing image preview provided by server
+    (function initExistingPreview() {
+        const existingPath = '@(Model.ExistingImagePath ?? string.Empty)';
+        if (existingPath && existingPath.length > 0) {
+            const preview = document.getElementById('imagePreview');
+            const info = document.getElementById('imageInfo');
+            preview.src = existingPath;
+            preview.style.display = 'block';
+            info.textContent = 'Existing image attached';
+            info.style.display = 'block';
+        }
+    })();
+
+    document.getElementById('uploadImageButton').addEventListener('click', function () {
+        document.getElementById('uploadImageInput').click();
+    });
+
+    document.getElementById('openCameraButton').addEventListener('click', function () {
+        document.getElementById('cameraInput').click();
+    });
+
+    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+    const maxFileBytes = 5 * 1024 * 1024; // 5 MB
+
+    function getFileExtension(name) {
+        if (!name) return '';
+        const i = name.lastIndexOf('.');
+        return i >= 0 ? name.substring(i).toLowerCase() : '';
+    }
+
+    function validateImageFile(file) {
+        if (!file) return 'No file selected.';
+        if (file.size === 0) return 'File is empty.';
+        if (file.size > maxFileBytes) return 'File is too large. Max allowed size is 5 MB.';
+        if (file.type && !file.type.startsWith('image/')) {
+            // sometimes camera inputs do not set type; still check extension below
+            const ext = getFileExtension(file.name);
+            if (!allowedExtensions.includes(ext)) return 'Invalid file type. Allowed types: ' + allowedExtensions.join(', ');
+        } else {
+            const ext = getFileExtension(file.name);
+            if (!allowedExtensions.includes(ext)) return 'Invalid file type. Allowed types: ' + allowedExtensions.join(', ');
+        }
+        return '';
+    }
+
+    function displayImagePreview(file) {
+        selectedFile = file;
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const preview = document.getElementById('imagePreview');
+            const info = document.getElementById('imageInfo');
+            const err = document.getElementById('imageError');
+            if (err) { err.style.display = 'none'; err.textContent = ''; }
+
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+
+            // Show file info
+            const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+            info.textContent = `File: ${file.name} (${sizeInMB} MB)`;
+            info.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function handleFileSelection(inputElement, file) {
+        const errorEl = document.getElementById('imageError');
+        const preview = document.getElementById('imagePreview');
+        const info = document.getElementById('imageInfo');
+        if (!file) {
+            // clear
+            if (preview) preview.style.display = 'none';
+            if (info) info.style.display = 'none';
+            if (errorEl) { errorEl.style.display = 'none'; errorEl.textContent = ''; }
+            return;
+        }
+
+        // validate client-side and show friendly error
+        const validationMessage = validateImageFile(file);
+        if (validationMessage) {
+            console.warn('Invalid image selected:', validationMessage);
+            // clear inputs and preview
+            inputElement.value = '';
+            const otherInput = inputElement.id === 'uploadImageInput' ? document.getElementById('cameraInput') : document.getElementById('uploadImageInput');
+            if (otherInput) otherInput.value = '';
+            if (preview) preview.style.display = 'none';
+            if (info) info.style.display = 'none';
+            if (errorEl) { errorEl.textContent = validationMessage + ' Allowed: ' + allowedExtensions.join(', ') + '. Max size: 5 MB.'; errorEl.style.display = 'block'; }
+            selectedFile = null;
+            return;
+        }
+
+        console.log('Image selected:', file.name);
+        displayImagePreview(file);
+        // Clear the other input to prevent conflicts
+        const otherInput = inputElement.id === 'uploadImageInput' ? document.getElementById('cameraInput') : document.getElementById('uploadImageInput');
+        if (otherInput) otherInput.value = '';
+    }
+
+    document.getElementById('uploadImageInput').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        handleFileSelection(this, file);
+    });
+
+    document.getElementById('cameraInput').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        handleFileSelection(this, file);
+    });
+</script>
     <script>
         let map = L.map('map').setView([58.163137,8.002106], 13);
 

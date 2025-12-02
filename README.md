@@ -18,6 +18,8 @@ It connects tablet users in the field with a central orchestration layer, API se
 - [Usage](#-usage)
 - [Testing](#-testing)
 - [Installation](#-installation)
+- [Security](#-security-)
+- [Use of external resources](#-use-of-external-resources)
 
 ---
 
@@ -366,6 +368,10 @@ git clone https://github.com/asklootz/NaviSafe.git
 cd NaviSafe
 dotnet restore
 ```
+If you want to run it with https, you need to set up a self-signed certificate.
+```bash
+dotnet dev-certs https --trust
+```
 
 ---
 
@@ -479,7 +485,41 @@ Anti-forgery token implementation in page:
 </form>
 ```
 
+Controlling the data sources with Content Security Policy (CSP):
+```csharp
+// Content Security Policy - prevents XSS attacks
+    // Define allowed sources for scripts, styles, fonts, images, and connections
+    // Alternative sources that can be used: https://unpkg.com, https://cdn.jsdelivr.net
+    context.Response.Headers.Append("Content-Security-Policy", 
+        "default-src 'self'; " +
+        "script-src 'self' 'unsafe-inline' ''unsafe-eval' https://cdnjs.cloudflare.com https://*.tile.openstreetmap.org; " +
+        "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;" +
+        "font-src 'self' data: https://cdnjs.cloudflare.com; " +
+        "img-src 'self' data: https://*.tile.openstreetmap.org https://www.w3.org https://cdnjs.cloudflare.com; " +
+        "connect-src 'self' https://*.tile.openstreetmap.org");
+    
+    // Prevent clickjacking
+    context.Response.Headers.Append("X-Frame-Options", "SAMEORIGIN");
+    
+    // Prevent MIME type sniffing
+    context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
+    
+    // XSS Protection (legacy browsers)
+    context.Response.Headers.Append("X-XSS-Protection", "1; mode=block");
+    
+    // Referrer Policy
+    context.Response.Headers.Append("Referrer-Policy", "strict-origin-when-cross-origin");
+```
 
+Checking the sha-hash integrity of CDN resources or SRI (sub
+```razorhtmldialect
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"
+  integrity="sha512-ozq8xQKq6urvuU6jNgkfqAmT7jKN2XumbrX1JiB3TnF7tI48DPI4Gy1GXKD/V3EExgAs1V+pRO7vwtS1LHg0Gw=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer">
+</script>
+```
 
 ---
 ## Use of external resources
