@@ -3,10 +3,17 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using NaviSafe.Models;
 using NaviSafe.Services;
+using Microsoft.EntityFrameworkCore;
+using NaviSafe.Data;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace NaviSafe.Controllers;
 
+// NOTE: SPA now uses /api/auth/* endpoints with JWT. This MVC controller kept for potential server-rendered flows.
 public class AccountController : Controller
 {
     private readonly UserStorage _userStorage;
@@ -145,6 +152,19 @@ public class AccountController : Controller
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         HttpContext.Session.Clear();
         return RedirectToAction("Login");
+    }
+
+    // Removed: API endpoints (/api/auth/register, /api/auth/login) and hashing helpers
+    // These now live in AuthController.
+
+    // Helper methods
+    private void StoreUserInSession(string email)
+    {
+        var userInfo = _userStorage.GetUserInfo(email);
+        if (userInfo == null) return;
+
+        HttpContext.Session.SetString("UserId", userInfo.UserId);
+        HttpContext.Session.SetString("IsAuthenticated", "true");
     }
 
     private IActionResult RedirectToReturnUrl(string? returnUrl)
