@@ -471,18 +471,6 @@ Image files uploaded by users are also protected against XSS attacks. Filenames 
     <h3>@Model.ShortDesc</h3> <!-- Automatically HTML-encoded ✅ -->
     <p>@Model.LongDesc</p> <!-- Automatically HTML-encoded ✅ -->
 </div>
-
-```
-
-### CSRF Protection
-We have implemented CSRF protection to prevent cross-site request forgery attacks.
-ASP.NET Core provides built-in protection against CSRF attacks, using anti-forgery tokens for POST-requests.
-
-Anti-forgery token implementation in page:
-```razorhtmldialect
-<form action="/Obstacle/Dataform" method="post" style="display: inline;">@Html.AntiForgeryToken()
-   <button class="btn btn-outline-success btn-sm me-2"><i class="bi bi-geo-alt"></i> New rapport</button>
-</form>
 ```
 
 Controlling the data sources with Content Security Policy (CSP):
@@ -521,7 +509,19 @@ Checking the sha-hash integrity of CDN resources or SRI (sub
 </script>
 ```
 
+### CSRF Protection
+We have implemented CSRF protection to prevent cross-site request forgery attacks.
+ASP.NET Core provides built-in protection against CSRF attacks, using anti-forgery tokens for POST-requests.
+
+Anti-forgery token implementation in page:
+```razorhtmldialect
+<form action="/Obstacle/Dataform" method="post" style="display: inline;">@Html.AntiForgeryToken()
+   <button class="btn btn-outline-success btn-sm me-2"><i class="bi bi-geo-alt"></i> New rapport</button>
+</form>
+```
+
 ---
+
 ## Use of external resources
 Thanks to all the different open-source resources that have been used in order to develop NaviSafe, including but not limited to:
 - [Docker Engine](https://www.docker.com/):[Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
