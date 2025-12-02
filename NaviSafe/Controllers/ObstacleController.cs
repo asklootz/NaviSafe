@@ -46,7 +46,8 @@ public class ObstacleController : Controller
         try
         {
             using var stream = file.OpenReadStream();
-            var read = await stream.ReadAsync(header.AsMemory(0, header.Length));
+            var bytesRead = await stream.ReadAsync(header.AsMemory(0, header.Length));
+            if (bytesRead < header.Length) return false;
             if (stream.CanSeek) stream.Position = 0; // reset for later copying
         }
         catch
