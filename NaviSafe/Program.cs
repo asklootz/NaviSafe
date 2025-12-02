@@ -193,7 +193,7 @@ app.Use(async (context, next) =>
     // Alternative sources that can be used: https://unpkg.com, https://cdn.jsdelivr.net
     context.Response.Headers.Append("Content-Security-Policy", 
         "default-src 'self'; " +
-        "script-src 'self' 'unsafe-inline' ''unsafe-eval' https://cdnjs.cloudflare.com https://*.tile.openstreetmap.org; " +
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://*.tile.openstreetmap.org; " +
         "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;" +
         "font-src 'self' data: https://cdnjs.cloudflare.com; " +
         "img-src 'self' data: https://*.tile.openstreetmap.org https://www.w3.org https://cdnjs.cloudflare.com; " +
