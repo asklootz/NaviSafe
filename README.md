@@ -46,7 +46,198 @@ The founding members of NaviSafe from Group 9 consists of:
 ## Architecture
 [![Navi-Safe-sysdiagram.png](https://i.postimg.cc/Cxw2mCfT/Navi-Safe-sysdiagram.png)](https://postimg.cc/BXwNvKgM)
 
-**Workflow:**
+### Frontend Architecture
+The frontend is a modern web application built with **TypeScript** and **Leaflet**, utilizing a modular build process.
+
+**Core Technologies & Packages:**
+
+- **Language:** TypeScript 5.8.2 (transpiled to JavaScript).
+    - **Map Engine:** `leaflet` (v1.9.4) for interactive mapping capabilities.
+    - **Styling:** Uses SCSS/SASS (`sass` v1.86.1) for modular and maintainable styles.
+- **Build Tooling:**
+    - `rollup` (v4.38.0) for bundling modules.
+    - `grunt` (v1.6.1) task runner for automating workflows (sass compilation, minification, copying assets).
+    - `grunt-contrib-uglify`, `grunt-rollup`, `grunt-sass`.
+- **Code Quality:**
+    - `eslint` (v9.23.0) & `prettier` (v3.5.3) for linting and code formatting.
+    - `stylelint` for SCSS validation.
+
+### Backend Architecture
+The backend is a containerized **ASP.NET Core 9.0** application designed for reliability and observability.
+
+**Core Configuration:**
+
+- **Application Name:** `NaviSafe`
+- **Hosting:** Runs in a Docker container using the `mariadb` image.
+- **Data Access:** Uses **Entity Framework Core** with `Pomelo.EntityFrameworkCore.MySql` to interact with the MariaDB database.
+- **Authentication & Security:**
+    - **JWT Bearer Auth:** Configured to support secure API token validation (`JwtTokenService`).
+    - **Session Management:** Enables stateful interactions for MVC views with secure, HTTP-only cookies.
+- **Observability:** Integrated **OpenTelemetry** pipeline providing:
+    - Metrics (ASP.NET Core & HTTP Client instrumentation).
+    - Distributed Tracing.
+    - Logging via Console exporter.
+- **Service Orchestration:** Implements service defaults (`AddServiceDefaults`, `MapDefaultEndpoints`) for standardized health checks and discovery in a cloud-native environment.
+
+## Database Strategy
+The solution employs a robust data persistence strategy centered around **MariaDB**:
+
+- **ORM & Data Access:** Uses **Entity Framework Core** with the `Pomelo.EntityFrameworkCore.MySql` provider. This allows for strongly-typed queries, efficient change tracking, and LINQ support.
+- **Connection Management:**
+    - **Auto-Detection:** Implements `ServerVersion.AutoDetect` to dynamically configure features based on the specific MariaDB version running in the container.
+    - **Service Integration:** Explicitly registers a named `MySqlDataSource` ("mariaDatabase"). This pattern supports .NET service defaults, enabling automatic health checks and standardized metrics collection.
+- **Resilience:** The startup configuration includes fallback logic (prioritizing `mariaDatabase` over `DefaultConnection`) to ensure the application connects reliably whether running locally or within the Docker Compose orchestration.
+
+### Importing Database
+
+In order to set up the accounts you need to import the mariaDatabase SQL Source file:
+1. Clone the repository
+2. Open File explorer and navigate C:\NaviSafe\NaviSafe and find the **mariaDatabase** SQL Source file
+3. Copy the file
+4. Open Phpmyadmin and click Import
+5. Import the file
+
+--- 
+
+#### Database Schema
+The database schema is designed to support a single user account with a single table for storing navigation data.
+
+##### 1. Database Creation
+The database is created automatically during the first run of the application. All the following SQL statements are executed within phpMyAdmin:
+
+```sql
+-- mariaDatabase Creation
+CREATE DATABASE IF NOT EXISTS `mariaDatabase` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_uca1400_ai_ci;
+USE `mariaDatabase`;
+```
+
+##### 2. Table Creation
+The table contains the following columns:
+
+1. **Organisation**
+```sql
+-- Organisation Table
+CREATE TABLE IF NOT EXISTS `organisation` (
+    `orgNr` int(11) NOT NULL AUTO_INCREMENT,
+    `orgName` varchar(255) NOT NULL,
+    PRIMARY KEY (`orgNr`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+```
+
+2. **Reporting**
+```sql
+-- Reporting Table
+CREATE TABLE IF NOT EXISTS `reporting` (
+    `regID` int(11) NOT NULL AUTO_INCREMENT,
+    `lat` float NOT NULL,
+    `lon` float NOT NULL,
+    `altitude` float DEFAULT NULL,
+    `accuracy` int(11) DEFAULT NULL,
+    `shortDesc` varchar(50) DEFAULT NULL,
+    `longDesc` varchar(255) DEFAULT NULL,
+    `img` mediumblob DEFAULT NULL,
+    `isSent` tinyint(1) NOT NULL,
+    `state` enum('SENT','PENDING','REJECTED') NOT NULL,
+    `rejectComment` varchar(255) DEFAULT NULL,
+    `userID` int(11) NOT NULL,
+    `creationDate` timestamp NOT NULL DEFAULT current_timestamp(),
+    PRIMARY KEY (`regID`),
+    KEY `userID` (`userID`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+```
+
+3. **UserAuth**
+```sql
+-- UserAuth Table
+CREATE TABLE IF NOT EXISTS `userAuth` (
+  `userID` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(70) NOT NULL,
+  `passHash` varchar(255) DEFAULT NULL,
+  `passSalt` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`userID`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+```
+
+4. **UserInfo**
+```sql
+-- UserInfo Table
+CREATE TABLE IF NOT EXISTS `userInfo` (
+  `userID` int(11) NOT NULL,
+  `firstName` varchar(255) DEFAULT NULL,
+  `lastName` varchar(255) DEFAULT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone` varchar(255) NOT NULL,
+  `orgNr` int(11) NOT NULL,
+  `roleID` char(5) NOT NULL,
+  `creationDate` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`userID`),
+  KEY `orgNr` (`orgNr`),
+  KEY `roleID` (`roleID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+```
+
+5. **UserRole**
+```sql
+-- User Role Table
+CREATE TABLE IF NOT EXISTS `userRole` (
+  `roleID` char(3) NOT NULL,
+  `rolePermissions` enum('ADMIN','PILOT') NOT NULL,
+  `permissionsDescription` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`roleID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+```
+
+##### 3. Data Insertion
+The following data is inserted into the database upon application startup:
+
+1. **Organisation**
+```sql
+-- Data Insertion for Organisation
+INSERT INTO `organisation` (`orgNr`, `orgName`) VALUES
+(1, 'Kartverket'),
+(2, 'Norsk Luftambulanse'),
+(3, 'Luftforsvaret'),
+(4, 'Politiets Helikoptertjeneste');
+```
+
+2. **Reporting**
+```sql
+-- Data Insertion for Reporting
+INSERT INTO `reporting` (`regID`, `lat`, `lon`, `altitude`, `accuracy`, `shortDesc`, `longDesc`, `img`, `isSent`, `state`, `rejectComment`, `userID`, `creationDate`) VALUES
+(1, 63.4298, 10.394, 33, 22, 'Building in Trondheim', 'PHT_pilot1 registered building during low altitude patrol near Trondheim', NULL, 1, 'SENT', 'Submitted', 4, '2025-11-08 15:57:50'),
+(2, 59.917, 10.7611, 25, 15, 'Power line over Oslo fjord', 'LUFT_pilot2 registered power line due to poor visibility in harsh weather', NULL, 1, 'SENT', 'Pending', 3, '2025-10-27 00:00:00'),
+(3, 58.1585, 8.0165, 12, 8, 'High tower near Kjevik Airport', 'NLA_pilot1 registered tower observed during landing', NULL, 1, 'SENT', 'Submitted', 2, '2025-10-28 00:00:00');
+```
+
+3. **UserAuth**
+```sql
+-- Data Insertion for UserAuth
+INSERT INTO `userAuth` (`userID`, `username`, `passHash`, `passSalt`) VALUES
+(1, 'admin@kartverket.no', 'loodhHl1A1YABjm/4xD/hW2q/ZuCzWLop6g4361nD3Q=', 'PGgltVghys3nldsaJP5r3w=='),
+(2, 'pilot@nla.no', 'lgFM6ogmbH1QhObvtrJhRKpJJzrzuzDS8Z+0iZxCYk4=', 'BRDgCz0DVguBDsC7wOAV8g=='),
+(3, 'pilot@forsvaret.no', 'BzDuVukFeycwe2c1jxdebhOfl663fxEXEe5gHXHgD1I=', 'fzCGk9lA0PR+hEvb8uHjzA=='),
+(4, 'pilot@politiet', '7kA1ghbxkuXDbzHjr0tVxB8wDfREsAOFH3S+IzPqJZE=', '4DBTxP+EUUmUhro+yJt2wA==');
+```
+
+4. **UserInfo**
+```sql
+-- Data Insertion for UserInfo
+INSERT INTO `userInfo` (`userID`, `firstName`, `lastName`, `email`, `phone`, `orgNr`, `roleID`, `creationDate`) VALUES
+(1, 'Yonathan', 'Admin', 'admin@kartverket.no', '40000000', 1, 'ADM', ' 2025-11-21 02:56:46'),
+(2, 'Ola', 'Nordmann', 'pilot@nla.no', '41000001', 2, 'PIL', '2025-11-21 02:59:18'),
+(3, 'Kari', 'Nordmann', 'pilot@forsvaret.no', '41000002', 3, 'PIL', ' 2025-11-21 03:06:35'),
+(4, 'Die', 'Polizie', 'pilot@politiet.no', '42000003', 4, 'PIL', '2025-11-21 03:11:09');
+```
+
+5. **UserRole**
+```sql
+-- Data Insertion for UserRole
+INSERT INTO `userRole` (`roleID`, `rolePermissions`, `permissionsDescription`) VALUES
+('ADM', 'ADMIN', 'Full system access, including management and configuration'),
+('PIL', 'PILOT', 'Limited access to flight and operational data');
+```
+
+### Workflow
 1. **Tablet & Admin Clients** send `POST`/`GET` requests.
 2. **Front-End** communicates with the **Aspire.NET orchestration layer**.
 3. **Orchestration** handles:
@@ -82,76 +273,38 @@ The founding members of NaviSafe from Group 9 consists of:
 
 ## Components
 
-### 1. Models
+### 1. Controllers (`NaviSafe/Controllers/`)
+Handle incoming HTTP requests, manage application flow, and interact with services.
+- **`AccountController.cs`**: Manages user authentication flows including Login, Logout, and session handling.
+- **`RegistrationController.cs`**: Handles new user sign-ups and validation logic.
+- **`ObstacleController.cs`**: Manages the core domain logic for reporting and retrieving navigation obstacles.
+- **`AuthController.cs`**: Likely handles lower-level authentication mechanisms or API-specific auth tokens.
+- **`HomeController.cs`**: Serves the main landing page and dashboard entry points.
 
-#### `LoginViewModel.cs`
-Data transfer object for login form submission:
-- `Email` - User email (required, validated)
-- `Password` - User password (required, data type: password)
-- `RememberMe` - Persistent login flag (boolean)
+### 2. Models (`NaviSafe/Models/`)
+Define the data structure and business entities used across the application.
+- **Domain Entities**:
+  - `ObstacleData.cs`: Represents navigation hazards reported by pilots.
+  - `UserEntities.cs`: Core user profile data structure.
+  - `RegistrationEntities.cs`: Data structures specific to the registration process.
+- **View Models & DTOs**:
+  - `LoginViewModel.cs` / `LoginUserModel.cs`: Data transfer objects for authentication forms.
+  - `RegisterViewModel.cs`: Captures and validates user input during registration.
+  - `ErrorViewModel.cs`: Standardized structure for displaying errors to the UI.
 
-```csharp
-public class LoginViewModel
-{
-    [Required]
-    [EmailAddress]
-    [Display(Name = "Email")]
-    public string Email { get; set; } = string.Empty;
+### 3. Views (`NaviSafe/Views/`)
+Razor views responsible for the server-side rendering of the HTML UI.
+- **`Home/`**: Main dashboard and landing page templates.
+    - **`Account/`**: Login and profile management interfaces.
+    - **`Obstacle/`**: Forms for reporting obstacles and lists for viewing them.
+    - **`Shared/`**: Reusable layout components (headers, footers, navigation bars).
 
-    [Required]
-    [DataType(DataType.Password)]
-    [Display(Name = "Password")]
-    public string Password { get; set; } = string.Empty;
+### 4. Services (`NaviSafe/Services/`)
+Encapsulate business logic and data access to keep controllers lightweight.
+- **`UserStorage.cs`**: A singleton or scoped service that acts as an abstraction layer for user data persistence (interacting with the database or in-memory store).
+- **`JwtTokenService.cs`**: Handles the generation and validation of JSON Web Tokens for secure API authentication.
 
-    [Display(Name = "Remember me?")]
-    public bool RememberMe { get; set; }
-}
-```
-
-#### `LoginUserModel.cs`
-Database entity extending ASP.NET Core Identity:
-- Inherits from `IdentityUser`
-- `LastLogin` - Timestamp of last successful login (nullable)
-
-```csharp
-public class LoginUserModel : IdentityUser
-{
-    public DateTime? LastLogin { get; set; }
-}
-```
-
-### 2. Controller
-
-#### `AccountController.cs`
-Handles all authentication-related HTTP requests, using `GET` and `POST` methods:
-
-```csharp
-[HttpGet]
-    public IActionResult Login(string? returnUrl = null)
-    {
-        ViewData["ReturnUrl"] = returnUrl;
-        return View();
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Login(LoginViewModel model, string? returnUrl = null)
-    {
-        if (!ModelState.IsValid)
-            return View(model);
-
-        if (!_userStorage.ValidateUser(model.Email, model.Password))
-        {
-            ModelState.AddModelError(string.Empty, "Invalid email or password.");
-            return View(model);
-        }
-
-        // Login successful - store user in session
-        StoreUserInSession(model.Email);
-        
-        return RedirectToReturnUrl(returnUrl);
-    }
-```
+---
 
 **Key Responsibilities:**
 - Login/Logout operations
@@ -159,40 +312,6 @@ Handles all authentication-related HTTP requests, using `GET` and `POST` methods
 - Session management
 - Input validation
 - Security token verification
-
-**Dependencies:**
-- `UserStorage` - Injected service for user data operations
-
-### 3. **Service Layer**
-
-#### `UserStorage.cs`
-Singleton service managing user data:
-
-**UserData Structure:**
-```csharp
-public class UserStorage
-{
-    public class UserData
-    {
-        public string UserId { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-        public string FullName { get; set; } = string.Empty;
-        public string PhoneNumber { get; set; } = string.Empty;
-        public string StreetAddress { get; set; } = string.Empty;
-        public string City { get; set; } = string.Empty;
-        public string PostalCode { get; set; } = string.Empty;
-        public string Country { get; set; } = string.Empty;
-        public DateTime RegisteredDate { get; set; }
-        
-        public string FullAddress => $"{StreetAddress}, {PostalCode} {City}, {Country}";
-    }
-```
-
-**Core Methods:**
-- `ValidateUser(email, password)` - Credential verification
-- `UserExists(email)` - Check email registration status
-- `RegisterUser(...)` - Create new user account
-- `GetUserInfo(email)` - Retrieve user profile data
 
 ---
 
@@ -208,10 +327,21 @@ Make sure you have:
 
 ## Usage
 
-### 1. Login Screen
+### 1. Login
 Visit http://localhost:8080 to access the login page. 
-- **Email**: *admin@navisafe.com*
-- **Password**: *Admin123*
+
+#### Admin 
+Use the following credentials to log in as an admin user:
+- **Email**: *admin@kartverket.no*
+- **Password**: *admin123*
+
+#### Pilot users
+Use the following credentials to log in as a pilot user:
+- **Email**:
+    - pilot@nla.no
+    - pilot@politiet.no
+    - pilot@forsvaret.no
+- **Password**: *test123*
 
 From here, after you have logged in, you will arrive to the main dashboard.
 
@@ -357,6 +487,9 @@ Note that the group did not have any working iPads available, so an iPhone was u
 **Expected Result:** Session cleared, redirected to login page
 
 **Actual Result:** Pass
+
+### TS-05: Sort the obstacle reports by Obstacle type
+
 
 ---
 
