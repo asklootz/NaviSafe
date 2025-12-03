@@ -61,7 +61,24 @@ builder.Logging.AddOpenTelemetry(options =>
 });
 
 // Add services
+builder.Services.AddControllers();
 builder.Services.AddControllersWithViews();
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+// Prefer a named connection string for the MariaDB datasource.
+// Read the connection first, register the named data source with the actual connection string.
+var conn = builder.Configuration.GetConnectionString("mariaDatabase")
+           ?? builder.Configuration.GetConnectionString("DefaultConnection")
+           ?? throw new InvalidOperationException("No connection string configured for mariaDatabase or DefaultConnection.");
+
+// Register a named MySQL DataSource with the connection string
+builder.AddMySqlDataSource("mariaDatabase");
+
+// Single DbContext registration using the chosen connection
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
 
 // Register UserStorage as scoped (required because it depends on DbContext)
 builder.Services.AddScoped<UserStorage>();
@@ -104,11 +121,43 @@ builder.Services.AddSession(options =>
 builder.Services.AddAuthorization();
 
 
+// Configure JWT Bearer authentication to enable User claims from tokens (if provided)
+var jwtKey = builder.Configuration["Jwt:Key"];
+if (string.IsNullOrEmpty(jwtKey))
+{
+    // fallback - recommend setting a proper secret in configuration
+    jwtKey = "th15_15_The_5uPEr_5EcREt_KeY_T0_thE_4M421n9Ly_5eCURe_4PPL1c4T10N";
+}
+
+var keyBytes = Encoding.UTF8.GetBytes(jwtKey);
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.FromSeconds(30)
+    };
+});
+
+builder.Services.AddScoped<JwtTokenService>();
+
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
 
-if (!app.Environment.IsDevelopment())
+if (!
+    app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();

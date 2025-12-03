@@ -7,6 +7,7 @@ using System.Security.Claims;
 
 namespace NaviSafe.Controllers;
 
+// NOTE: SPA now uses /api/auth/* endpoints with JWT. This MVC controller kept for potential server-rendered flows.
 public class AccountController : Controller
 {
     private readonly UserStorage _userStorage;
