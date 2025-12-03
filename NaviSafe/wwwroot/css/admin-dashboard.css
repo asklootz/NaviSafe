@@ -1,0 +1,10 @@
+﻿body {
+}
+.brand-logo {
+    width: 4rem;
+    height: 4rem;
+    object-fit: contain;
+}
+.page-bg {
+    background-color: #bde3ff;
+}

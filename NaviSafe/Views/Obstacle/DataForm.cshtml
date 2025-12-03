@@ -1,4 +1,4 @@
-﻿@model NaviSafe.Models.ObstacleData
+﻿@model NaviSafe.Models.ObstacleDataForm
 
 @{
     ViewData["Title"] = "Registration Form";
@@ -9,99 +9,194 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.13.1/font/bootstrap-icons.min.css" integrity="sha512-t7Few9xlddEmgd3oKZQahkNI4dS6l80+eGEzFQiqtyVYdvcSG2D3Iub77R20BdotfRPA9caaRkg1tyaJiPmO0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/lib/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="~/css/obstacle-form.css" />
 </head>
 <body class="page-bg">
 <header>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-transparent container-fluid">
-            <div class="container-fluid">
-                <img src="~/NaviSafeIcon.svg" alt="NaviSafe Logo" class="brand-logo me-2"/>
-                <div class="text-center"><a class="navbar-brand fw-semibold " asp-area="" asp-controller="Home" asp-action="Index">NaviSafe</a><br/><a class="navbar-brand">New Registration</a></div>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-transparent container-fluid">
+        <div class="container-fluid">
+            <img src="~/NaviSafeIcon.svg" alt="NaviSafe Logo" class="brand-logo me-2"/>
+            <div class="text-center"><a class="navbar-brand fw-semibold " >NaviSafe</a>
+                <br/>
+                <a class="navbar-brand">New Registration</a></div>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    
                 </div>
-                <button class="btn btn-report "><img src="~/list-icon.svg" alt="List Icon" class=""/> My Registrations</button>
+            <div class="align-content-md-center">
+                <h1 class="fs-3 fw-semibold mb-1 text-center">Obstacle Registration Form</h1>
+                <p class="text-decoration-underline mb-0 text-center">Fields with <span class="text-danger">*</span> must be filled</p>
             </div>
-        </nav>
-    </header>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    
+            </div>
+                @* show Admin Dashboard button only for users in role ADM *@
+                @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("ADM"))
+                {
+                    <div >
+                        <form action="/Home/AdminDashboard" method="post" style="display: inline;">
+                            @Html.AntiForgeryToken()
+                            <a type="button" asp-area="" asp-controller="Home" asp-action="AdminDashboard" class="btn btn-admin btn-success fs-3 me-2">
+                                <i class="bi align-content-center bi-person-workspace fs-2 me-3"></i> Admin Dashboard
+                            </a>
+                        </form>
+                    </div>
+                }
+            <button class="btn btn-report fs-3" type="button" onclick="window.location.href='@Url.Action("Overview", "Obstacle")'"><i class="bi bi-list fs-2 me-3"></i>My Registrations</button>
+        </div>
+    </nav>
 </header>
 
-<section class="container-fluid my-4">
+<section class="container-fluid mb-4">
     <div class="row justify-content-center">
         <div class="col-12 ">
             <div class="card card-ns shadow-sm">
                 <div class="card-body p-4">
-                    <header class="mb-3">
+                    @* <header class="mb-3">
                         <h1 class="fs-3 fw-semibold mb-1 text-center" >Obstacle Registration Form</h1>
-                        <p class="text-secondary mb-0 text-center">Fields with * must be filled</p>
-                    </header>
+                        <p class="text-decoration-underline mb-0 text-center">Fields with <span class="text-danger">*</span> must be filled</p>
+                    </header> *@
 
-                    <form asp-action="DataForm" method="post" class="">
+                    @{
+                        var isEditing = ViewBag.EditingId != null;
+                        var formAction = isEditing ? "UpdateDraft" : "DataForm";
+                    }
+                    
+                    <form asp-action="@formAction" method="post" enctype="multipart/form-data" class="">
+                        @Html.AntiForgeryToken()
+                        @if (isEditing)
+                        {
+                            <input type="hidden" name="id" value="@ViewBag.EditingId" />
+                        }
                         <div class="row g-4">
                             <div class="col-12">
-                                <label asp-for="ObstacleName" class="form-label formLabel">Obst acle Type* :</label>
+                                <label asp-for="shortDesc" class="form-label formLabel">
+                                    <i class="bi bi-tag-fill"></i>
+                                    <span>Obstacle Type <span class="text-danger">*</span></span>
+                                </label>
                                 <div class="position-relative">
-                                    <input asp-for="ObstacleName"
+                                    <input asp-for="shortDesc"
                                            id="ObstacleName"
                                            class="form-control formTextField"
                                            autocomplete="off"
-                                           placeholder="e.g., Tower, Tree" />
-                                    <div id="ObstacleNameMenu" class="dropdown-menu w-100 shadow-sm border-black" style="max-height:600px;"></div>
+                                           placeholder="e.g., Tower, Tree, etc..." />
+                                    @* <div id="ObstacleNameMenu" class="dropdown-menu w-100 shadow-sm border-black" style="max-height:600px;"></div> *@
+                                
+
+                  
+                                <!-- Custom Autocomplete Dropdown -->
+                                <div id="ObstacleNameDropdown" class="autocomplete-dropdown" style="display: none;">
+                                    <div class="autocomplete-item" data-value="Building">
+                                        <i class="bi bi-building-fill fs-2 me-3"></i>
+                                        <span class="fs-5 fw-bold">Building</span>
+                                    </div>
+                                    <div class="autocomplete-item" data-value="Tree">
+                                        <i class="bi bi-tree-fill text-success fs-2 me-3"></i>
+                                        <span class="fs-5 fw-bold">Tree</span>
+                                    </div>
+                                    <div class="autocomplete-item" data-value="Tower">
+                                        <i class="bi bi-broadcast-pin text-danger fs-2 me-3"></i>
+                                        <span class="fs-5 fw-bold">Tower</span>
+                                    </div>
+                                    <div class="autocomplete-item" data-value="Power Line">
+                                        <i class="bi bi-lightning-charge-fill text-warning fs-2 me-3"></i>
+                                        <span class="fs-5 fw-bold">Power Line</span>
+                                    </div>
+                                    <div class="autocomplete-item" data-value="Wind Turbine">
+                                        <i class="bi bi-fan fs-2 me-3"></i>
+                                        <span class="fs-5 fw-bold">Wind Turbine</span>
+                                    </div>
+                                    <div class="autocomplete-item" data-value="Other">
+                                        <i class="bi bi-three-dots text-muted fs-2 me-3"></i>
+                                        <span class="fs-5 fw-bold">Other</span>
+                                    </div>
+                                    </div>
                                 </div>
-                                <span asp-validation-for="ObstacleName" class="text-danger small"></span>
                             </div>
+                                <span asp-validation-for="shortDesc" class="text-danger small"></span>
                             
                             <div class="mt-4">
-                                <label asp-for="ObstacleDescription" class="form-label formLabel">Full Description:</label>
-                                <textarea asp-for="ObstacleDescription" rows="4" class="form-control formTextField"  placeholder="Describe the obstacle, materials, location, etc."></textarea>
-                                <span asp-validation-for="ObstacleDescription" class="text-danger small"></span>
+                                <label asp-for="longDesc" class="form-label formLabel">
+                                    <i class="bi bi-info-lg"></i>
+                                    <span>Obstacle Description</span>
+                                   </label>
+                                <textarea asp-for="longDesc" rows="4" class="form-control formTextField"  placeholder="Describe the obstacle, materials, location, etc."></textarea>
+                                @* <span asp-validation-for="longDesc" class="text-danger small"></span> *@
                             </div>
                             
                             
                             
-                            
+                        
                             <div class="d-flex align-items-center justify-content-between mb-2">
-                                <label class="form-label mb-0 formLabel">Provide coordinates* :</label>
-                                <div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" id="liveOption" name="dataSource" value="live" checked>
-                                        <label class="form-check-label" for="liveOption">Live data</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" id="markerOption" name="dataSource" value="marker">
-                                        <label class="form-check-label" for="markerOption">Marker data</label>
-                                    </div>
-                                </div>
-                            </div>
+                                    <label class="form-label mb-0 formLabel">
+                                        <i class="bi bi-geo-fill"></i>
+                                        <span>Provide Coordinates <span class="text-danger">*</span></span>
+                                    </label>
+                             </div>
 
                             <div id="map" class="map-container col-12"></div>
-                            <input type="hidden" asp-for="GeometryGeoJson" id="GeometryGeoJson"/>
+                            <input type="hidden" asp-for="geoJSON" id="GeometryGeoJson"/>
+                            <input type="hidden" asp-for="accuracy" id="Accuracy"/>
 
                             <div class="mt-3">
-                                <label for="MarkerCoordinatesJSON" class="form-label">Coordinates Preview</label>
-                                <textarea id="MarkerCoordinatesJSON" class="form-control form-control-sm" rows="3" readonly placeholder="Draw on the map to see coordinates here..."></textarea>
-                                <label for="LiveCoordinates" class="form-label mt-2">Live coordinates</label>
-                                <textarea id="LiveCoordinates" class="form-control form-control-sm" rows="4" readonly placeholder="Your live coordinates will appear here..."></textarea>
+
+                                <!-- New separate latitude/longitude inputs -->
+                                <div class="row mt-2 g-2">
+                                    <div class="col-6">
+                                            <label asp-for="lat" class="form-label formLabel">Latitude <span class="text-danger">*</span></label>
+                                        <input asp-for="lat" type="number" inputmode="decimal" step="0.000001" id="Latitude" class="form-control formTextField" placeholder="Latitude" />
+                                    </div>
+                                    <div class="col-6">
+                                            <label asp-for="lon" class="form-label formLabel">Longitude <span class="text-danger">*</span></label>
+                                        <input asp-for="lon" type="number" inputmode="decimal" step="0.000001" id="Longitude" class="form-control formTextField" placeholder="Longitude" />
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="col-12 mt-4">
-                                <label asp-for="ObstacleHeight" class="form-label formLabel">Obstacle Height (feet):</label>
-                                <input asp-for="ObstacleHeight" type="number" step="0.01" min="0" class="form-control formTextField" placeholder="e.g., 2.5" />
-                                <span asp-validation-for="ObstacleHeight" class="text-danger small"></span>
+                                <label asp-for="altitude" class="form-label formLabel">Obstacle Height (feet):</label>
+                                <div class="row g-2 align-items-center">
+                                    <div class="col-6">
+                                        <input asp-for="altitude" type="number" step="0.01" min="0" class="form-control formTextField" placeholder="e.g., 2.5" />
+                                        @* <span asp-validation-for="ObstacleHeight" class="text-danger small"></span> *@
+                                    </div>
+                                    <div class="col-3 text-center">
+                                        <button type="button" class="btn btn-primary btn-img w-100" id="openCameraButton">
+                                            <i class="bi bi-camera-fill"></i> Camera
+                                        </button>
+                                        <input type="file" id="cameraInput" name="ImageFile" accept="image/*" capture="camera" style="display: none;" />
+                                    </div>
+                                    <div class="col-3 text-center">
+                                        <button type="button" class="btn btn-secondary btn-img w-100" id="uploadImageButton">
+                                            <i class="bi bi-upload"></i> Upload
+                                        </button>
+                                        <input type="file" id="uploadImageInput" name="ImageFile" accept="image/*" style="display: none;" />
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-12 text-center">
+                                        <img id="imagePreview" src="#" alt="Image Preview" style="display: none; max-width: 100%; max-height: 300px; border: 1px solid #ccc; border-radius: 10px;" />
+                                        <p id="imageInfo" style="display: none; color: #6c757d; font-size: 0.9em; margin-top: 0.5rem;"></p>
+                                        <div id="imageError" class="text-danger small mt-2" style="display: none;"></div>
+                                    </div>
+                                </div>
                             </div>
-                            
-                            
+
+                        
                         </div>
-                        <div class="pt-2">
-                            <button type="submit" class="btn btn-indigo">
-                                Submit Data
-                            </button>
+                        <div class="mt-4">
+                            <div class="row mt-3 g-2">
+                                <div class="col-6">
+                                    <button type="submit" asp name="submitAction" value="draft" class="btn btn-yellow w-100"> <i class="bi bi-pencil-square"></i> Save as Draft</button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="submit" name="submitAction" value="sent" class="btn btn-green w-100"> <i class="bi bi-check-circle-fill"></i> Submit Data</button>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -114,17 +209,145 @@
     <partial name="_ValidationScriptsPartial"/>
 
     <link rel="stylesheet" href="~/lib/leaflet/dist/leaflet.css" crossorigin=""/>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" 
+    integrity="sha512-gc3xjCmIy673V6MyOAZhIW93xhM9ei1I+gLbmFjUHIjocENRsLX/QUE1htk5q1XV2D/iie/VQ8DXI6Vu8bexvQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <script src="~/lib/leaflet/dist/leaflet.js" crossorigin=""></script>
-    <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"
+        integrity="sha512-ozq8xQKq6urvuU6jNgkfqAmT7jKN2XumbrX1JiB3TnF7tI48DPI4Gy1GXKD/V3EExgAs1V+pRO7vwtS1LHg0Gw=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer">
+    </script>
 
     <link rel="stylesheet" href="~/lib/leaflet-locatecontrol-0.85.0/leaflet-locatecontrol-0.85.0/dist/L.Control.Locate.mapbox.min.css"/>
     <script src="~/lib/leaflet-locatecontrol-0.85.0/leaflet-locatecontrol-0.85.0/dist/L.Control.Locate.min.js"></script>
     
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
-    <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.EasyButton/2.4.0/easy-button.css" 
+    integrity="sha512-aiVWmB2G8oV+XfHo1CR6hEAxzCl48Lrl3UBzQ6P+BEMkT8qY1tGecdQx6x/X8i9cCVrwQU9ipsOsZlNkRh9n7w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.EasyButton/2.4.0/easy-button.js" 
+    integrity="sha512-nMxgrgYu7vo/LNe5NFHZOIkwbodaU13UdYiDoDCuo3P2sryEyffrk1R3c2tFGbZ83AqaMbO19yhKnVgHztuqAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js" integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.21.0/jquery.validate.min.js" 
+    integrity="sha512-KFHXdr2oObHKI9w4Hv1XPKc898mE4kgYx58oqsc/JqqdLMDI4YjOLzom+EMlW8HFUd0QfjfAvxSL6sEq/a42fQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.js" 
+    integrity="sha512-F49kv+wpQXPPk83WZgrqcw/A72douvETfmyZJ1tRELBVhDEm1aXH1FOUDjP0KJzgJKZY+w3RGeOiIBQq3tddqA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+<script>
+    let selectedFile = null;
+
+    // If editing, show existing image preview provided by server
+    (function initExistingPreview() {
+        const existingPath = '@(Model.ExistingImagePath ?? string.Empty)';
+        if (existingPath && existingPath.length > 0) {
+            const preview = document.getElementById('imagePreview');
+            const info = document.getElementById('imageInfo');
+            preview.src = existingPath;
+            preview.style.display = 'block';
+            info.textContent = 'Existing image attached';
+            info.style.display = 'block';
+        }
+    })();
+
+    document.getElementById('uploadImageButton').addEventListener('click', function () {
+        document.getElementById('uploadImageInput').click();
+    });
+
+    document.getElementById('openCameraButton').addEventListener('click', function () {
+        document.getElementById('cameraInput').click();
+    });
+
+    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+    const maxFileBytes = 5 * 1024 * 1024; // 5 MB
+
+    function getFileExtension(name) {
+        if (!name) return '';
+        const i = name.lastIndexOf('.');
+        return i >= 0 ? name.substring(i).toLowerCase() : '';
+    }
+
+    function validateImageFile(file) {
+        if (!file) return 'No file selected.';
+        if (file.size === 0) return 'File is empty.';
+        if (file.size > maxFileBytes) return 'File is too large. Max allowed size is 5 MB.';
+        if (file.type && !file.type.startsWith('image/')) {
+            // sometimes camera inputs do not set type; still check extension below
+            const ext = getFileExtension(file.name);
+            if (!allowedExtensions.includes(ext)) return 'Invalid file type. Allowed types: ' + allowedExtensions.join(', ');
+        } else {
+            const ext = getFileExtension(file.name);
+            if (!allowedExtensions.includes(ext)) return 'Invalid file type. Allowed types: ' + allowedExtensions.join(', ');
+        }
+        return '';
+    }
+
+    function displayImagePreview(file) {
+        selectedFile = file;
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const preview = document.getElementById('imagePreview');
+            const info = document.getElementById('imageInfo');
+            const err = document.getElementById('imageError');
+            if (err) { err.style.display = 'none'; err.textContent = ''; }
+
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+
+            // Show file info
+            const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+            info.textContent = `File: ${file.name} (${sizeInMB} MB)`;
+            info.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function handleFileSelection(inputElement, file) {
+        const errorEl = document.getElementById('imageError');
+        const preview = document.getElementById('imagePreview');
+        const info = document.getElementById('imageInfo');
+        if (!file) {
+            // clear
+            if (preview) preview.style.display = 'none';
+            if (info) info.style.display = 'none';
+            if (errorEl) { errorEl.style.display = 'none'; errorEl.textContent = ''; }
+            return;
+        }
+
+        // validate client-side and show friendly error
+        const validationMessage = validateImageFile(file);
+        if (validationMessage) {
+            console.warn('Invalid image selected:', validationMessage);
+            // clear inputs and preview
+            inputElement.value = '';
+            const otherInput = inputElement.id === 'uploadImageInput' ? document.getElementById('cameraInput') : document.getElementById('uploadImageInput');
+            if (otherInput) otherInput.value = '';
+            if (preview) preview.style.display = 'none';
+            if (info) info.style.display = 'none';
+            if (errorEl) { errorEl.textContent = validationMessage + ' Allowed: ' + allowedExtensions.join(', ') + '. Max size: 5 MB.'; errorEl.style.display = 'block'; }
+            selectedFile = null;
+            return;
+        }
+
+        console.log('Image selected:', file.name);
+        displayImagePreview(file);
+        // Clear the other input to prevent conflicts
+        const otherInput = inputElement.id === 'uploadImageInput' ? document.getElementById('cameraInput') : document.getElementById('uploadImageInput');
+        if (otherInput) otherInput.value = '';
+    }
+
+    document.getElementById('uploadImageInput').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        handleFileSelection(this, file);
+    });
+
+    document.getElementById('cameraInput').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        handleFileSelection(this, file);
+    });
+</script>
     <script>
         let map = L.map('map').setView([58.163137,8.002106], 13);
 
@@ -146,26 +369,102 @@
         lc.getContainer().id = "locate-button";
         lc.start();
 
-        map.on('locationfound', function(e) {
+        // When user activates the locate control, resume live updates and clear marker/manual overrides
+        (function() {
+            const locateBtn = document.getElementById('locate-button');
+            if (!locateBtn) return;
+            locateBtn.addEventListener('click', function () {
+                // allow live location to be used again
+                markerPlaced = false;
+                manualOverride = false;
+                try { drawnItems.clearLayers(); } catch (ex) { }
+
+                // ensure locate/watch is running
+                try {
+                    lc.start();
+                    map.locate({ watch: true, setView: false, enableHighAccuracy: true });
+                } catch (ex) { console.warn('Failed to restart locate', ex); }
+            });
+        })();
+
+        // Also start the browser geolocation explicitly to ensure 'locationfound' events fire
+        try {
+            map.locate({ watch: true, setView: false, enableHighAccuracy: true, timeout: 10000, maximumAge: 5000 });
+        } catch (ex) {
+            console.warn('map.locate failed', ex);
+        }
+
+        // show geolocation errors in console and notify user if needed
+        map.on('locationerror', function(ev) {
+            console.warn('locationerror', ev);
+        });
+
+        // State flags
+        let markerPlaced = false;
+        let manualOverride = false;
+
+        // Helper to update geometry and previews from a lat/lng pair
+        function updateFromLatLng(lat, lng, accuracy = null, source = 'manual') {
+            if (lat == null || lng == null || Number.isNaN(lat) || Number.isNaN(lng)) return;
+
+            const coords = [lng, lat];
+            const feature = {
+                type: 'Feature',
+                geometry: { type: 'Point', coordinates: coords },
+                properties: { source: source }
+            };
+
+            const json = JSON.stringify(feature);
+
+            const geoEl = document.getElementById('GeometryGeoJson');
+            if (geoEl) geoEl.value = json;
+            const previewEl = document.getElementById('MarkerCoordinatesJSON');
+            if (previewEl) previewEl.value = json;
+
+            // set accuracy hidden field ONLY when the source is live (browser geolocation)
+            const accEl = document.getElementById('Accuracy');
+            if (accEl) {
+                if (source === 'live' && accuracy != null && !Number.isNaN(accuracy)) {
+                    // Only persist accuracy when it came from live geolocation updates
+                    accEl.value = Math.round(accuracy);
+                    window.lastAccuracy = parseInt(accEl.value, 10);
+                    console.debug('updateFromLatLng (live) set Accuracy =', accEl.value);
+                } else {
+                    // Clear accuracy when coordinates are from marker/manual so it's not submitted
+                    accEl.value = '';
+                }
+             }
+             
+              // Update lat/lng inputs (format to 6 decimals)
+              const latEl = document.getElementById('Latitude');
+              const lngEl = document.getElementById('Longitude');
+              if (latEl) latEl.value = (typeof lat === 'number' && isFinite(lat)) ? lat.toFixed(6) : String(lat);
+              if (lngEl) lngEl.value = (typeof lng === 'number' && isFinite(lng)) ? lng.toFixed(6) : String(lng);
+          }
+
+          map.on('locationfound', function(e) {
+             // only update if no marker placed and user didn't manually override
+             //if (markerPlaced || manualOverride) return;
+
             drawnItems.clearLayers();
             let lat = e.latlng.lat;
             let lng = e.latlng.lng;
             let radius = e.accuracy;
             let altitude = e.latlng.alt;
-
-            let LiveCoordinatesJSON = {
-                "type": "Feature",
-                "geometry": { "type": "Point", "coordinates": [lng, lat] },
-                "properties": { "accuracy": radius, "altitude": altitude }
-            };
-            let liveCoordinatesJSONString = JSON.stringify(LiveCoordinatesJSON);
-            let liveCoordinates = "Lat: " + lat + "\nLng: " + lng + "\nAccuracy: " + radius + "m" + "\nJSON: " + liveCoordinatesJSONString;
-            console.log("User's location: Lat: " + lat + ", Lng: " + lng + ", Accuracy: " + radius + "m" + ", Altitude: " + altitude);
-            document.getElementById("LiveCoordinates").value = liveCoordinates;
-
-            let liveCoordinatesJSON = {};
-            document.getElementById("MarkerCoordinatesJSON").value = liveCoordinatesJSON;
-        });
+            
+             let LiveCoordinatesJSON = {
+                 "type": "Feature",
+                 "geometry": { "type": "Point", "coordinates": [lng, lat] },
+                 "properties": { "accuracy": radius, "altitude": altitude }
+             };
+             let liveCoordinatesJSONString = JSON.stringify(LiveCoordinatesJSON);
+             let liveCoordinates = "Lat: " + lat + "\nLng: " + lng + "\nAccuracy: " + radius + "m" + "\nJSON: " + liveCoordinatesJSONString;
+             const liveEl = document.getElementById("LiveCoordinates");
+             if (liveEl) liveEl.value = liveCoordinates;
+             // update the lat/lng fields and geometry
++            // pass the reported accuracy through to updateFromLatLng with source 'live'
+             updateFromLatLng(lat, lng, radius, 'live');
+          });
 
         let drawnItems = new L.FeatureGroup();
         map.addLayer(drawnItems);
@@ -183,162 +482,175 @@
         });
         map.addControl(drawControl);
 
-        var customMarkerControl = L.Control.extend({
-            options: {
-                position: 'topleft' // Position of the control on the map
-            },
+        
 
-            onAdd: function(map) {
-                var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
-                container.innerHTML = '<button title="Draw Custom Marker" class="custom-marker-button"></button>';
-
-                L.DomEvent.disableClickPropagation(container);
-                L.DomEvent.on(container, 'click', function() {
-                    // Logic to handle drawing your custom marker
-                    // For example, add a click event listener to the map to place a marker
-                    map.once('click', function(e) {
-                        L.marker(e.latlng, {
-                            icon: L.icon({
-                                iconUrl: '~/NaviSafeIcon.png',
-                                iconSize: [32, 32],
-                                iconAnchor: [16, 32]
-                            })
-                        }).addTo(map);
-                    });
-                    //alert('Click on the map to place your custom marker!');
-                });
-
-                return container;
-            }
-        });
-
-        map.addControl(new customMarkerControl());
 
         map.on(L.Draw.Event.CREATED, function (e) {
+            // When a marker is drawn, stop live tracking and use marker coordinates
             drawnItems.clearLayers();
             let layer = e.layer;
             lc.stop();
+            markerPlaced = true;
+            manualOverride = false; // marker is explicit placement
 
             drawnItems.addLayer(layer);
-            
             let geoJsonData = layer.toGeoJSON();
             let geoJsonString = JSON.stringify(geoJsonData);
 
-            document.getElementById('GeometryGeoJson').value = geoJsonString;
-            document.getElementById('MarkerCoordinatesJSON').value = geoJsonString;
+            // Set the hidden geojson (use layer's geojson for accuracy)
+            var geoEl = document.getElementById('GeometryGeoJson');
+            var previewEl = document.getElementById('MarkerCoordinatesJSON');
+            if (geoEl) geoEl.value = geoJsonString;
+            if (previewEl) previewEl.value = geoJsonString;
+
+            // update lat/lng inputs using central helper so marker visuals and inputs stay in sync
+            if (typeof layer.getLatLng === 'function') {
+                const latlng = layer.getLatLng();
+                updateFromLatLng(latlng.lat, latlng.lng, null, 'marker');
+
+                // explicitly set Latitude/Longitude inputs as well
+                var latInputEl = document.getElementById('Latitude');
+                var lngInputEl = document.getElementById('Longitude');
+                if (latInputEl) latInputEl.value = (latlng.lat).toFixed(6);
+                if (lngInputEl) lngInputEl.value = (latlng.lng).toFixed(6);
+            }
         });
 
-        let useLiveData = true;
+        // Coordinate inputs: if user edits them manually we stop live tracking and use those coords
+        const latInput = document.getElementById('Latitude');
+        const lngInput = document.getElementById('Longitude');
 
-        document.getElementById('liveOption').addEventListener('change', function () {
-            useLiveData = true;
-            lc.start();
-            drawnItems.clearLayers();
-            document.getElementById('GeometryGeoJson').value = "";
-            document.getElementById('MarkerCoordinatesJSON').value = "";
-        });
+        function onManualCoordinateChange() {
+            const latVal = parseFloat(latInput.value);
+            const lngVal = parseFloat(lngInput.value);
 
-        document.getElementById('markerOption').addEventListener('change', function () {
-            useLiveData = false;
-            lc.stop();
-            document.getElementById("LiveCoordinates").value = "";
-        });
+            if (isFinite(latVal) && isFinite(lngVal)) {
+                manualOverride = true;
+                markerPlaced = false;
+                lc.stop();
+                // place marker and update geometry
+                updateFromLatLng(latVal, lngVal, null, 'manual');
+                // pan map to coordinates
+                try { map.setView([latVal, lngVal], Math.max(map.getZoom(), 13)); } catch { }
+            }
+        }
+
+        latInput.addEventListener('change', onManualCoordinateChange);
+        lngInput.addEventListener('change', onManualCoordinateChange);
+
     </script>
     
-    <script>
-        // Suggestions source (add more as needed, icons will need to be added too)
-const obstacleSuggestions = [
-  'Tree','Building','Pole','Tower','Crane', 'PowerLine'
-];
+<script>
+function setupObstacleNameAutocomplete() {
+    const $input = $('#ObstacleName');
+    const $dropdown = $('#ObstacleNameDropdown');
+    const $items = $('.autocomplete-item');
 
-const obstacleIcons = {
-    'Tree' : '~/tree-icon.svg',
-    'Building' : '~/building-icon.svg',
-    'Pole' : '~/pole-icon.svg',
-    'Tower' : '~/tower-icon.svg',
-    'Crane' : '~/crane-icon.svg',
-    'PowerLine' : '~/powerline-icon.svg'
-}
+    // Show dropdown on focus
+    $input.on('focus', function() {
+    $dropdown.show().addClass('show');
+    filterAutocompleteItems(''); // Show all items
+    });
 
-const input = document.getElementById('ObstacleName');
+    // Filter items as user types
+    $input.on('input', function() {
+    const searchText = $(this).val().toLowerCase();
+    filterAutocompleteItems(searchText);
+    });
 
-const menu = document.getElementById('ObstacleNameMenu');
-
-let activeIndex = -1;
-
-function openMenu() { menu.classList.add('show'); }
-        
-function closeMenu() { menu.classList.remove('show'); activeIndex = -1; }
-        
-function renderMenu(items) {
-  menu.innerHTML = '';
-  if (!items.length) { closeMenu(); return; }
-  items.forEach((text) => {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'dropdown-item';
-    btn.textContent = text;
-    btn.addEventListener('mousedown', (e) => { e.preventDefault(); select(text); });
-    menu.appendChild(btn);
-  });
-  openMenu();
-}
-
-function select(text) {
-  input.value = text;
-  closeMenu();
-}
-
-function currentItems() {
-  return Array.from(menu.querySelectorAll('.dropdown-item, .dropdownoptions'));
-}
-
-function setActive(i) {
-  const items = currentItems();
-  items.forEach((el, idx) => el.classList.toggle('active', idx === i));
-  const active = items[i];
-  if (active) active.scrollIntoView({ block: 'nearest' });
-}
-
-input.addEventListener('input', () => {
-  const q = input.value.trim().toLowerCase();
-  if (!q) { closeMenu(); return; }
-  const matches = obstacleSuggestions
-    .filter(s => s.toLowerCase().includes(q))
-    .slice(0, 8);
-  renderMenu(matches);
-});
-
-
-input.addEventListener('keydown', (e) => {
-  if (!menu.classList.contains('show')) return;
-  const items = currentItems();
-  if (!items.length) return;
-
-  if (e.key === 'ArrowDown') {
-    e.preventDefault();
-    activeIndex = (activeIndex + 1) % items.length;
-    setActive(activeIndex);
-  } else if (e.key === 'ArrowUp') {
-    e.preventDefault();
-    activeIndex = (activeIndex - 1 + items.length) % items.length;
-    setActive(activeIndex);
-  } else if (e.key === 'Enter') {
-    if (activeIndex >= 0) {
-      e.preventDefault();
-      items[activeIndex].dispatchEvent(new Event('mousedown'));
+    // Hide dropdown when clicking outside
+    $(document).on('click', function(e) {
+    if (!$(e.target).closest('#ObstacleName, #ObstacleNameDropdown').length) {
+        $dropdown.hide().removeClass('show');
     }
-  } else if (e.key === 'Escape') {
-    closeMenu();
-  }
-});
+    });
 
-input.addEventListener('blur', () => setTimeout(closeMenu, 150));
-document.addEventListener('click', (e) => {
-  if (!menu.contains(e.target) && e.target !== input) closeMenu();
-});
+    // Select item on click
+    $items.on('click', function() {
+    const value = $(this).data('value');
+    $input.val(value);
+    $dropdown.hide().removeClass('show');
 
-if (input.value === 'Tree') {
-    input.value = 'Tree';
+    // Visual feedback
+    $input.addClass('border-success');
+    setTimeout(function() {
+        $input.removeClass('border-success');
+    }, 1000);
+
+    // Focus next field (height)
+    $('#obstacleHeight').focus();
+    });
+
+    // Handle keyboard navigation
+    let highlightedIndex = -1;
+
+    $input.on('keydown', function(e) {
+    const $visibleItems = $items.filter(':visible');
+
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        highlightedIndex = Math.min(highlightedIndex + 1, $visibleItems.length - 1);
+        updateHighlight($visibleItems);
+    } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        highlightedIndex = Math.max(highlightedIndex - 1, 0);
+        updateHighlight($visibleItems);
+    } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (highlightedIndex >= 0 && highlightedIndex < $visibleItems.length) {
+        $visibleItems.eq(highlightedIndex).click();
+        }
+    } else if (e.key === 'Escape') {
+        $dropdown.hide().removeClass('show');
+    }
+    });
+
+    function filterAutocompleteItems(searchText) {
+    let visibleCount = 0;
+
+    $items.each(function() {
+        const itemText = $(this).data('value').toLowerCase();
+
+        if (itemText.includes(searchText)) {
+        $(this).show();
+        visibleCount++;
+        } else {
+        $(this).hide();
+        }
+    });
+
+    // Show dropdown if there are visible items
+    if (visibleCount > 0 && $input.is(':focus')) {
+        $dropdown.show().addClass('show');
+    } else if (visibleCount === 0) {
+        $dropdown.hide().removeClass('show');
+    }
+
+    // Reset highlight
+    highlightedIndex = -1;
+    $items.removeClass('highlighted');
+    }
+
+    function updateHighlight($visibleItems) {
+    $items.removeClass('highlighted');
+    if (highlightedIndex >= 0 && highlightedIndex < $visibleItems.length) {
+        $visibleItems.eq(highlightedIndex).addClass('highlighted');
+
+        // Scroll highlighted item into view
+        const $highlighted = $visibleItems.eq(highlightedIndex);
+        const dropdownScrollTop = $dropdown.scrollTop();
+        const dropdownHeight = $dropdown.height();
+        const itemTop = $highlighted.position().top;
+        const itemHeight = $highlighted.outerHeight();
+
+        if (itemTop < 0) {
+        $dropdown.scrollTop(dropdownScrollTop + itemTop);
+        } else if (itemTop + itemHeight > dropdownHeight) {
+        $dropdown.scrollTop(dropdownScrollTop + itemTop + itemHeight - dropdownHeight);
+        }
+    }
+    }
 }
+
+    setupObstacleNameAutocomplete();
 </script>

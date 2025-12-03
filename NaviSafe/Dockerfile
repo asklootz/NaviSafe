@@ -32,5 +32,4 @@ USER root
 RUN chmod 755 /app/cert.pfx
 USER app
 COPY --from=publish /app/publish .
-COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "NaviSafe.dll"]

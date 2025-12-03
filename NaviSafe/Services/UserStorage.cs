@@ -1,74 +1,104 @@
+using NaviSafe.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace NaviSafe.Services;
 
 public class UserStorage
 {
+    private readonly ApplicationDbContext _db;
+
+    public UserStorage(ApplicationDbContext db)
+    {
+        _db = db;
+    }
+
     public class UserData
     {
         public string UserId { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-        public string FullName { get; set; } = string.Empty;
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public int OrgNr { get; set; }
+        public string RoleID { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
-        public string StreetAddress { get; set; } = string.Empty;
-        public string City { get; set; } = string.Empty;
-        public string PostalCode { get; set; } = string.Empty;
-        public string Country { get; set; } = string.Empty;
         public DateTime RegisteredDate { get; set; }
-        
-        public string FullAddress => $"{StreetAddress}, {PostalCode} {City}, {Country}";
+        public string FullName => $"{FirstName} {LastName}".Trim();
     }
 
-    private static readonly Dictionary<string, UserData> Users = new()
-    {
-        { 
-            "admin@navisafe.com", 
-            new UserData 
-            { 
-                UserId = "admin-001",
-                Password = "Admin123", 
-                FullName = "Administrator",
-                PhoneNumber = "+47 123 45 678",
-                StreetAddress = "Tollbodgata 50",
-                City = "Kristiansand",
-                PostalCode = "4614",
-                Country = "Norway",
-                RegisteredDate = DateTime.UtcNow
-            } 
-        }
-    };
-
-    public bool UserExists(string email) => 
-        Users.ContainsKey(email.ToLower());
+    public bool UserExists(string email) =>
+        _db.UserInfo.AsNoTracking().Any(u => u.Email.ToLower() == email.ToLower());
 
     public bool ValidateUser(string email, string password)
     {
-        var user = GetUserInfo(email);
-        return user?.Password == password;
+        var info = _db.UserInfo.AsNoTracking().FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+        if (info == null) return false;
+
+        var auth = _db.UserAuth.AsNoTracking().FirstOrDefault(a => a.UserID == info.UserID);
+        if (auth == null || string.IsNullOrEmpty(auth.PassHash)) return false;
+
+        return BCrypt.Net.BCrypt.Verify(password, auth.PassHash);
     }
 
-    public string RegisterUser(string email, string password, string fullName, 
-        string phoneNumber, string streetAddress, string city, string postalCode, string country)
+    // Note: synchronous to keep controller code unchanged
+    public string RegisterUser(string email, string password,
+        string firstName, string lastName, string phoneNumber, int orgNr, string roleId)
     {
-        if (UserExists(email))
-            return string.Empty;
+        if (UserExists(email)) return string.Empty;
 
-        var userId = Guid.NewGuid().ToString();
-        
-        Users[email.ToLower()] = new UserData
+        using var tx = _db.Database.BeginTransaction();
+        try
         {
-            UserId = userId,
-            Password = password,
-            FullName = fullName,
-            PhoneNumber = phoneNumber,
-            StreetAddress = streetAddress,
-            City = city,
-            PostalCode = postalCode,
-            Country = country,
-            RegisteredDate = DateTime.UtcNow
-        };
+            var salt = BCrypt.Net.BCrypt.GenerateSalt(12);
+            var hash = BCrypt.Net.BCrypt.HashPassword(password, salt);
 
-        return userId;
+            var auth = new UserAuth
+            {
+                Username = email,
+                PassHash = hash,
+                PassSalt = salt
+            };
+
+            _db.UserAuth.Add(auth);
+            _db.SaveChanges(); // populates auth.UserID
+
+            var info = new UserInfo
+            {
+                UserID = auth.UserID,
+                FirstName = firstName,
+                LastName = lastName,
+                Email = email,
+                Phone = phoneNumber,
+                OrgNr = orgNr,
+                RoleID = roleId,
+                CreationDate = DateTime.Now
+            };
+
+            _db.UserInfo.Add(info);
+            _db.SaveChanges();
+
+            tx.Commit();
+            return auth.UserID.ToString();
+        }
+        catch
+        {
+            tx.Rollback();
+            return string.Empty;
+        }
     }
 
-    public UserData? GetUserInfo(string email) => 
-        Users.TryGetValue(email.ToLower(), out var user) ? user : null;
+    public UserData? GetUserInfo(string email)
+    {
+        var info = _db.UserInfo.AsNoTracking().FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+        if (info == null) return null;
+
+        return new UserData
+        {
+            UserId = info.UserID.ToString(),
+            FirstName = info.FirstName ?? string.Empty,
+            LastName = info.LastName ?? string.Empty,
+            PhoneNumber = info.Phone,
+            OrgNr = info.OrgNr,
+            RoleID = info.RoleID,
+            RegisteredDate = info.CreationDate
+        };
+    }
 }

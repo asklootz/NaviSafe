@@ -9,7 +9,7 @@
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
-SET time_zone = "+00:00";
+SET GLOBAL time_zone = "CET";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -29,7 +29,7 @@ USE `mariaDatabase`;
 -- Table structure for table `organisation`
 --
 
-DROP TABLE IF EXISTS `organisation`;
+-- DROP TABLE IF EXISTS `organisation`;
 CREATE TABLE IF NOT EXISTS `organisation` (
   `orgNr` int(11) NOT NULL AUTO_INCREMENT,
   `orgName` varchar(255) NOT NULL,
@@ -52,7 +52,7 @@ INSERT INTO `organisation` (`orgNr`, `orgName`) VALUES
 -- Table structure for table `reporting`
 --
 
-DROP TABLE IF EXISTS `reporting`;
+-- DROP TABLE IF EXISTS `reporting`;
 CREATE TABLE IF NOT EXISTS `reporting` (
   `regID` int(11) NOT NULL AUTO_INCREMENT,
   `lat` float NOT NULL,
@@ -61,12 +61,13 @@ CREATE TABLE IF NOT EXISTS `reporting` (
   `accuracy` int(11) DEFAULT NULL,
   `shortDesc` varchar(50) DEFAULT NULL,
   `longDesc` varchar(255) DEFAULT NULL,
-  `img` mediumblob DEFAULT NULL,
-  `isSent` tinyint(1) NOT NULL,
-  `state` enum('SENT','PENDING','REJECTED') NOT NULL,
+  `img` varchar(50) DEFAULT NULL,
+  `isSent` bool NOT NULL,
+  `state` enum('APPROVED','PENDING','REJECTED') NOT NULL,
   `rejectComment` varchar(255) DEFAULT NULL,
   `userID` int(11) NOT NULL,
   `creationDate` timestamp NOT NULL DEFAULT current_timestamp(),
+  `geoJSON` JSON DEFAULT NULL,
   PRIMARY KEY (`regID`),
   KEY `userID` (`userID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
@@ -75,10 +76,18 @@ CREATE TABLE IF NOT EXISTS `reporting` (
 -- Dumping data for table `reporting`
 --
 
-INSERT INTO `reporting` (`regID`, `lat`, `lon`, `altitude`, `accuracy`, `shortDesc`, `longDesc`, `img`, `isSent`, `state`, `rejectComment`, `userID`, `creationDate`) VALUES
-(1, 63.4298, 10.394, 33, 22, 'Building in Trondheim', 'PHT_pilot1 registered building during low altitude patrol near Trondheim', NULL, 1, 'SENT', 'Submitted', 4, '2025-11-08 15:57:50'),
-(2, 59.917, 10.7611, 25, 15, 'Power line over Oslo fjord', 'LUFT_pilot2 registered power line due to poor visibility in harsh weather', NULL, 1, 'SENT', 'Pending', 3, '2025-10-27 00:00:00'),
-(3, 58.1585, 8.0165, 12, 8, 'High tower near Kjevik Airport', 'NLA_pilot1 registered tower observed during landing', NULL, 1, 'SENT', 'Submitted', 2, '2025-10-28 00:00:00');
+ INSERT INTO `reporting` (`regID`, `lat`, `lon`, `altitude`, `accuracy`, `shortDesc`, `longDesc`, `img`, `isSent`, `state`, `rejectComment`, `userID`, `creationDate`, `geoJSON`) VALUES
+ (1, 59.1816, 7.55859, 69, NULL, 'Jesus', 'Our lord and saviour', '/images/TallJesus.jpg', true, 'REJECTED', 'He is not real >:(', 4, '2025-11-26 12:24:46', '{"type":"Feature","geometry":{"type":"Point","coordinates":[7.558593750000001,59.18155722094256]},"properties":{"source":"marker"}}'),
+ (2, 58.1465, 7.99509, 420, NULL, 'Tree', 'Jolly good christmas tree', '/images/Tree.jpg', true, 'PENDING', 'Will approve if sender is on the nice list ;D', 2, '2025-11-26 12:06:44', '{"type":"Feature","geometry":{"type":"Point","coordinates":[7.9950857162475595,58.14652207802879]},"properties":{"source":"marker"}}'),
+ (3, 58.8027, 5.67667, 666, NULL, 'CatZilla', 'Giant scary killer kitty cat', '/images/CatZilla.jpeg', true, 'APPROVED', 'Oh hell yeah! Pspspspspsps :3', 3, '2025-11-26 12:38:38', '{"type":"Feature","geometry":{"type":"Point","coordinates":[5.676675438880921,58.80270370916149]},"properties":{"source":"marker"}}'),
+ (4, 58.9403, 5.70661, 210, 89, 'Ullanhaugstaarnet', 'Admins can also make registrations', '/images/1_20251201T154634318.webp', true, 'APPROVED', 'I am admin, I wanna approve my own stuff', 1, '2025-12-01 16:52:03', '{"type":"Feature","geometry":{"type":"Point","coordinates":[6.973571777343751,59.13156769674785]},"properties":{"source":"marker"}}'),
+ (5, 59.1316, 6.97357, 500, NULL, 'A really tall pole', NULL, NULL, 1, 'PENDING', NULL, 2, '2025-12-01 15:52:03', '{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[6.973571777343751,59.13156769674785]},\"properties\":{\"source\":\"marker\"}}'),
+ (6, 58.1456, 7.99904, 89.99, 94, 'Building', 'A new skyscraper', NULL, 1, 'PENDING', NULL, 2, '2025-12-01 15:52:59', '{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[7.99903605465667,58.14561409530386]},\"properties\":{\"source\":\"live\"}}'),
+ (7, 58.1458, 7.99921, NULL, 128, 'Tree', 'I think I MAYBE saw a tree, gonna save as draft for now', '/images/3_20251201T161020672.webp', 0, 'PENDING', NULL, 3, '2025-12-01 16:10:20', '{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[7.999210622317597,58.14578929828326]},\"properties\":{\"source\":\"live\"}}'),
+ (8, 60.3798, 5.19061, 50, NULL, 'Wind Turbine', NULL, '/images/3_20251201T161504426.jpg', 1, 'PENDING', NULL, 3, '2025-12-01 16:15:04', '{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[5.190610885620118,60.379805554936084]},\"properties\":{\"source\":\"marker\"}}'),
+ (9, 58.1456, 7.99904, 77, 94, 'Power Line', 'Powerful powerlines powering everything', '/images/4_20251201T161845457.png', 1, 'PENDING', NULL, 4, '2025-12-01 16:18:45', '{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[7.99903605465667,58.14561409530386]},\"properties\":{\"source\":\"live\"}}'),
+ (10, 70.0206, 22.8516, NULL, NULL, 'Wind Turbine', NULL, NULL, 1, 'PENDING', NULL, 4, '2025-12-01 16:19:31', '{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[22.851562500000004,70.02058730174062]},\"properties\":{\"source\":\"marker\"}}');
+                  
 
 -- --------------------------------------------------------
 
@@ -86,7 +95,7 @@ INSERT INTO `reporting` (`regID`, `lat`, `lon`, `altitude`, `accuracy`, `shortDe
 -- Table structure for table `userAuth`
 --
 
-DROP TABLE IF EXISTS `userAuth`;
+-- DROP TABLE IF EXISTS `userAuth`;
 CREATE TABLE IF NOT EXISTS `userAuth` (
   `userID` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(70) NOT NULL,
@@ -100,10 +109,10 @@ CREATE TABLE IF NOT EXISTS `userAuth` (
 --
 
 INSERT INTO `userAuth` (`userID`, `username`, `passHash`, `passSalt`) VALUES
-(1, 'admin@kartverket.no', 'loodhHl1A1YABjm/4xD/hW2q/ZuCzWLop6g4361nD3Q=', 'PGgltVghys3nldsaJP5r3w=='),
-(2, 'pilot@nla.no', 'lgFM6ogmbH1QhObvtrJhRKpJJzrzuzDS8Z+0iZxCYk4=', 'BRDgCz0DVguBDsC7wOAV8g=='),
-(3, 'pilot@forsvaret.no', 'BzDuVukFeycwe2c1jxdebhOfl663fxEXEe5gHXHgD1I=', 'fzCGk9lA0PR+hEvb8uHjzA=='),
-(4, 'pilot@politiet', '7kA1ghbxkuXDbzHjr0tVxB8wDfREsAOFH3S+IzPqJZE=', '4DBTxP+EUUmUhro+yJt2wA==');
+(1, 'admin@kartverket.no', '$2a$12$Ba.jhfeB6LIpCqRIIxEbh.MA.9EbftVLvPbwC8WJ/5WSiu4Rsrlci', '$2a$12$Ba.jhfeB6LIpCqRIIxEbh.'),
+(2, 'pilot@nla.no', '$2a$12$S9.2S.LWO8yBqSN9SvzOO.UUxu8KeluJ0yJZ2Aw1lGUaoWSk/YOTW', '$2a$12$S9.2S.LWO8yBqSN9SvzOO.'),
+(3, 'pilot@forsvaret.no', '$2a$12$m88vO3/D3M1oJlBOYT01DuiD9gTawkd/N6SIXKsLzh5ZJYhU3kWh.', '$2a$12$m88vO3/D3M1oJlBOYT01Du'),
+(4, 'pilot@politiet.no', '$2a$12$qLHFfrGcnL6YgU0wptsUouKRWYP85tXWfnSffEYRMFmCkJ0j7lOxi', '$2a$12$qLHFfrGcnL6YgU0wptsUou');
 
 -- --------------------------------------------------------
 
@@ -111,7 +120,7 @@ INSERT INTO `userAuth` (`userID`, `username`, `passHash`, `passSalt`) VALUES
 -- Table structure for table `userInfo`
 --
 
-DROP TABLE IF EXISTS `userInfo`;
+-- DROP TABLE IF EXISTS `userInfo`;
 CREATE TABLE IF NOT EXISTS `userInfo` (
   `userID` int(11) NOT NULL,
   `firstName` varchar(255) DEFAULT NULL,
@@ -142,7 +151,7 @@ INSERT INTO `userInfo` (`userID`, `firstName`, `lastName`, `email`, `phone`, `or
 -- Table structure for table `userRole`
 --
 
-DROP TABLE IF EXISTS `userRole`;
+-- DROP TABLE IF EXISTS `userRole`;
 CREATE TABLE IF NOT EXISTS `userRole` (
   `roleID` char(3) NOT NULL,
   `rolePermissions` enum('ADMIN','PILOT') NOT NULL,

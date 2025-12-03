@@ -1,0 +1,39 @@
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
+
+namespace NaviSafe.Models;
+
+public class ObstacleDataForm
+{
+    [Required(ErrorMessage = "Obstacle name is required")]
+    [MaxLength(100)]
+    public string shortDesc { get; set; } = string.Empty;
+    
+    //[Required(ErrorMessage = "Obstacle description is required")]
+    [MaxLength(1000)]
+    public string? longDesc { get; set; } = null;
+
+    public float? lat { get; set; } = null;
+
+    public float? lon { get; set; } = null;
+    
+    public string? geoJSON { get; set; } = null;
+    
+    //[Required(ErrorMessage = "Obstacle height is required")]
+    [Range(0.1, 1000.0, ErrorMessage = "Height must be between 0.1 and 1000.0 meters")]
+    public float? altitude { get; set; } = null;
+
+    public int? accuracy { get; set; } = null;
+
+    public string state { get; set; } = "Pending";
+    
+    public bool isSent { get; set; } = false;
+
+    public string? rejectComment { get; set; } = null;
+
+    // Property to bind uploaded image file from the form
+    public IFormFile? ImageFile { get; set; }
+
+    // When editing an existing draft, hold the currently stored image path so the view can show a preview
+    public string? ExistingImagePath { get; set; }
+}
