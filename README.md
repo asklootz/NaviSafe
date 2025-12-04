@@ -372,41 +372,62 @@ This test scenario assumes the following:
 •   The pilot is using an iOS Device with Safari or Google Chrome
 
 ### TS-01: Pilot obstacle report with pin
-- **Input**: Submit an obstacle with type, height, a description and a pin.
+
+- **Input**: Click on the "Draw a marker" button on the left of the map and place a pin. Then input type, height and a description
 - **Expected result**: The obstacle is submitted for review and a new report form is shown
 - **Actual result**: The obstacle is sent to the admin for review
 
 ---
 
 ### TS-02: Pilot obstacle report without pin
-- **Input**: Submit an Obstacle with Type, Height and Description but without pin
+
+- **Input**: Submit an Obstacle with Type, Height and Description but do not place a pin
 - **Expected result**: the helicopter’s live location will be used instead of the pin
 - **Actual result**: The helicopters live location is used and a report is successfully sent for review
 
 ---
 
-### TS-03: Pilot obstacle report with pin - without fields
-- **Input**: Submitting just a pin without any fields
-- **Expected result**: You must add an obstacle type before saving as draft or submitting the report
-- **Actual result**: Pressing submit takes you to the Obstacle Type section, where you must select a type
+### TS-03: Pilot saving obstacle as draft 
 
----
-
-### TS-04: Pilot adding a picture to the obstacle report
-- **input**: Upload or take a picture with the camera
-- **Expected result**: The picture is added to the report
-- **Actual result**: The picture is sucessfully added to the report 
-
----
-
-### TS-05: Pilot saving obstacle as draft 
-- **input**: Select and obstacle type and then save it as a draft
+- **Input**: Select an obstacle type and then save it as a draft
 - **Expected result**: The draft is saved in the my registrations tab
 - **Actual result**: The draft is saved and can be edited at a later point
 
 ---
 
-### TS-06: Verifying the location trackers' accuracy
+### TS-04: Pilot obstacle report with pin - without fields
+
+- **Input**: Click on the "Draw a marker" button on the left of the map and drop a pin, then submit without any fields
+- **Expected result**: Alert notifies you that you must add an obstacle type before saving as draft or submitting the report
+- **Actual result**: Pressing submit takes you to the Obstacle Type section, where you must select a type
+
+---
+
+### TS-05: Pilot adding a picture to the obstacle report
+
+- **Input**: Upload or take a picture with the camera/uploade buttons
+- **Expected result**: The picture is added to the report
+- **Actual result**: The picture is sucessfully added to the report 
+
+---
+
+### TS-06: Check the pilots own reports
+
+**Input**: Click the "my registrations" button
+**Expected result**: the my registration page is shown
+**actual result**: a list of the pilots registrations are shown
+
+---
+
+### TS-07: Edit a draft
+
+**Input**: Find the draft in "my registrations" and click edit draft
+**Expected result**: you can edit the draft
+**actual result**: you are sent to the registration form to complete the draft
+
+---
+
+### TS-08: Verifying the location trackers' accuracy
 Verify the location trackers' accuracy. Three devices were tested after the group noticed a difference in the accuracy of our devices and browsers. 
 
 **Expected results**: Tracker inaccuracy does not exceed 50 meters
@@ -421,81 +442,96 @@ Note that the group did not have any working iPads available, so an iPhone was u
 
 ---
 
-### TS-07: Verify the Administrators ability to approve obstacles
+### TS-09: Verify the Administrators ability to approve obstacles
 
-**Input**: View a pending report and change status to Approved/Published. Write a reason for the decision and press Update status.
+**Input**: Click "View Details" on a pending report and then "Pending Review". Change the status to Approved/Published, then write a reason for the decision and press Update status.
 **Expected results**: The obstacle is successfully approved, and becomes green to signify this.
 **Actual result**: The obstacle's status is changed to approved
 
 ---
 
-### TS-07: Verify the Administrators ability to reject obstacles
+### TS-10: Verify the Administrators ability or quick approve obstacles
 
-**input**: View a pending report and change its status to Rejected. Write a reason for the rejection and press Update status
+**Input**: Click "View details" on a pending report and then "quick approve"
+**Expected results**: The report is approved 
+**Actual result**: the report has been approved 
+
+---
+
+### TS-11: Verify the Administrators ability to reject obstacles
+
+**Input**: Click "View Details" on a pending report and then "Pending Review". Change the status to Rejected, then write a reason for the decision and press Update status.
 **Expected result**: The report is rejected
 **Actual result**: The report has been succesfully rejected 
 
 ---
 
-### TS-08: Verify the Administrator ability to sort reports by the approved status
+### TS-12: Verify the Administrators ability to quick reject
 
-**input**: Click the approved button on the admin dashboard 
+**Input**: Click "View Details" on a pending report and click quick reject
+**Expected Result**: The report is rejected
+**Actual result**: The report is rejected after a quick comment
+
+---
+
+### TS-13: Verify the Administrator ability to sort reports by the approved status
+
+**Input**: Click the "Approved" button near the top of the admin dashboard 
 **Expected result**: Only approved reports will show
 **Actual result**: Approved reports are the only ones displayed
 
 ---
 
-### TS-09:  Verify the Administrator ability to sort reports by the pending status
+### TS-14:  Verify the Administrator ability to sort reports by the pending status
 
-**input**: Click the pending review button on the admin dashboard 
+**Input**: Click the "Pending review" button near the top of the admin dashboard 
 **Expected result**: Only pending reports will show
 **Actual result**: pending reports are the only ones displayed
 
 ---
 
-### TS-09:  Verify the Administrator ability to sort reports by the rejected status
+### TS-15:  Verify the Administrator ability to sort reports by the rejected status
 
-**input**: Click the rejected button on the admin dashboard 
+**Input**: Click the "Rejected" button near the top of the admin dashboard 
 **Expected result**: Only rejected reports will show
 **Actual result**: rejected reports are the only ones displayed
 
 ---
 
-### TS-09:  Verify the Administrator ability to sort reports to total submitted reports
+### TS-16:  Verify the Administrator ability to sort reports to total submitted reports
 
-**input**: Click the total submitted reports button on the admin dashboard 
+**Input**: Click the "Total submitted reports" button near the top of the admin dashboard 
 **Expected result**: All reports will show
 **Actual result**: Every report is shown 
 
 ---
 
-### TS-10: Verify the administrators ability to view the obstacle report's image
+### TS-17: Verify the administrators ability to view the obstacle report's image
 
-**input** click the View button under the image tab
+**Input** Click the "View" button under the image tab
 **Expected result: The image is shown to the administrator
 **actual result**: The image is opened in a new tab, providig a clear view
 
 ---
 
-### TS-11: Verify the administrators ability to view reports on the map
+### TS-18: Verify the administrators ability to view reports on the map
 
-**input**: Click on show map view
+**Input**: Click on the "show map view"
 **Expected result**: A map with all obstacles is shown
 **Actual result**: A map is shown with all obstacles color coded by status
 
 ---
 
-### TS-12: Verify the administrators ability to view obstacle details on the map
+### TS-19: Verify the administrators ability to view obstacle details on the map
 
-**input** Click on an obstacle and then details
+**Input** Click on an obstacle on the map and then details
 **Expected result** Admin is taken to the report details & review page
 **Actual result** The admin is taken to the page for changing report status
 
+---
 
-
-
-
-
+### Login Test Case
+These Test Cases are meant to check that the login page functions as intended
 
 ### TC-01: Successful Login
 **Steps:**
