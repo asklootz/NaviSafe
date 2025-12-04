@@ -86,10 +86,10 @@ Use the following credentials to log in as a pilot user:
     - pilot@forsvaret.no
 - **Password**: *test123*
 
-From here, after you have logged in, you will arrive to the main dashboard.
+For pilots, you will arrive at the obstacle registration form, while Admins will arrive at the admin dashboard 
 
-### 2. Home Dashboard
-After a successful login, you should now have access the main dashboard. From here, you can navigate to **Register Obstacle**. 
+### 2. Admin Dashboard
+After a successful login, you should now have access the admin dashboard. Here you can view a list of reports, details about themo and approve/reject the obstacles. You can also sort them by ID, Date, Reporter and Status. Admins can also access a map with all of the reports, and register obstacles themselves 
 
 ### 3. Obstacle Registration
 1. Fill in **Obstacle Name** and **Obstacle Height**.
@@ -100,8 +100,8 @@ After that, you should be able to draw a marker on the map. Then **Coordinates P
 4. Click **Submit Data** - the data will be sent via `POST`to the API and stored in the MariaDB database. 
 5. After submitting data, you can select **Back To Home** and thus return to the main dashboard.
 
-### 4. Return to Home Dashboard and Logout
-You can also click on the **NaviSafe** name in order to return to your main dashboard. If you wish to logout, simply click on the **Logout** button.
+### 4. Pilots can enter "My registrations to logout and Admins can logout via their main dashboard 
+If you wish to logout, simply click on the **Logout** button.
 
 ---
 
@@ -212,8 +212,8 @@ Note that the group did not have any working iPads available, so an iPhone was u
 ### TS-12: Verify the Administrators ability to quick reject
 
 - **Input**: Click "View Details" on a pending report and click quick reject
-- **Expected Result**: The report is rejected
-- **Actual result**: The report is rejected after a quick comment
+- **Expected Result**: The report is rejected without needing to input a reason
+- **Actual result**: The report is rejected, and the reason is automatically put as "Quick Reject"
 
 ---
 
