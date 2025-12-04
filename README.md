@@ -363,43 +363,50 @@ You can also click on the **NaviSafe** name in order to return to your main dash
 ---
 
 ## Testing
-The objective of this **Test Scenario** is to verify that users can submit data, interact with the map, and have their location accurately tracked.
+The objective of this **Test Scenario** is to verify that pilots can submit data, interact with the map, and have their location accurately tracked. And that admins can manage and review reports
 
 Preconditions:
 This test scenario assumes the following:
-•   The pilot is logged in to their account
-•   The pilot has service
+•   The pilot/admin is logged in to their account
+•   The pilot/admin has service
 •   The pilot is using an iOS Device with Safari or Google Chrome
 
-### TS-01: Obstacle Registration with pin
+### TS-01: Pilot obstacle report with pin
 - **Input**: Submit an obstacle with type, height, a description and a pin.
-- **Expected result**: The obstacle is submitted and appears on the map
-- **Actual result**: The obstacle is displayed on the map
+- **Expected result**: The obstacle is submitted for review and a new report form is shown
+- **Actual result**: The obstacle is sent to the admin for review
 
 ---
 
-### TS-02: Obstacle Registration without pin
+### TS-02: Pilot obstacle report without pin
 - **Input**: Submit an Obstacle with Type, Height and Description but without pin
 - **Expected result**: the helicopter’s live location will be used instead of the pin
-- **Actual result**: Feature not available, the registration goes through; however, no marker on the map
+- **Actual result**: The helicopters live location is used and a report is successfully sent for review
 
 ---
 
-### TS-03: Obstacle Registration with pin - without fields
+### TS-03: Pilot obstacle report with pin - without fields
 - **Input**: Submitting just a pin without any fields
-- **Expected result**: a pin is dropped and the registration can be completed later
-- **Actual result**: Feature not available, you will be asked to fill the fields
+- **Expected result**: You must add an obstacle type before saving as draft or submitting the report
+- **Actual result**: Pressing submit takes you to the Obstacle Type section, where you must select a type
 
 ---
 
-### TS-04: Obstacle Registration - Drag and Drop a pin
-Drag and drop a pin on the map
-- **Expected result**: A pin is dropped on the map
-- **Actual result**: A pin is dropped on the map and the live tracker disappears
+### TS-04: Pilot adding a picture to the obstacle report  | FIX THIS LATER
+- **input**: Upload or take a picture with the camera
+- **Expected result**: The picture is added to the report
+- **Actual result**: 
 
 ---
 
-### TS-05: Verifying the location trackers' accuracy
+### TS-05: Pilot saving obstacle as draft 
+- **input** Select and obstacle type and then save it as a draft
+- 
+
+
+---
+
+### TS-06: Verifying the location trackers' accuracy
 Verify the location trackers' accuracy. Three devices were tested after the group noticed a difference in the accuracy of our devices and browsers. 
 
 **Expected results**: 
@@ -415,11 +422,19 @@ Note that the group did not have any working iPads available, so an iPhone was u
 
 ---
 
-### TS-01: Successful Login
+### TS-05: Admin Obstacle approve
+Verify the Administrators ability to approve obstacles
+
+**Expected results**
+- The obstacle is successfully approved, showing as green on the map
+
+---
+
+### TC-01: Successful Login
 **Steps:**
 1. Navigate to `/Account/Login`
-2. Enter email: `admin@navisafe.com`
-3. Enter password: `Admin123`
+2. Enter email: `admin@kartverket.no `
+3. Enter password: `admin123`
 4. Click "Login"
 
 **Expected Result:** Redirect to Home dashboard with authenticated session
@@ -428,10 +443,10 @@ Note that the group did not have any working iPads available, so an iPhone was u
 
 ---
 
-### TS-02: Invalid Data
+### TC-02: Invalid Data
 **Steps:**
 1. Navigate to `/Account/Login`
-2. Enter email: `admin@navisafe.com`
+2. Enter email: `admin@kartverket`
 3. Enter password: `WrongPassword`
 4. Click "Login"
 
@@ -441,7 +456,7 @@ Note that the group did not have any working iPads available, so an iPhone was u
 
 ---
 
-### TS-03: Empty Form Submission
+### TC-03: Empty Form Submission
 **Steps:**
 1. Navigate to `/Account/Login`
 2. Leave email and password fields empty
@@ -453,11 +468,11 @@ Note that the group did not have any working iPads available, so an iPhone was u
 
 ---
 
-### TS-04: Invalid Email Format
+### TC-04: Invalid Email Format
 **Steps:**
 1. Navigate to `/Account/Login`
 2. Enter email: `notanemail`
-3. Enter password: `Admin123`
+3. Enter password: `admin123`
 4. Click "Login"
 
 **Expected Result:** Email format validation error
@@ -466,7 +481,7 @@ Note that the group did not have any working iPads available, so an iPhone was u
 
 ---
 
-### TS-05: Session Consistency
+### TC-05: Session Consistency
 **Steps:**
 1. Login successfully
 2. Navigate to different pages
@@ -487,9 +502,6 @@ Note that the group did not have any working iPads available, so an iPhone was u
 **Expected Result:** Session cleared, redirected to login page
 
 **Actual Result:** Pass
-
-### TS-05: Sort the obstacle reports by Obstacle type
-
 
 ---
 
