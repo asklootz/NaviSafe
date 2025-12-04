@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using NaviSafe.Data;
 using System.Linq;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.StaticFiles;
 
 var builder = WebApplication.CreateBuilder(args);
 var enUs = new CultureInfo("en-US");
@@ -84,16 +85,6 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("IsAdmin", p => p.RequireRole("ADM"));
 });
 
-// builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme) MÅ SJEKKE
-//     .AddCookie(options =>
-//     {
-//         options.LoginPath = "/Account/Login";
-//         options.LogoutPath = "/Account/Logout";
-//         options.ExpireTimeSpan = TimeSpan.FromHours(8);
-//         options.SlidingExpiration = true;
-//     });
-
-
 // Add simple session support for login
 builder.Services.AddSession(options =>
 {
@@ -121,6 +112,28 @@ app.UseSession();
 app.UseRequestLocalization(requestLocalizationOptions);
 app.UseAuthentication();
 
+// Serve static files from wwwroot. Disable aggressive caching for image files so newly uploaded images are visible immediately.
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = ctx =>
+    {
+        var path = ctx.File?.PhysicalPath ?? string.Empty;
+        if (!string.IsNullOrEmpty(path))
+        {
+            if (path.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)
+                || path.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase)
+                || path.EndsWith(".png", StringComparison.OrdinalIgnoreCase)
+                || path.EndsWith(".gif", StringComparison.OrdinalIgnoreCase)
+                || path.EndsWith(".webp", StringComparison.OrdinalIgnoreCase))
+            {
+                ctx.Context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+                ctx.Context.Response.Headers["Pragma"] = "no-cache";
+                ctx.Context.Response.Headers["Expires"] = "0";
+            }
+        }
+    }
+});
+
 // Redirect unauthenticated users to the Login page for protected URLs
 app.Use(async (context, next) =>
 {
@@ -133,6 +146,7 @@ app.Use(async (context, next) =>
         "/Account/Login",
         "/Account/Register",
         "/Account/AccessDenied",
+        "/images",
         "/css/",
         "/js/",
         "/lib/",
