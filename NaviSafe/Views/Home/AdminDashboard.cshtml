@@ -438,10 +438,8 @@
             });
 
             $(document).on('click', '#quickRejectBtn', function() {
-                const reason = prompt('Reason for rejection:');
-                if (reason && reason.trim()) {
-                    updateReportStatus(currentReportId, 'REJECTED', reason);
-                }
+                const defaultreason = 'Quick rejection';
+                updateReportStatus(currentReportId, 'REJECTED', defaultreason);
             });
 
             // Show Map Modal
