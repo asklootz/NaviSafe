@@ -10,14 +10,14 @@ It connects tablet users in the field with a central orchestration layer, API se
 ## Table of Contents
 - [About](#-about)
 - [Contributors](#-contributors)
+- [Getting Started](#-getting-started)
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [Testing](#-testing)
 - [Architecture](#-architecture)
 - [Features](#-features)
 - [Tech Stack](#-tech-stack)
 - [Components](#-components)
-- [Getting Started](#-getting-started)
-- [Usage](#-usage)
-- [Testing](#-testing)
-- [Installation](#-installation)
 - [Security](#-security-)
 - [Use of external resources](#-use-of-external-resources)
 
@@ -40,6 +40,384 @@ The founding members of NaviSafe from Group 9 consists of:
 - *Synne Kyrkjebø*
 - *André Abrahamsen*
 - *Rikke Krauss*
+
+---
+
+## Getting Started
+
+### Prerequisites
+Make sure you have:
+- [.NET SDK 9.0+](https://dotnet.microsoft.com/)
+- [Docker](https://www.docker.com/)
+- [Git](https://git-scm.com/)
+
+---
+
+## Installation
+Clone and set up the project:
+
+```bash
+git clone https://github.com/asklootz/NaviSafe.git
+cd NaviSafe
+dotnet restore
+```
+If you want to run it with https, you need to set up a self-signed certificate.
+```bash
+dotnet dev-certs https --trust
+```
+
+---
+
+## Usage
+
+### 1. Login
+Visit http://localhost:8080 to access the login page. 
+
+#### Admin 
+Use the following credentials to log in as an admin user:
+- **Email**: *admin@kartverket.no*
+- **Password**: *admin123*
+
+#### Pilot users
+Use the following credentials to log in as a pilot user:
+- **Email**:
+    - pilot@nla.no
+    - pilot@politiet.no
+    - pilot@forsvaret.no
+- **Password**: *test123*
+
+For pilots, you will arrive at the obstacle registration form, while Admins will arrive at the admin dashboard 
+
+### 2. Admin Dashboard
+After a successful login, you should now have access the admin dashboard. Here you can view a list of reports, details about themo and approve/reject the obstacles. You can also sort them by ID, Date, Reporter and Status. Admins can also access a map with all of the reports, and register obstacles themselves 
+
+### 3. Obstacle Registration
+1. Fill in **Obstacle Name** and **Obstacle Height**.
+2. Add a **Description** with details about the obstacle.
+3. Select the location of the map (powered by OpenStreetMap + Leaflet). You will receive a pop-up notification whether you will allow to turn on location or not.
+After that, you should be able to draw a marker on the map. Then **Coordinates Preview** will pinpoint your coordinates in terms of longitude and latitude, while 
+**Live coordinates** tracks your location with described coordinates in realtime. 
+4. Click **Submit Data** - the data will be sent via `POST`to the API and stored in the MariaDB database. 
+5. After submitting data, you can select **Back To Home** and thus return to the main dashboard.
+
+### 4. Pilots can enter "My registrations to logout and Admins can logout via their main dashboard 
+If you wish to logout, simply click on the **Logout** button.
+
+---
+
+## Testing
+The objective of this **Test Scenario** is to verify that pilots can submit data, interact with the map, and have their location accurately tracked. And that admins can manage and review reports
+
+Preconditions:
+This test scenario assumes the following:
+•   The pilot/admin is logged in to their account
+•   The pilot/admin has service
+•   The pilot is using an iOS Device with Safari or Google Chrome
+
+### TS-01: Pilot obstacle report with pin
+
+- **Input**: Click on the "Draw a marker" button on the left of the map and place a pin. Then input type, height and a description
+- **Expected result**: The obstacle is submitted for review and a new report form is shown
+- **Actual result**: The obstacle is sent to the admin for review
+
+---
+
+### TS-02: Pilot obstacle report without pin
+
+- **Input**: Submit an Obstacle with Type, Height and Description but do not place a pin
+- **Expected result**: the helicopter’s live location will be used instead of the pin
+- **Actual result**: The helicopters live location is used and a report is successfully sent for review
+
+---
+
+### TS-03: Pilot saving obstacle as draft 
+
+- **Input**: Select an obstacle type and then save it as a draft
+- **Expected result**: The draft is saved in the my registrations tab
+- **Actual result**: The draft is saved and can be edited at a later point
+
+---
+
+### TS-04: Pilot obstacle report with pin - without fields
+
+- **Input**: Click on the "Draw a marker" button on the left of the map and drop a pin, then submit without any fields
+- **Expected result**: Alert notifies you that you must add an obstacle type before saving as draft or submitting the report
+- **Actual result**: Pressing submit takes you to the Obstacle Type section, where you must select a type
+
+---
+
+### TS-05: Pilot adding a picture to the obstacle report
+
+- **Input**: Upload or take a picture with the camera/uploade buttons
+- **Expected result**: The picture is added to the report
+- **Actual result**: The picture is sucessfully added to the report 
+
+---
+
+### TS-06: Check the pilots own reports
+
+- **Input**: Click the "my registrations" button
+- **Expected result**: the my registration page is shown
+- **actual result**: a list of the pilots registrations are shown
+
+---
+
+### TS-07: Edit a draft
+
+- **Input**: Find the draft in "my registrations" and click edit draft
+- **Expected result**: you can edit the draft
+- **actual result**: you are sent to the registration form to complete the draft
+
+---
+
+### TS-08: Verifying the location trackers' accuracy
+Verify the location trackers' accuracy. Three devices were tested after the group noticed a difference in the accuracy of our devices and browsers. 
+
+**Expected results**: Tracker inaccuracy does not exceed 50 meters
+
+**Actual results**: 
+- iPhone 14 Plus’s accuracy constantly changed between 5-31 Meters
+- Windows 11 Laptop was tested with Opera GX, giving either 4911 or 22.5 meters and Google Chrome with 128 Meters of inaccuracy
+- MacBook M1 Pro had an accuracy of 35 Meters
+
+The iPhone 14 Plus and MacBook's results are satisfactory, while the laptop's range was too unstable.
+Note that the group did not have any working iPads available, so an iPhone was used as a substitute
+
+---
+
+### TS-09: Verify the Administrators ability to approve obstacles
+
+- **Input**: Click "View Details" on a pending report and then "Pending Review". Change the status to Approved/Published, then write a reason for the decision and press Update status.
+- **Expected results**: The obstacle is successfully approved, and becomes green to signify this.
+- **Actual result**: The obstacle's status is changed to approved
+
+---
+
+### TS-10: Verify the Administrators ability or quick approve obstacles
+
+- **Input**: Click "View details" on a pending report and then "quick approve"
+- **Expected results**: The report is approved 
+- **Actual result**: the report has been approved 
+
+---
+
+### TS-11: Verify the Administrators ability to reject obstacles
+
+- **Input**: Click "View Details" on a pending report and then "Pending Review". Change the status to Rejected, then write a reason for the decision and press Update status.
+- **Expected result**: The report is rejected
+- **Actual result**: The report has been succesfully rejected 
+
+---
+
+### TS-12: Verify the Administrators ability to quick reject
+
+- **Input**: Click "View Details" on a pending report and click quick reject
+- **Expected Result**: The report is rejected without needing to input a reason
+- **Actual result**: The report is rejected, and the reason is automatically put as "Quick Reject"
+
+---
+
+### TS-13: Verify the Administrator ability to sort reports by the approved status
+
+- **Input**: Click the "Approved" button near the top of the admin dashboard 
+- **Expected result**: Only approved reports will show
+- **Actual result**: Approved reports are the only ones displayed
+
+---
+
+### TS-14:  Verify the Administrator ability to sort reports by the pending status
+
+- **Input**: Click the "Pending review" button near the top of the admin dashboard 
+- **Expected result**: Only pending reports will show
+- **Actual result**: pending reports are the only ones displayed
+
+---
+
+### TS-15:  Verify the Administrator ability to sort reports by the rejected status
+
+- **Input**: Click the "Rejected" button near the top of the admin dashboard 
+- **Expected result**: Only rejected reports will show
+- **Actual result**: rejected reports are the only ones displayed
+
+---
+
+### TS-16:  Verify the Administrator ability to sort reports to total submitted reports
+
+- **Input**: Click the "Total submitted reports" button near the top of the admin dashboard 
+- **Expected result**: All reports will show
+- **Actual result**: Every report is shown 
+
+---
+
+### TS-17: Verify the administrators ability to view the obstacle report's image
+
+- **Input** Click the "View" button under the image tab
+- **Expected result: The image is shown to the administrator
+- **actual result**: The image is opened in a new tab, providig a clear view
+
+---
+
+### TS-18: Verify the administrators ability to view reports on the map
+
+- **Input**: Click on the "show map view"
+- **Expected result**: A map with all obstacles is shown
+- **Actual result**: A map is shown with all obstacles color coded by status
+
+---
+
+### TS-19: Verify the administrators ability to view obstacle details on the map
+
+- **Input** Click on an obstacle on the map and then details
+- **Expected result** Admin is taken to the report details & review page
+- **Actual result** The admin is taken to the page for changing report status
+
+---
+
+### Login Test Case
+These Test Cases are meant to check that the login page functions as intended
+
+### TC-01: Creating an account
+**Steps**
+1. Navigate to 'Account/Login'
+2. Click "Create an account"
+3. Fill in the details
+4. Click Register
+
+**Expected result**: A new account is created
+
+**Actual Result**: Pass
+
+---
+
+### TC-02: Successful Login
+**Steps:**
+1. Navigate to `/Account/Login`
+2. Enter email: `admin@kartverket.no `
+3. Enter password: `admin123`
+4. Click "Login"
+
+**Expected Result:** Redirect to Home dashboard with authenticated session
+
+**Actual Result:** Pass
+
+---
+
+### TC-03: Invalid Data
+**Steps:**
+1. Navigate to `/Account/Login`
+2. Enter email: `admin@kartverket`
+3. Enter password: `WrongPassword`
+4. Click "Login"
+
+**Expected Result:** Error message "Invalid email or password" displayed
+
+**Actual Result:** Pass
+
+---
+
+### TC-04: Empty Form Submission
+**Steps:**
+1. Navigate to `/Account/Login`
+2. Leave email and password fields empty
+3. Click "Login"
+
+**Expected Result:** Validation errors for required fields
+
+**Actual Result:** Pass
+
+---
+
+### TC-05: Invalid Email Format
+**Steps:**
+1. Navigate to `/Account/Login`
+2. Enter email: `notanemail`
+3. Enter password: `admin123`
+4. Click "Login"
+
+**Expected Result:** Email format validation error
+
+**Actual Result:** Pass
+
+---
+
+### TC-06: Session Consistency
+**Steps:**
+1. Login successfully
+2. Navigate to different pages
+3. Check session data remains intact
+
+**Expected Result:** User remains authenticated across page navigation
+
+**Actual Result:** Pass
+
+---
+
+#### TC-07: Logout Functionality
+**Steps:**
+1. Login successfully
+2. Click "Logout" button
+3. Try accessing protected pages
+
+**Expected Result:** Session cleared, redirected to login page
+
+**Actual Result:** Pass
+
+---
+
+## User Tests
+
+To determine how intuitive and user friendly the web application is, we conducted a test with two people from outside the group. Several tasks were prepared for the testers to attempt
+
+### Test 1: Please report an obstacle with a pin
+
+- **User 1**: Located the "Draw a Marker" button and used it to set a pin. He then filled im the Obstacles type, a short description and then a height
+- **User 2**: First attemped to right click on the map like you do with google maps, and when this failed he used the "Draw a Marker button" soon after. This user also submitted a picture 
+
+---
+
+### Test 2: Please report an obstacle without using a pin
+
+- **User 1**: Noticed that the Live marker was active the moment he started the form, he then filled the relevant fields and submitted
+- **User 2**: Also noticed how the Live marker was already in use, filled in only the required information before sending
+
+---
+
+### Test 3: Please create a draft, and then complete it
+
+- **User 1**: After creating a draft, this user found their way to the "My registration" page where he saw his own draft. The user then completed his draft
+- **User 2**: The user created their draft and also found their way to the "My registration" Page, as there were not many other places to go. He then completed his draft
+
+---
+
+## The users were then redirected to the admin page 
+
+### Test 4: Please approve a report
+
+- **User 1**: This user quickly found his wait to the "Reports & Review page" via the "View Details" button and used the "Quick Approve" feature
+- **User 2**: User 2 also found the page easily, but he instead clicked on the "Pending Review" Button and put it on Approved/Published. He then tried to approve the report, but was prompted to write a reason before approving
+
+This showed that the approval process wasnt the most intuitive part of our application
+
+---
+
+### Test 5: Please deny a request
+
+- **User 1**: Clicked the "View Details" button again and used the Quick Reject feature
+- **User 2**: He went again to the "Pending Review" Button, changed it to rejected and then wrote a reason before updating
+
+---
+
+### Please sort the reports by their different statuses
+
+- **User 1**: Clicked on the "Approved" Button, before moving on to "Rejected" and "Pending Review"
+- **User 2**: This user also found the buttons quite easily, moving from "Rejected" to "Approved into "Pending Review" before finally settling at "Total submitted reports"
+
+---
+
+### Please look at the map and find an obstacle to inspect
+
+- **User 1**: The user found his way to the map section and clicked on one of the rejected reports. He viewed the image and then clicked "View details", sending him back to the "Report Details & Overview" page
+- **User 2**: The second user found his way to the map rather quickly, he then zoomed out to see the whole map. The user then selected an obstacle to the north, and since it had no image he clicked on "View details"
 
 ---
 
@@ -87,15 +465,6 @@ The solution employs a robust data persistence strategy centered around **MariaD
     - **Auto-Detection:** Implements `ServerVersion.AutoDetect` to dynamically configure features based on the specific MariaDB version running in the container.
     - **Service Integration:** Explicitly registers a named `MySqlDataSource` ("mariaDatabase"). This pattern supports .NET service defaults, enabling automatic health checks and standardized metrics collection.
 - **Resilience:** The startup configuration includes fallback logic (prioritizing `mariaDatabase` over `DefaultConnection`) to ensure the application connects reliably whether running locally or within the Docker Compose orchestration.
-
-### Importing Database
-
-In order to set up the accounts you need to import the mariaDatabase SQL Source file:
-1. Clone the repository
-2. Open File explorer and navigate C:\NaviSafe\NaviSafe and find the **mariaDatabase** SQL Source file
-3. Copy the file
-4. Open Phpmyadmin and click Import
-5. Import the file
 
 --- 
 
@@ -312,199 +681,6 @@ Encapsulate business logic and data access to keep controllers lightweight.
 - Session management
 - Input validation
 - Security token verification
-
----
-
-## Getting Started
-
-### Prerequisites
-Make sure you have:
-- [.NET SDK 9.0+](https://dotnet.microsoft.com/)
-- [Docker](https://www.docker.com/)
-- [Git](https://git-scm.com/)
-
----
-
-## Usage
-
-### 1. Login
-Visit http://localhost:8080 to access the login page. 
-
-#### Admin 
-Use the following credentials to log in as an admin user:
-- **Email**: *admin@kartverket.no*
-- **Password**: *admin123*
-
-#### Pilot users
-Use the following credentials to log in as a pilot user:
-- **Email**:
-    - pilot@nla.no
-    - pilot@politiet.no
-    - pilot@forsvaret.no
-- **Password**: *test123*
-
-From here, after you have logged in, you will arrive to the main dashboard.
-
-### 2. Home Dashboard
-After a successful login, you should now have access the main dashboard. From here, you can navigate to **Register Obstacle**. 
-
-### 3. Obstacle Registration
-1. Fill in **Obstacle Name** and **Obstacle Height**.
-2. Add a **Description** with details about the obstacle.
-3. Select the location of the map (powered by OpenStreetMap + Leaflet). You will receive a pop-up notification whether you will allow to turn on location or not.
-After that, you should be able to draw a marker on the map. Then **Coordinates Preview** will pinpoint your coordinates in terms of longitude and latitude, while 
-**Live coordinates** tracks your location with described coordinates in realtime. 
-4. Click **Submit Data** - the data will be sent via `POST`to the API and stored in the MariaDB database. 
-5. After submitting data, you can select **Back To Home** and thus return to the main dashboard.
-
-### 4. Return to Home Dashboard and Logout
-You can also click on the **NaviSafe** name in order to return to your main dashboard. If you wish to logout, simply click on the **Logout** button.
-
----
-
-## Testing
-The objective of this **Test Scenario** is to verify that users can submit data, interact with the map, and have their location accurately tracked.
-
-Preconditions:
-This test scenario assumes the following:
-•   The pilot is logged in to their account
-•   The pilot has service
-•   The pilot is using an iOS Device with Safari or Google Chrome
-
-### TS-01: Obstacle Registration with pin
-- **Input**: Submit an obstacle with type, height, a description and a pin.
-- **Expected result**: The obstacle is submitted and appears on the map
-- **Actual result**: The obstacle is displayed on the map
-
----
-
-### TS-02: Obstacle Registration without pin
-- **Input**: Submit an Obstacle with Type, Height and Description but without pin
-- **Expected result**: the helicopter’s live location will be used instead of the pin
-- **Actual result**: Feature not available, the registration goes through; however, no marker on the map
-
----
-
-### TS-03: Obstacle Registration with pin - without fields
-- **Input**: Submitting just a pin without any fields
-- **Expected result**: a pin is dropped and the registration can be completed later
-- **Actual result**: Feature not available, you will be asked to fill the fields
-
----
-
-### TS-04: Obstacle Registration - Drag and Drop a pin
-Drag and drop a pin on the map
-- **Expected result**: A pin is dropped on the map
-- **Actual result**: A pin is dropped on the map and the live tracker disappears
-
----
-
-### TS-05: Verifying the location trackers' accuracy
-Verify the location trackers' accuracy. Three devices were tested after the group noticed a difference in the accuracy of our devices and browsers. 
-
-**Expected results**: 
-- Tracker inaccuracy does not exceed 50 meters
-
-**Actual results**: 
-- iPhone 14 Plus’s accuracy constantly changed between 5-31 Meters
-- Windows 11 Laptop was tested with Opera GX, giving either 4911 or 22.5 meters and Google Chrome with 128 Meters of inaccuracy
-- MacBook M1 Pro had an accuracy of 35 Meters
-
-The iPhone 14 Plus and MacBook's results are satisfactory, while the laptop's range was too unstable.
-Note that the group did not have any working iPads available, so an iPhone was used as a substitute
-
----
-
-### TS-01: Successful Login
-**Steps:**
-1. Navigate to `/Account/Login`
-2. Enter email: `admin@navisafe.com`
-3. Enter password: `Admin123`
-4. Click "Login"
-
-**Expected Result:** Redirect to Home dashboard with authenticated session
-
-**Actual Result:** Pass
-
----
-
-### TS-02: Invalid Data
-**Steps:**
-1. Navigate to `/Account/Login`
-2. Enter email: `admin@navisafe.com`
-3. Enter password: `WrongPassword`
-4. Click "Login"
-
-**Expected Result:** Error message "Invalid email or password" displayed
-
-**Actual Result:** Pass
-
----
-
-### TS-03: Empty Form Submission
-**Steps:**
-1. Navigate to `/Account/Login`
-2. Leave email and password fields empty
-3. Click "Login"
-
-**Expected Result:** Validation errors for required fields
-
-**Actual Result:** Pass
-
----
-
-### TS-04: Invalid Email Format
-**Steps:**
-1. Navigate to `/Account/Login`
-2. Enter email: `notanemail`
-3. Enter password: `Admin123`
-4. Click "Login"
-
-**Expected Result:** Email format validation error
-
-**Actual Result:** Pass
-
----
-
-### TS-05: Session Consistency
-**Steps:**
-1. Login successfully
-2. Navigate to different pages
-3. Check session data remains intact
-
-**Expected Result:** User remains authenticated across page navigation
-
-**Actual Result:** Pass
-
----
-
-#### TC-06: Logout Functionality
-**Steps:**
-1. Login successfully
-2. Click "Logout" button
-3. Try accessing protected pages
-
-**Expected Result:** Session cleared, redirected to login page
-
-**Actual Result:** Pass
-
-### TS-05: Sort the obstacle reports by Obstacle type
-
-
----
-
-## Installation
-Clone and set up the project:
-
-```bash
-git clone https://github.com/asklootz/NaviSafe.git
-cd NaviSafe
-dotnet restore
-```
-If you want to run it with https, you need to set up a self-signed certificate.
-```bash
-dotnet dev-certs https --trust
-```
 
 ---
 
