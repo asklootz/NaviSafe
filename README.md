@@ -413,17 +413,17 @@ This test scenario assumes the following:
 
 ### TS-06: Check the pilots own reports
 
-**Input**: Click the "my registrations" button
-**Expected result**: the my registration page is shown
-**actual result**: a list of the pilots registrations are shown
+- **Input**: Click the "my registrations" button
+- **Expected result**: the my registration page is shown
+- **actual result**: a list of the pilots registrations are shown
 
 ---
 
 ### TS-07: Edit a draft
 
-**Input**: Find the draft in "my registrations" and click edit draft
-**Expected result**: you can edit the draft
-**actual result**: you are sent to the registration form to complete the draft
+- **Input**: Find the draft in "my registrations" and click edit draft
+- **Expected result**: you can edit the draft
+- **actual result**: you are sent to the registration form to complete the draft
 
 ---
 
@@ -444,89 +444,89 @@ Note that the group did not have any working iPads available, so an iPhone was u
 
 ### TS-09: Verify the Administrators ability to approve obstacles
 
-**Input**: Click "View Details" on a pending report and then "Pending Review". Change the status to Approved/Published, then write a reason for the decision and press Update status.
-**Expected results**: The obstacle is successfully approved, and becomes green to signify this.
-**Actual result**: The obstacle's status is changed to approved
+- **Input**: Click "View Details" on a pending report and then "Pending Review". Change the status to Approved/Published, then write a reason for the decision and press Update status.
+- **Expected results**: The obstacle is successfully approved, and becomes green to signify this.
+- **Actual result**: The obstacle's status is changed to approved
 
 ---
 
 ### TS-10: Verify the Administrators ability or quick approve obstacles
 
-**Input**: Click "View details" on a pending report and then "quick approve"
-**Expected results**: The report is approved 
-**Actual result**: the report has been approved 
+- **Input**: Click "View details" on a pending report and then "quick approve"
+- **Expected results**: The report is approved 
+- **Actual result**: the report has been approved 
 
 ---
 
 ### TS-11: Verify the Administrators ability to reject obstacles
 
-**Input**: Click "View Details" on a pending report and then "Pending Review". Change the status to Rejected, then write a reason for the decision and press Update status.
-**Expected result**: The report is rejected
-**Actual result**: The report has been succesfully rejected 
+- **Input**: Click "View Details" on a pending report and then "Pending Review". Change the status to Rejected, then write a reason for the decision and press Update status.
+- **Expected result**: The report is rejected
+- **Actual result**: The report has been succesfully rejected 
 
 ---
 
 ### TS-12: Verify the Administrators ability to quick reject
 
-**Input**: Click "View Details" on a pending report and click quick reject
-**Expected Result**: The report is rejected
-**Actual result**: The report is rejected after a quick comment
+- **Input**: Click "View Details" on a pending report and click quick reject
+- **Expected Result**: The report is rejected
+- **Actual result**: The report is rejected after a quick comment
 
 ---
 
 ### TS-13: Verify the Administrator ability to sort reports by the approved status
 
-**Input**: Click the "Approved" button near the top of the admin dashboard 
-**Expected result**: Only approved reports will show
-**Actual result**: Approved reports are the only ones displayed
+- **Input**: Click the "Approved" button near the top of the admin dashboard 
+- **Expected result**: Only approved reports will show
+- **Actual result**: Approved reports are the only ones displayed
 
 ---
 
 ### TS-14:  Verify the Administrator ability to sort reports by the pending status
 
-**Input**: Click the "Pending review" button near the top of the admin dashboard 
-**Expected result**: Only pending reports will show
-**Actual result**: pending reports are the only ones displayed
+- **Input**: Click the "Pending review" button near the top of the admin dashboard 
+- **Expected result**: Only pending reports will show
+- **Actual result**: pending reports are the only ones displayed
 
 ---
 
 ### TS-15:  Verify the Administrator ability to sort reports by the rejected status
 
-**Input**: Click the "Rejected" button near the top of the admin dashboard 
-**Expected result**: Only rejected reports will show
-**Actual result**: rejected reports are the only ones displayed
+- **Input**: Click the "Rejected" button near the top of the admin dashboard 
+- **Expected result**: Only rejected reports will show
+- **Actual result**: rejected reports are the only ones displayed
 
 ---
 
 ### TS-16:  Verify the Administrator ability to sort reports to total submitted reports
 
-**Input**: Click the "Total submitted reports" button near the top of the admin dashboard 
-**Expected result**: All reports will show
-**Actual result**: Every report is shown 
+- **Input**: Click the "Total submitted reports" button near the top of the admin dashboard 
+- **Expected result**: All reports will show
+- **Actual result**: Every report is shown 
 
 ---
 
 ### TS-17: Verify the administrators ability to view the obstacle report's image
 
-**Input** Click the "View" button under the image tab
-**Expected result: The image is shown to the administrator
-**actual result**: The image is opened in a new tab, providig a clear view
+- **Input** Click the "View" button under the image tab
+- **Expected result: The image is shown to the administrator
+- **actual result**: The image is opened in a new tab, providig a clear view
 
 ---
 
 ### TS-18: Verify the administrators ability to view reports on the map
 
-**Input**: Click on the "show map view"
-**Expected result**: A map with all obstacles is shown
-**Actual result**: A map is shown with all obstacles color coded by status
+- **Input**: Click on the "show map view"
+- **Expected result**: A map with all obstacles is shown
+- **Actual result**: A map is shown with all obstacles color coded by status
 
 ---
 
 ### TS-19: Verify the administrators ability to view obstacle details on the map
 
-**Input** Click on an obstacle on the map and then details
-**Expected result** Admin is taken to the report details & review page
-**Actual result** The admin is taken to the page for changing report status
+- **Input** Click on an obstacle on the map and then details
+- **Expected result** Admin is taken to the report details & review page
+- **Actual result** The admin is taken to the page for changing report status
 
 ---
 
@@ -605,6 +605,63 @@ These Test Cases are meant to check that the login page functions as intended
 **Expected Result:** Session cleared, redirected to login page
 
 **Actual Result:** Pass
+
+---
+
+## User Tests
+
+To determine how intuitive and user friendly the web application is, we conducted a test with two people from outside the group. Several tasks were prepared for the testers to attempt
+
+### Test 1: Please report an obstacle with a pin
+
+- **User 1**: Located the "Draw a Marker" button and used it to set a pin. He then filled im the Obstacles type, a short description and then a height
+- **User 2**: First attemped to right click on the map like you do with google maps, and when this failed he used the "Draw a Marker button" soon after. This user also submitted a picture 
+
+---
+
+### Test 2: Please report an obstacle without using a pin
+
+- **User 1**: Noticed that the Live marker was active the moment he started the form, he then filled the relevant fields and submitted
+- **User 2**: Also noticed how the Live marker was already in use, filled in only the required information before sending
+
+---
+
+### Test 3: Please create a draft, and then complete it
+
+- **User 1**: After creating a draft, this user found their way to the "My registration" page where he saw his own draft. The user then completed his draft
+- **User 2**: The user created their draft and also found their way to the "My registration" Page, as there were not many other places to go. He then completed his draft
+
+---
+
+## The users were then redirected to the admin page 
+
+### Test 4: Please approve a report
+
+- **User 1**: This user quickly found his wait to the "Reports & Review page" via the "View Details" button and used the "Quick Approve" feature
+- **User 2**: User 2 also found the page easily, but he instead clicked on the "Pending Review" Button and put it on Approved/Published. He then tried to approve the report, but was prompted to write a reason before approving
+
+This showed that the approval process wasnt the most intuitive part of our application
+
+---
+
+### Test 5: Please deny a request
+
+- **User 1**: Clicked the "View Details" button again and used the Quick Reject feature
+- **User 2**: He went again to the "Pending Review" Button, changed it to rejected and then wrote a reason before updating
+
+---
+
+### Please sort the reports by their different statuses
+
+- **User 1**: Clicked on the "Approved" Button, before moving on to "Rejected" and "Pending Review"
+- **User 2**: This user also found the buttons quite easily, moving from "Rejected" to "Approved into "Pending Review" before finally settling at "Total submitted reports"
+
+---
+
+### Please look at the map and find an obstacle to inspect
+
+- **User 1**: The user found his way to the map section and clicked on one of the rejected reports. He viewed the image and then clicked "View details", sending him back to the "Report Details & Overview" page
+- **User 2**: The second user found his way to the map rather quickly, he then zoomed out to see the whole map. The user then selected an obstacle to the north, and since it had no image he clicked on "View details"
 
 ---
 
