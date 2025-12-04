@@ -1,0 +1,33 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: NaviSafe/Dockerfile
+    container_name: navisafe_app
+    volumes:
+      - ../NaviSafe:/app
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_URLS: "http://0.0.0.0:8080"
+    restart: unless-stopped
+
+  playwright:
+    image: mcr.microsoft.com/playwright:v1.45.0-jammy
+    container_name: navisafe_playwright
+    working_dir: /tests
+    volumes:
+      - ./tests:/tests
+    depends_on:
+      - app
+    command: ["npx", "playwright", "test"]
+
+  k6:
+    image: grafana/k6
+    container_name: navisafe_k6
+    working_dir: /k6
+    volumes:
+      - ./k6:/k6
+    depends_on:
+      - app
+    command: ["run", "stress.js"]
