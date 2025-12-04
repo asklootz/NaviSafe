@@ -276,7 +276,20 @@ Note that the group did not have any working iPads available, so an iPhone was u
 ### Login Test Case
 These Test Cases are meant to check that the login page functions as intended
 
-### TC-01: Successful Login
+### TC-01: Creating an account
+**Steps**
+1. Navigate to 'Account/Login'
+2. Click "Create an account"
+3. Fill in the details
+4. Click Register
+
+**Expected result**: A new account is created
+
+**Actual Result**: Pass
+
+---
+
+### TC-02: Successful Login
 **Steps:**
 1. Navigate to `/Account/Login`
 2. Enter email: `admin@kartverket.no `
@@ -289,7 +302,7 @@ These Test Cases are meant to check that the login page functions as intended
 
 ---
 
-### TC-02: Invalid Data
+### TC-03: Invalid Data
 **Steps:**
 1. Navigate to `/Account/Login`
 2. Enter email: `admin@kartverket`
@@ -302,7 +315,7 @@ These Test Cases are meant to check that the login page functions as intended
 
 ---
 
-### TC-03: Empty Form Submission
+### TC-04: Empty Form Submission
 **Steps:**
 1. Navigate to `/Account/Login`
 2. Leave email and password fields empty
@@ -314,7 +327,7 @@ These Test Cases are meant to check that the login page functions as intended
 
 ---
 
-### TC-04: Invalid Email Format
+### TC-05: Invalid Email Format
 **Steps:**
 1. Navigate to `/Account/Login`
 2. Enter email: `notanemail`
@@ -327,7 +340,7 @@ These Test Cases are meant to check that the login page functions as intended
 
 ---
 
-### TC-05: Session Consistency
+### TC-06: Session Consistency
 **Steps:**
 1. Login successfully
 2. Navigate to different pages
@@ -339,7 +352,7 @@ These Test Cases are meant to check that the login page functions as intended
 
 ---
 
-#### TC-06: Logout Functionality
+#### TC-07: Logout Functionality
 **Steps:**
 1. Login successfully
 2. Click "Logout" button
