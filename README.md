@@ -392,25 +392,24 @@ This test scenario assumes the following:
 
 ---
 
-### TS-04: Pilot adding a picture to the obstacle report  | FIX THIS LATER
+### TS-04: Pilot adding a picture to the obstacle report
 - **input**: Upload or take a picture with the camera
 - **Expected result**: The picture is added to the report
-- **Actual result**: 
+- **Actual result**: The picture is sucessfully added to the report 
 
 ---
 
 ### TS-05: Pilot saving obstacle as draft 
-- **input** Select and obstacle type and then save it as a draft
-- 
-
+- **input**: Select and obstacle type and then save it as a draft
+- **Expected result**: The draft is saved in the my registrations tab
+- **Actual result**: The draft is saved and can be edited at a later point
 
 ---
 
 ### TS-06: Verifying the location trackers' accuracy
 Verify the location trackers' accuracy. Three devices were tested after the group noticed a difference in the accuracy of our devices and browsers. 
 
-**Expected results**: 
-- Tracker inaccuracy does not exceed 50 meters
+**Expected results**: Tracker inaccuracy does not exceed 50 meters
 
 **Actual results**: 
 - iPhone 14 Plus’s accuracy constantly changed between 5-31 Meters
@@ -422,13 +421,81 @@ Note that the group did not have any working iPads available, so an iPhone was u
 
 ---
 
-### TS-05: Admin Obstacle approve
-Verify the Administrators ability to approve obstacles
+### TS-07: Verify the Administrators ability to approve obstacles
 
-**Expected results**
-- The obstacle is successfully approved, showing as green on the map
+**Input**: View a pending report and change status to Approved/Published. Write a reason for the decision and press Update status.
+**Expected results**: The obstacle is successfully approved, and becomes green to signify this.
+**Actual result**: The obstacle's status is changed to approved
 
 ---
+
+### TS-07: Verify the Administrators ability to reject obstacles
+
+**input**: View a pending report and change its status to Rejected. Write a reason for the rejection and press Update status
+**Expected result**: The report is rejected
+**Actual result**: The report has been succesfully rejected 
+
+---
+
+### TS-08: Verify the Administrator ability to sort reports by the approved status
+
+**input**: Click the approved button on the admin dashboard 
+**Expected result**: Only approved reports will show
+**Actual result**: Approved reports are the only ones displayed
+
+---
+
+### TS-09:  Verify the Administrator ability to sort reports by the pending status
+
+**input**: Click the pending review button on the admin dashboard 
+**Expected result**: Only pending reports will show
+**Actual result**: pending reports are the only ones displayed
+
+---
+
+### TS-09:  Verify the Administrator ability to sort reports by the rejected status
+
+**input**: Click the rejected button on the admin dashboard 
+**Expected result**: Only rejected reports will show
+**Actual result**: rejected reports are the only ones displayed
+
+---
+
+### TS-09:  Verify the Administrator ability to sort reports to total submitted reports
+
+**input**: Click the total submitted reports button on the admin dashboard 
+**Expected result**: All reports will show
+**Actual result**: Every report is shown 
+
+---
+
+### TS-10: Verify the administrators ability to view the obstacle report's image
+
+**input** click the View button under the image tab
+**Expected result: The image is shown to the administrator
+**actual result**: The image is opened in a new tab, providig a clear view
+
+---
+
+### TS-11: Verify the administrators ability to view reports on the map
+
+**input**: Click on show map view
+**Expected result**: A map with all obstacles is shown
+**Actual result**: A map is shown with all obstacles color coded by status
+
+---
+
+### TS-12: Verify the administrators ability to view obstacle details on the map
+
+**input** Click on an obstacle and then details
+**Expected result** Admin is taken to the report details & review page
+**Actual result** The admin is taken to the page for changing report status
+
+
+
+
+
+
 
 ### TC-01: Successful Login
 **Steps:**
