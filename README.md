@@ -175,7 +175,7 @@ Use the Logout button in the navigation bar.
 
 ---
 
-# Testing 
+# Testing
 Testing details are provided in the [Tests.Doc.md](NaviSafe.Tests/Tests.Doc.md) file, located in:
 `NaviSafe.Tests/Tests.Doc.md`.
 
