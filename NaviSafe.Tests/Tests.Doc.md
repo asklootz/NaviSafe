@@ -277,7 +277,7 @@ These Test Cases are meant to check that the login page functions as intended
 
 ---
 
-#### TC-07: Logout Functionality
+### TC-07: Logout Functionality
 **Steps:**
 1. Login successfully
 2. Click "Logout" button
