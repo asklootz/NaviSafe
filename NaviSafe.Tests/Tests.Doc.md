@@ -71,7 +71,7 @@ This test scenario assumes the following:
 
 ### TS-05: Pilot adding a picture to the obstacle report
 
-- **Input**: Upload or take a picture with the camera/uploade buttons
+- **Input**: Upload or take a picture with the camera/upload buttons
 - **Expected Result**: The picture is added to the report
 - **Actual Result**: The picture is sucessfully added to the report
 
