@@ -504,7 +504,7 @@ Performance testing was conducted using Apache JMeter with a focus on realistic 
 
 ---
 
-#### 1. Login Page Load Test
+#### 1. Login Page Load (GET /Account/Login)
 Simulate multiple users acessing the login page simultaneously.
 To measure how the system handles concurrent acces to the main entry page.
 
@@ -517,6 +517,26 @@ Error Rate: 0.00%
 
 The results show that the system handles concurrent acess to the login page efficiently. Even under simultaneous access, response times remain low, and no errors were occurred, which indicates stable performance for this entry point of the system.
 
+---
+
+#### 2. Login Action (POST /Account/Login)
+Simulate multiple users logging in simultaneously to test the authentication process under load.
+To measure backend authentication and session handling performance.
+
+**Results:**
+Average Response Time: 508 ms
+Minimum Response Time: 474 ms
+Maximum Response Time: 624 ms
+Throughput: 1.0 requests/second
+Error Rate: 0.00% 
+
+The login action demonstrates robust performance under concurrent load. The average response time remains acceptable, and the system successfully handles multiple login requests without errors, indicating effective session management and authentication processes.
+
+---
+
+## 3. Obstacle Registration (POST /Obstacle/Dataform)
+Simulate pilots submitting obstacle reports.
+To measure database write performance and data processing under load.
 ---
 
 ## Installation
