@@ -490,6 +490,32 @@ Note that the group did not have any working iPads available, so an iPhone was u
 
 ### TS-05: Sort the obstacle reports by Obstacle type
 
+---
+
+### Performance Testing
+Performance testing was conducted using Apache JMeter with a focus on realistic scenarios based on expected system usage.
+
+**Setup:**
+- Tool: Apache JMeter
+- Environment: Local Docker setup
+- Server: https://localhost:8081
+- Concurrent users: 10
+- Ramp-up period: 10 seconds
+
+---
+
+#### 1. Login Page Load Test
+Simulate multiple users acessing the login page simultaneously.
+To measure how the system handles concurrent acces to the main entry page.
+
+**Results:**
+Average Response Time: 67 ms
+Minimum Response Time: 23 ms
+Maximum Response Time: 399 ms
+Throughput: 1.1 requests/second
+Error Rate: 0.00%
+
+The results show that the system handles concurrent acess to the login page efficiently. Even under simultaneous access, response times remain low, and no errors were occurred, which indicates stable performance for this entry point of the system.
 
 ---
 
