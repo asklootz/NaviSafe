@@ -176,7 +176,7 @@ Note that the group did not have any working iPads available, so an iPhone was u
 
 - **Input** Click the "View" button under the image tab
 - **Expected result: The image is shown to the administrator
-- **actual result**: The image is opened in a new tab, providig a clear view
+- **actual result**: The image is opened in a new tab, providing a clear view
 
 ---
 
