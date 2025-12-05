@@ -14,21 +14,21 @@ namespace NaviSafe.Tests
 {
     public class AccountControllerTests
     {
-        // Lager nye DbContextOptions for hver test, med en egen in-memory database
-        // Guid.NewGuid() sørger for at unikt databasenavn pr test. 
+        // Creates new DbContextOptions for each test, with own in-memory database
+        // Guid.NewGuid() handles unique database name per test
         private DbContextOptions<ApplicationDbContext> CreateNewContextOptions()
         {
             var builder = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: $"AccountControllerTests_{Guid.NewGuid():N}")
-                // Ignorer transaksjons-advarselen som InMemory ikke støtter.
+                // Ignores transaction warning which InMemory does not support
                 .ConfigureWarnings(w => w.Ignore(InMemoryEventId.TransactionIgnoredWarning));
 
             return builder.Options;
         }
 
 
-        // Lager en AccountController og tilhørende UserStorage og context
-        //brukes som test fixture i flere tester
+        // Creates AccountController and corresponding UserStorage and context
+        // Uses as a test fixture in multiple tests
         private (AccountController controller, ApplicationDbContext context) CreateController()
         {
             var options  = CreateNewContextOptions();
@@ -39,35 +39,34 @@ namespace NaviSafe.Tests
             return (controller, context);
         }
 
-        // 1) Login POST - skal returnere View når ModelState er ugyldig
+        // 1) Login POST - will return View when ModelState is not valid
         [Fact]
         public async Task LoginPost_ReturnsView_WhenModelStateIsNotValid()
         {
-            // Arrange - settes opp controller+modelstate 
+            // Arrange - setup controller+modelstate 
             var (controller, _) = CreateController();
             
 
-            controller.ModelState.AddModelError("Email", "Required"); //legger til en feil i modelstate for å simulere ugyldig inut 
-
+            controller.ModelState.AddModelError("Email", "Required"); // Adding an error in ModelState for simulating invalid input
             var model = new LoginViewModel
             {
                 Email    = "",
                 Password = ""
             };
 
-            // Act - kaller Login-postmetode 
+            // Act - calls Login post method
             var result = await controller.Login(model, returnUrl: null);
 
-            // Assert - forventer å få view resultat  med modellen tilbake 
+            // Assert - expects to have viewResult with model back
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.Same(model, viewResult.Model);
         }
 
-        // 2) Login POST – skal gi ModelError når brukernavn/passord er feil
+        // 2) Login POST – should receive ModelError when username/password is wrong
         [Fact]
         public async Task LoginPost_AddsModelError_WhenCredentialsAreNotValid()
         {
-            // Arrange: setter opp controller + feil Modelstate
+            // Arrange: setup Controller + incorrect Modelstate
             var (controller, _) = CreateController();
 
             var model = new LoginViewModel
@@ -76,32 +75,32 @@ namespace NaviSafe.Tests
                 Password = "NotCorrect123!"
             };
 
-            // Act - prøver å logge på med ugyldig input 
+            // Act - attempting to login with invalid input 
             var result = await controller.Login(model, returnUrl: null);
 
-            // Assert - fortsatt viewresult med samme modell 
+            // Assert - still ViewResult with same model 
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.Same(model, viewResult.Model);
 
-            Assert.False(controller.ModelState.IsValid); //ModelSate skal inneholde feilmelding 
+            Assert.False(controller.ModelState.IsValid); // ModelSate should contain error 
             Assert.True(controller.ModelState.ContainsKey(string.Empty));
 
             var error = controller.ModelState[string.Empty]!.Errors.Single();
             Assert.Equal("Invalid email or password.", error.ErrorMessage);
         }
 
-        // 3) Register POST, skal gi ModelError når e-post allerede finnes
+        // 3) Register POST, should give ModelError when e-mail already exist
         [Fact]
         public async Task RegisterPost_AddsModelError_WhenEmailAlreadyExists()
         {
-            // Arrange - oppretter en context og legger inn en bruker manuelt via userstorage. 
+            // Arrange - creates a Context and adding an account manually via UserStorage
             var options = CreateNewContextOptions();
             using var context = new ApplicationDbContext(options);
             var storage = new UserStorage(context);
 
             var existingEmail = "admin@navisafe.com";
 
-            // Registrer en bruker med denne e-posten først
+            // Register an account with that particular e-mail first
             storage.RegisterUser(
                 email:      existingEmail,
                 password:   "SomePassword123!",
@@ -125,10 +124,10 @@ namespace NaviSafe.Tests
                 RoleId        = "Admin",
             };
 
-            // Act - prøver å registerer en bruker med samme epost. 
+            // Act - trying to register an account with the same e-mail 
             var result = await controller.Register(model);
 
-            // Assert - forventer vireResult med feil i ModelSate. 
+            // Assert - expecting vireResult with error in ModelState 
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.Same(model, viewResult.Model);
 
