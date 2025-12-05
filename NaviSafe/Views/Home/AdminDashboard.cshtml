@@ -438,8 +438,7 @@
             });
 
             $(document).on('click', '#quickRejectBtn', function() {
-                const defaultreason = 'Quick rejection';
-                updateReportStatus(currentReportId, 'REJECTED', defaultreason);
+                updateReportStatus(currentReportId, 'REJECTED', 'Quick rejection - does not meet requirements and/or insufficient information');
             });
 
             // Show Map Modal
