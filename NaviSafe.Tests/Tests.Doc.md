@@ -59,3 +59,53 @@ How to run the tests
 
 In Rider, open the Unit Tests tool window and choose Run All Tests for the NaviSafe.Tests project.
 All tests should run and show their result there.
+
+ObstacleValidTest
+these test verify the validation rules for the ObstacleDataForm model. The goal is to ensure that submitted obstacles follow the requirements for name and height before they are further proceed in the system. 
+
+Obstacle_Name_Reuquired 
+Checks that shortdec is (obstacle name) is requried. If this is empty the model should return a validation error message.
+
+Obstacle_Height_cant_be_Below_Requirements
+test that the altitude cannot be lower than the minimum limit of 0.1 meters, if the value is below the validation should return a error message. 
+
+Obstacleheight_more_than_max_is_invalid
+Tests that the altiude cannot exceed the maximum limit of 1000 meters.
+
+Model_has_no_validation_error
+confirms that a valid model - with the correct name and a height within the legal range - should not give any validation errors. This ensures that normal, correct submissions are approved without any problems.
+
+DummyTest_shouldPass
+This is used to confirm that the test environment is running as expected. 
+
+AccountControllerTest 
+These test verify basic login and registration behavior in AccountController using an In-memory database. the tests checks that:
+Login POST: 
+returns the same view and model if ModelState is invalid. It adds a general ModelState error message when username/password does not match a user in the database. 
+Register POST:
+Prevents new user registration if the email already exists. In this case, the view is returned with the same model, and the ModelState gets an error message. 
+
+HomecontrollerTest 
+These tests verify that Homecontroller works as expected by ensuring that: 
+Index() returns a Viewresult 
+Privacy() returns a ViewResult
+since homecontroller only returns static views without any login or data processing, these test act as a simple smoke test. 
+They confirm that the controlles is configured correctly and that the action methods respond as the MVC frameork expected.
+
+ObstacleControllerTest
+These tests checks that ObstacleController handles both GEt and POSt requests correctly. These tests verify the follwing:
+GET:dataform(). returns a ViewResult as expected. 
+POST:Dataform(model, SubmitAction) (disable test) A valid model should take user to the "overview" view
+an invalid model (error in ModelState) should return the same view with the model rolled back so that the user can correct the error.
+To perform these tests, a fake web environemnt and an empty EF core database are used, so that controller can run without external dependencies. 
+These tests serve as both validation and structrual tests, ensuring that the obstacle data system responds correctly to user input 
+
+UserStorageTest
+the tests follows case-insensitive email lookup, UserExist should return true regardless of whether the email is entered in uppercase or lowercase letters.
+RegisterUser should return a valid UserID
+set registeredDate to a valid date
+the same email cannot be registered twice
+first call to RegisterUser succeeds, second call with the same email returns empty string as userID
+password validation
+validateUser returns- true when email and password match, false when the this is incorrect
+this provides confidence that user handling works robustly before it is used in controllers or UI.  
