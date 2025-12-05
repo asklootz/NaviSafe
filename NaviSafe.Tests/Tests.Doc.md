@@ -318,7 +318,7 @@ To determine how intuitive and user friendly the web application is, we conducte
 
 ### Test 4: Please approve a report
 
-- **User 1**: This user quickly found his wait to the "Reports & Review page" via the "View Details" button and used the "Quick Approve" feature
+- **User 1**: This user quickly found his way to the "Reports & Review page" via the "View Details" button and used the "Quick Approve" feature
 - **User 2**: User 2 also found the page easily, but he instead clicked on the "Pending Review" Button and put it on Approved/Published. He then tried to approve the report, but was prompted to write a reason before approving
 
 This showed that the approval process wasnt the most intuitive part of our application
