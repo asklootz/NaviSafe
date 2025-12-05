@@ -1,38 +1,29 @@
-# README Documentation - NaviSafe
+# NaviSafe - Aerial Obstacle Reporting System
 
 [![Navi-Safe-logo.png](https://i.postimg.cc/rFBbxXqr/Navi-Safe-logo.png)](https://postimg.cc/YhxbBPGr)
 
 **NaviSafe** is a web-based solution app developed for **Kartverket** to assist pilots and administrators with safe navigation, flight and coordination.  
-It connects tablet users in the field with a central orchestration layer, API services, and a containerized database backend.
+The system is tailored to tablet users and connects pilots in the field to a centralized orchestration layer, an ASP.NET Core backend, and a containerized MariaDB database.
 
 ---
 
-## Table of Contents
-- [About](#-about)
-- [Contributors](#-contributors)
-- [Getting Started](#-getting-started)
-- [Installation](#-installation)
-- [Usage](#-usage)
-- [Testing](#-testing)
-- [Architecture](#-architecture)
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Components](#-components)
-- [Security](#-security-)
-- [Use of external resources](#-use-of-external-resources)
+# Table of Contents
+
+- [Contributors](#contributors)
+- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
+- [Test Accounts](#test-accounts)
+- [Usage](#usage)
+- [Testing and Load Testing](#testing-and-load-testing)
+- [System Architecture](#system-architecture)
+- [Tech Stack](#tech-stack)
+- [Components](#components)
+- [Database Strategy](#database-strategy)
+- [Security](#security)
+- [Use of External Resources](#use-of-external-resources)
 
 ---
-
-## About
-NaviSafe was developed as part of a collaboration with **Kartverket** to support:
-- Pilots using tablets in the field
-- Admin users managing navigation data
-- Secure API requests and data orchestration
-- Metrics collection and health monitoring
-
----
-
-## Contributors
+# Contributors
 The founding members of NaviSafe from Group 9 consists of:
 - *Ask Lootz*
 - *Jimmy Trinh*
@@ -40,79 +31,175 @@ The founding members of NaviSafe from Group 9 consists of:
 - *Synne Kyrkjebø*
 - *André Abrahamsen*
 - *Rikke Krauss*
-
 ---
 
-## Getting Started
-
-### Prerequisites
-Make sure you have:
-- [.NET SDK 9.0+](https://dotnet.microsoft.com/)
-- [Docker](https://www.docker.com/)
-- [Git](https://git-scm.com/)
-
+# Prerequisites
+**Install:**
+- [.NET 9.0+ SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+- [Docker](https://www.docker.com/products/docker-desktop/)
+- [Git](https://www.docker.com/products/docker-desktop/)
+- MariaDB client / phpMyAdmin (AppHost.cs will automatically create phpMyAdmin when it runs)
 ---
 
-## Installation
-Clone and set up the project:
-
+# Quick Start
+### 1. Clone and run the project
 ```bash
 git clone https://github.com/asklootz/NaviSafe.git
 cd NaviSafe
 dotnet restore
+dotnet run
 ```
-If you want to run it with https, you need to set up a self-signed certificate.
+After you have cloned the repo, run the project via IDE program. You should be redirected to the Aspire Dashboard.
+
+### 2. Access the application
+Click on the `naviSafe` link in Aspire dashboard or navigate to:
+```arduino
+https://localhost:8081/
+```
+
+If HTTPS certificate warnings appear:
 ```bash
 dotnet dev-certs https --trust
 ```
+Or manually trust the self-signed certificate in your browser.
 
 ---
 
-## Usage
+# Test Accounts 
+| Email | Password |
+|-------|----------|
+| admin@kartverket.no | admin123 |
+| pilot@nla.no | test123 |
+| pilot@forsvaret.no | test123 |
+| pilot@politiet.no | test123 |
 
-### 1. Login
-Visit http://localhost:8080 to access the login page. 
+---
 
-#### Admin 
-Use the following credentials to log in as an admin user:
-- **Email**: *admin@kartverket.no*
-- **Password**: *admin123*
+# Usage
+This section explains the application from a new user's perspective. No technical knowledge required.
+### 1. Login (Pilot)
+Navigate to:
+```ardunino
+https://localhost:8081/Account/Login
+```
+Enter an admin or pilot account to access the dashboard.
 
-#### Pilot users
-Use the following credentials to log in as a pilot user:
-- **Email**:
-    - pilot@nla.no
-    - pilot@politiet.no
-    - pilot@forsvaret.no
-- **Password**: *test123*
+### 2. Register an Obstacle
+From the dashboard, you can:
+- Register new obstacles
+- Navigate through different entities and fill in such as:
+  - *Obstacle Type*
+  - *Obstacle Description*
+  - *Provide Coordinates*
+  - *Latitude*
+  - *Longitude*
+  - *Obstacle Height (in feet)*
+  - *Camera function and ability to upload a picture*
 
-For pilots, you will arrive at the obstacle registration form, while Admins will arrive at the admin dashboard 
+**Selecting a location**
+1. Allow GPS-location access
+2. Drop a marker on the Leaflet map
+3. Coordinates appear automatically (can also fill in manually)
+
+- Save as a draft
+- Submit data
+- Clicking on **"My Registrations"** and redirects you to a complete overview of obstacle reporting page
+
+### 3. View My Registrations
+Navigate to:
+**Obstacle** --> **My Registrations**
+
+You can view:
+- Stored obstacles
+- Status (Pending, Approved, Rejected)
+- Metadata
+- Coordinates
+- Images
+- View Details / View on Map
+
+### 4. Logout
+Use the Logout button in the navigation bar.
+
+### 1. Login (Admin)
+Navigate to:
+```ardunino
+https://localhost:8081/Account/Login
+```
+Enter an admin account to access the admin dashboard.
 
 ### 2. Admin Dashboard
-After a successful login, you should now have access the admin dashboard. Here you can view a list of reports, details about themo and approve/reject the obstacles. You can also sort them by ID, Date, Reporter and Status. Admins can also access a map with all of the reports, and register obstacles themselves 
+From the dashboard, as an admin user, you have access to:
+- Have a complete overview of submitted obstacle reports
+- An unique ID, obstacle type, description, reporter name, status, date, image and action of viewing report details
+- **Total Submitted Reports**, **Pending Review**, **Approved** and **Rejected** is clickable and can filter lists in respective segments
+- Optional to create a new obstacle form
 
-### 3. Obstacle Registration
-1. Fill in **Obstacle Name** and **Obstacle Height**.
-2. Add a **Description** with details about the obstacle.
-3. Select the location of the map (powered by OpenStreetMap + Leaflet). You will receive a pop-up notification whether you will allow to turn on location or not.
-After that, you should be able to draw a marker on the map. Then **Coordinates Preview** will pinpoint your coordinates in terms of longitude and latitude, while 
-**Live coordinates** tracks your location with described coordinates in realtime. 
-4. Click **Submit Data** - the data will be sent via `POST`to the API and stored in the MariaDB database. 
-5. After submitting data, you can select **Back To Home** and thus return to the main dashboard.
+### 3. Map View
+After clicking on the **Show Map View** button on the navigation bar, you can:
+- Have access to the Leaflet map where markers are pinpointed with their unique color code (*green = submitted, yellow = pending, red = rejected*)
+- Clicking on the particular marker will provide a field of reporting details
+- By clicking on **View Details** will redirect you back to the dashboard and a reporting detail will be shown
 
-### 4. Pilots can enter "My registrations to logout and Admins can logout via their main dashboard 
-If you wish to logout, simply click on the **Logout** button.
+### 4. New Report
+Using the same instances as pilot, you can:
+- Register new obstacles
+- Navigate through different entities and fill in such as:
+  - *Obstacle Type*
+  - *Obstacle Description*
+  - *Provide Coordinates*
+  - *Latitude*
+  - *Longitude*
+  - *Obstacle Height (in feet)*
+  - *Camera function and ability to upload a picture*
+
+**Selecting a location**
+1. Allow GPS-location access
+2. Drop a marker on the Leaflet map
+3. Coordinates appear automatically (can also fill in manually)
+
+- Save as a draft
+- Submit data
+
+### 5. Report Details & Overview
+You can view:
+- Report information
+- Location map
+- Attached image
+- Reporter information
+- Admin review
+- Update status by changing via the dropdown menu
+- Quick approve or quick reject for minimal time consumption
+
+### 6. Logout
+Use the Logout button in the navigation bar.
 
 ---
 
-## Testing
-The objective of this **Test Scenario** is to verify that pilots can submit data, interact with the map, and have their location accurately tracked. And that admins can manage and review reports
+# Testing and Load Testing
+The objective of testing was to ensure that the NaviSafe application functions correctly across different user scenarios and performs well under load.
 
-Preconditions:
+**Functional Testing**
+
+The following user flows were validated:
+- ✔️ Login success and failure
+- ✔️ Obstacle registration with pin
+- ✔️ Dynamic map interaction
+- ✔️ Coordinate tracking
+- ✔️ File upload validation
+- ✔️ Session persistence
+- ✔️ Logout navigation
+
+**Preconditions:**
+
 This test scenario assumes the following:
-•   The pilot/admin is logged in to their account
-•   The pilot/admin has service
-•   The pilot is using an iOS Device with Safari or Google Chrome
+
+- The pilot/admin is logged in to their account
+- The pilot/admin has service
+- The pilot is using an iOS Device with Safari or Google Chrome
+
+---
+
+## Test Cases
 
 ### TS-01: Pilot obstacle report with pin
 
@@ -130,7 +217,7 @@ This test scenario assumes the following:
 
 ---
 
-### TS-03: Pilot saving obstacle as draft 
+### TS-03: Pilot saving obstacle as draft
 
 - **Input**: Select an obstacle type and then save it as a draft
 - **Expected result**: The draft is saved in the my registrations tab
@@ -150,7 +237,7 @@ This test scenario assumes the following:
 
 - **Input**: Upload or take a picture with the camera/uploade buttons
 - **Expected result**: The picture is added to the report
-- **Actual result**: The picture is sucessfully added to the report 
+- **Actual result**: The picture is sucessfully added to the report
 
 ---
 
@@ -171,11 +258,11 @@ This test scenario assumes the following:
 ---
 
 ### TS-08: Verifying the location trackers' accuracy
-Verify the location trackers' accuracy. Three devices were tested after the group noticed a difference in the accuracy of our devices and browsers. 
+Verify the location trackers' accuracy. Three devices were tested after the group noticed a difference in the accuracy of our devices and browsers.
 
 **Expected results**: Tracker inaccuracy does not exceed 50 meters
 
-**Actual results**: 
+**Actual results**:
 - iPhone 14 Plus’s accuracy constantly changed between 5-31 Meters
 - Windows 11 Laptop was tested with Opera GX, giving either 4911 or 22.5 meters and Google Chrome with 128 Meters of inaccuracy
 - MacBook M1 Pro had an accuracy of 35 Meters
@@ -196,8 +283,8 @@ Note that the group did not have any working iPads available, so an iPhone was u
 ### TS-10: Verify the Administrators ability or quick approve obstacles
 
 - **Input**: Click "View details" on a pending report and then "quick approve"
-- **Expected results**: The report is approved 
-- **Actual result**: the report has been approved 
+- **Expected results**: The report is approved
+- **Actual result**: the report has been approved
 
 ---
 
@@ -205,7 +292,7 @@ Note that the group did not have any working iPads available, so an iPhone was u
 
 - **Input**: Click "View Details" on a pending report and then "Pending Review". Change the status to Rejected, then write a reason for the decision and press Update status.
 - **Expected result**: The report is rejected
-- **Actual result**: The report has been succesfully rejected 
+- **Actual result**: The report has been succesfully rejected
 
 ---
 
@@ -219,7 +306,7 @@ Note that the group did not have any working iPads available, so an iPhone was u
 
 ### TS-13: Verify the Administrator ability to sort reports by the approved status
 
-- **Input**: Click the "Approved" button near the top of the admin dashboard 
+- **Input**: Click the "Approved" button near the top of the admin dashboard
 - **Expected result**: Only approved reports will show
 - **Actual result**: Approved reports are the only ones displayed
 
@@ -227,7 +314,7 @@ Note that the group did not have any working iPads available, so an iPhone was u
 
 ### TS-14:  Verify the Administrator ability to sort reports by the pending status
 
-- **Input**: Click the "Pending review" button near the top of the admin dashboard 
+- **Input**: Click the "Pending review" button near the top of the admin dashboard
 - **Expected result**: Only pending reports will show
 - **Actual result**: pending reports are the only ones displayed
 
@@ -235,7 +322,7 @@ Note that the group did not have any working iPads available, so an iPhone was u
 
 ### TS-15:  Verify the Administrator ability to sort reports by the rejected status
 
-- **Input**: Click the "Rejected" button near the top of the admin dashboard 
+- **Input**: Click the "Rejected" button near the top of the admin dashboard
 - **Expected result**: Only rejected reports will show
 - **Actual result**: rejected reports are the only ones displayed
 
@@ -243,9 +330,9 @@ Note that the group did not have any working iPads available, so an iPhone was u
 
 ### TS-16:  Verify the Administrator ability to sort reports to total submitted reports
 
-- **Input**: Click the "Total submitted reports" button near the top of the admin dashboard 
+- **Input**: Click the "Total submitted reports" button near the top of the admin dashboard
 - **Expected result**: All reports will show
-- **Actual result**: Every report is shown 
+- **Actual result**: Every report is shown
 
 ---
 
@@ -371,7 +458,7 @@ To determine how intuitive and user friendly the web application is, we conducte
 ### Test 1: Please report an obstacle with a pin
 
 - **User 1**: Located the "Draw a Marker" button and used it to set a pin. He then filled im the Obstacles type, a short description and then a height
-- **User 2**: First attemped to right click on the map like you do with google maps, and when this failed he used the "Draw a Marker button" soon after. This user also submitted a picture 
+- **User 2**: First attemped to right click on the map like you do with google maps, and when this failed he used the "Draw a Marker button" soon after. This user also submitted a picture
 
 ---
 
@@ -389,7 +476,7 @@ To determine how intuitive and user friendly the web application is, we conducte
 
 ---
 
-## The users were then redirected to the admin page 
+## The users were then redirected to the admin page
 
 ### Test 4: Please approve a report
 
@@ -421,57 +508,219 @@ This showed that the approval process wasnt the most intuitive part of our appli
 
 ---
 
-## Architecture
+## Load Testing (WebSurge)
+This summarizes the results of load and stress testing performed on the NaviSafe application.
+All tests were executed using **West Wind WebSurge** and focused on application performance, endpoint stability,
+and request handling under concurrent load.
+
+### Test Configuration
+| Setting | Value |
+|-------|----------|
+| Duration | 60 sec |
+| Concurrent Threads | 2 |
+| Total Requests | 4,081 |
+| Successful Requests | 3,919 |
+| Failed Requests | 162 |
+| Environment | Localhost (Docker + Aspire) |
+| Testing Tool | WebSurge 3.0.3 | 
+
+The entire system ran using .NET Aspire, ensuring all dependent services (Web app, MariaDB, phpMyAdmin) were
+orchestrated and healthy throughout the test.
+
+### Performance Summary
+| Metric | Result |
+|--------|----------------------|
+| Avg Response Time | 29.31 ms     |
+| Median Response Time | 7.79 ms     |
+| 95th Percentile | 278.71 ms     |
+| 99th Percentile | 296.29 ms     | 
+| Fastest Request | 1.43 ms     |
+| Slowest Request | 383.78 ms     |
+| Requests per Second | ~68 req/s     |
+| Data Served | 102 MB         | 
+| Data Posted | 599 KB         |
+
+### Endpoint Analysis
+Below is a breakdown of performance for each tested endpoint grouped by expected behaviour.
+
+✔️ **GET Endpoints - Fast and Stable**
+
+| Endpoint                    | Avg (ms)                | Success                | Fail      |
+|-----------------------------|-------------------------|------------------------|-----------|                  
+| `/`                         | 9.62                    | 471                    | 0         |
+| `/Home/AdminDashboard`      | 9.71                    | 471                    | 0         |
+| `/Account/Login` (GET)      | 6.11                    | 471                    | 0         |
+| `/Account/Register`         | 6.72                    | 157                    | 0         |
+| `/Obstacle/Dataform` (GET)  | 6.63                    | 471                    | 0         |
+| `/Obstacle/Overview`        | 8.11                    | 471                    | 0         |
+
+**Verdict**:
+
+All GET requests respond consistently under **10 ms**, with **0 failures** across hundreds of requests.
+This indicates:
+- Stable database reads
+- No bottlenecks in routing
+- Efficient rendering pipeline
+- Minimal server-side overhead
+
+🟡 **POST Endpoints - Mostly Stable**
+
+**POST** `/Account/Logout`
+
+| Avg (ms) | Success | Fail       |
+|----------|---------|------------|
+| 12.68    | 469     | 2          |
+
+Logout is lightweight and performs well.
+
+**POST** `/Home/UpdateReportStatus/`
+
+| Avg (ms) | Success | Fail       |
+|----------|---------|------------|
+| 8.48     | 157     | 0          |
+
+Very rapid - this endpoint is efficient and scales well.
+
+⚠️ **POST** `/Account/Login` - **Expected Complex Behaviour**
+
+| Metric                 | Value               |
+|------------------------|---------------------|
+| Avg Response Time      | 282.67 ms           |
+| Max Response Time      | 383.78 ms           |
+| 95th Percentile        | 307.92 ms           |
+| Success                | 311                 |
+| Fail                   | 2                   |
+
+**Verdict**:
+
+Login requests are intentionally slower due to:
+- Password hashing
+- Database lookups
+- Session initialization
+- Cookie generation
+
+Which is normal and expected under load.
+
+❌**Faultfinding: POST** `/Obstacle/Dataform`
+
+| Metric                 | Value               |
+|------------------------|---------------------|
+| Success                | 0                   |
+| Failed Requests        | 157                 |
+| Avg Response           | 2.07 ms             |
+
+These failures were **not caused by performance issues.**
+
+**Root Cause**
+
+The request contained an invalid image format (APNG), which NaviSafe does not support.
+
+Allowed formats:
+- JPEG
+- PNG
+- GIF
+- WEBP
+
+The server rejects unsupported images immediately, explaining the extremely low response times.
+This failure confirms that **input validation works successfully.**
+
+# System Architecture
 [![Navi-Safe-sysdiagram.png](https://i.postimg.cc/Cxw2mCfT/Navi-Safe-sysdiagram.png)](https://postimg.cc/BXwNvKgM)
 
-### Frontend Architecture
-The frontend is a modern web application built with **TypeScript** and **Leaflet**, utilizing a modular build process.
+NaviSafe is built on modern containerized infrastructure with clear seperation of frontend, backend, database, and orchestration layers.
 
-**Core Technologies & Packages:**
+**Workflow:**
+1. Pilot/Admin clients communicates with ASP.NET Core
+2. Backend persists data via EF Core to MariaDB
+3. Aspire orchestrates app, along with phpMyAdmin and database containers
+4. OpenTelemetry provides logs and metrics
+5. Razor views serve all web pages
 
-- **Language:** TypeScript 5.8.2 (transpiled to JavaScript).
-    - **Map Engine:** `leaflet` (v1.9.4) for interactive mapping capabilities.
-    - **Styling:** Uses SCSS/SASS (`sass` v1.86.1) for modular and maintainable styles.
-- **Build Tooling:**
-    - `rollup` (v4.38.0) for bundling modules.
-    - `grunt` (v1.6.1) task runner for automating workflows (sass compilation, minification, copying assets).
-    - `grunt-contrib-uglify`, `grunt-rollup`, `grunt-sass`.
-- **Code Quality:**
-    - `eslint` (v9.23.0) & `prettier` (v3.5.3) for linting and code formatting.
-    - `stylelint` for SCSS validation.
+---
 
-### Backend Architecture
-The backend is a containerized **ASP.NET Core 9.0** application designed for reliability and observability.
+# Tech Stack
+| Layer          | Technology / Tools                         | Description |
+|----------------|--------------------------------------------|-------------|
+| Frontend       | HTML                                       | UI structure and layout |
+|                | CSS                                        | Styling and custom UI design |
+|                | Bootstrap CSS                              | Responsive UI components |
+|                | JavaScript                                 | Client-side logic and interactivity |
+|                | Leaflet                                    | Interactive maps and geolocation |
+| Backend        | ASP.NET Core 9.0                           | Main web application framework |
+|                | MVC + Razor                                | Views, routing, UI rendering |
+|                | EF Core (Pomelo provider)                  | ORM for MariaDB |
+|                | OpenTelemetry                              | Logging, metrics, tracing |
+|                | JWT                                        | Token-based authentication (API) |
+| Database       | MariaDB 11.8                               | Relational database |
+|                | phpMyAdmin                                 | Database management UI |
+| Infrastructure | .NET Aspire                                | Orchestration & service hosting |
+|                | Docker                                     | Containerized application environment |
+| Mapping        | OpenStreetMap                              | Map tiles and geographic data |
+|                | Leaflet Draw                               | Pin placement, geometry editing |
 
-**Core Configuration:**
+---
 
-- **Application Name:** `NaviSafe`
-- **Hosting:** Runs in a Docker container using the `mariadb` image.
-- **Data Access:** Uses **Entity Framework Core** with `Pomelo.EntityFrameworkCore.MySql` to interact with the MariaDB database.
-- **Authentication & Security:**
-    - **JWT Bearer Auth:** Configured to support secure API token validation (`JwtTokenService`).
-    - **Session Management:** Enables stateful interactions for MVC views with secure, HTTP-only cookies.
-- **Observability:** Integrated **OpenTelemetry** pipeline providing:
-    - Metrics (ASP.NET Core & HTTP Client instrumentation).
-    - Distributed Tracing.
-    - Logging via Console exporter.
-- **Service Orchestration:** Implements service defaults (`AddServiceDefaults`, `MapDefaultEndpoints`) for standardized health checks and discovery in a cloud-native environment.
+# Components
+## **Controllers** `NaviSafe/Controllers/`
 
-## Database Strategy
+| Controller | Description |
+|-------|----------|
+| AccountController | Login, logout, authentication |
+| HomeController | Dashboard & Navigation |
+| ObstacleController | Obstacle Creation and Listing|
+
+---
+
+## Models `NaviSafe/Models/`
+The domain includes:
+- AdminReportViewModel
+- ErrorViewModel
+- LoginUserModel
+- LoginViewModel
+- ObstacleDataForm
+- RegisterViewModel
+
+These models map directly to mariaDatabase tables via EF Core.
+
+## Views `NaviSafe/Views/`
+Razor pages include:
+- Login
+- Register
+- Dashboard (Pilot and Admin)
+- Obstacle form
+- Obstacle overview
+- Shared UI Layout
+
+## Services `NaviSafe/Services/`
+Core services:
+- UserStorage that manages the user database storage
+
+---
+
+# Database Strategy
 The solution employs a robust data persistence strategy centered around **MariaDB**:
 
 - **ORM & Data Access:** Uses **Entity Framework Core** with the `Pomelo.EntityFrameworkCore.MySql` provider. This allows for strongly-typed queries, efficient change tracking, and LINQ support.
 - **Connection Management:**
-    - **Auto-Detection:** Implements `ServerVersion.AutoDetect` to dynamically configure features based on the specific MariaDB version running in the container.
-    - **Service Integration:** Explicitly registers a named `MySqlDataSource` ("mariaDatabase"). This pattern supports .NET service defaults, enabling automatic health checks and standardized metrics collection.
+  - **Auto-Detection:** Implements `ServerVersion.AutoDetect` to dynamically configure features based on the specific MariaDB version running in the container.
+  - **Service Integration:** Explicitly registers a named `MySqlDataSource` ("mariaDatabase"). This pattern supports .NET service defaults, enabling automatic health checks and standardized metrics collection.
 - **Resilience:** The startup configuration includes fallback logic (prioritizing `mariaDatabase` over `DefaultConnection`) to ensure the application connects reliably whether running locally or within the Docker Compose orchestration.
+
+## Importing Database
+
+In order to set up the accounts, you need to import the mariaDatabase SQL Source file:
+1. Clone the repository
+2. Open File explorer and navigate `C:\NaviSafe\NaviSafe` and find the **mariaDatabase** SQL Source file
+3. Copy the file
+4. Open phpMyAdmin and click Import
+5. Import the file
 
 --- 
 
-#### Database Schema
+### Database Schema
 The database schema is designed to support a single user account with a single table for storing navigation data.
 
-##### 1. Database Creation
+#### 1. Database Creation
 The database is created automatically during the first run of the application. All the following SQL statements are executed within phpMyAdmin:
 
 ```sql
@@ -480,7 +729,7 @@ CREATE DATABASE IF NOT EXISTS `mariaDatabase` DEFAULT CHARACTER SET utf8mb4 COLL
 USE `mariaDatabase`;
 ```
 
-##### 2. Table Creation
+#### 2. Table Creation
 The table contains the following columns:
 
 1. **Organisation**
@@ -556,7 +805,7 @@ CREATE TABLE IF NOT EXISTS `userRole` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 ```
 
-##### 3. Data Insertion
+#### 3. Data Insertion
 The following data is inserted into the database upon application startup:
 
 1. **Organisation**
@@ -606,85 +855,9 @@ INSERT INTO `userRole` (`roleID`, `rolePermissions`, `permissionsDescription`) V
 ('PIL', 'PILOT', 'Limited access to flight and operational data');
 ```
 
-### Workflow
-1. **Tablet & Admin Clients** send `POST`/`GET` requests.
-2. **Front-End** communicates with the **Aspire.NET orchestration layer**.
-3. **Orchestration** handles:
-   - API services
-   - Metrics
-   - Data processing
-4. **Dockerized Back-End** runs:
-   - ASP.NET 9.0 Web Server
-   - MariaDB 11.8 Database
-   - phpMyAdmin for DB management
-
 ---
 
-## Features
-- RESTful API for front-end requests
-- Metrics and monitoring support
-- MariaDB database for data persistence
-- Dockerized infrastructure for easy deployment
-- Secure connection & administration channel
-
----
-
-## Tech Stack
-| Layer | Technology                                        |
-|------|---------------------------------------------------|
-| **Front-End** | *(Leaflet, JavaScript, CSS, Bootstrap CSS, HTML)* |
-| **API & Orchestration** | ASP.NET Core 9.0                                  |
-| **Database** | MariaDB 11.8                                      |
-| **DB Admin Tool** | phpMyAdmin 5.2                                    |
-| **Containerization** | Docker, Docker File                               |
-
----
-
-## Components
-
-### 1. Controllers (`NaviSafe/Controllers/`)
-Handle incoming HTTP requests, manage application flow, and interact with services.
-- **`AccountController.cs`**: Manages user authentication flows including Login, Logout, and session handling.
-- **`RegistrationController.cs`**: Handles new user sign-ups and validation logic.
-- **`ObstacleController.cs`**: Manages the core domain logic for reporting and retrieving navigation obstacles.
-- **`AuthController.cs`**: Likely handles lower-level authentication mechanisms or API-specific auth tokens.
-- **`HomeController.cs`**: Serves the main landing page and dashboard entry points.
-
-### 2. Models (`NaviSafe/Models/`)
-Define the data structure and business entities used across the application.
-- **Domain Entities**:
-  - `ObstacleData.cs`: Represents navigation hazards reported by pilots.
-  - `UserEntities.cs`: Core user profile data structure.
-  - `RegistrationEntities.cs`: Data structures specific to the registration process.
-- **View Models & DTOs**:
-  - `LoginViewModel.cs` / `LoginUserModel.cs`: Data transfer objects for authentication forms.
-  - `RegisterViewModel.cs`: Captures and validates user input during registration.
-  - `ErrorViewModel.cs`: Standardized structure for displaying errors to the UI.
-
-### 3. Views (`NaviSafe/Views/`)
-Razor views responsible for the server-side rendering of the HTML UI.
-- **`Home/`**: Main dashboard and landing page templates.
-    - **`Account/`**: Login and profile management interfaces.
-    - **`Obstacle/`**: Forms for reporting obstacles and lists for viewing them.
-    - **`Shared/`**: Reusable layout components (headers, footers, navigation bars).
-
-### 4. Services (`NaviSafe/Services/`)
-Encapsulate business logic and data access to keep controllers lightweight.
-- **`UserStorage.cs`**: A singleton or scoped service that acts as an abstraction layer for user data persistence (interacting with the database or in-memory store).
-- **`JwtTokenService.cs`**: Handles the generation and validation of JSON Web Tokens for secure API authentication.
-
----
-
-**Key Responsibilities:**
-- Login/Logout operations
-- User registration
-- Session management
-- Input validation
-- Security token verification
-
----
-
-## Security :lock:
+## Security 
 Security measures have been taken to ensure the confidentiality and integrity of the data.\
 We have set up a secure connection between the user and application using TLS encryption (selfsigned certificate).
 
@@ -831,7 +1004,7 @@ Anti-forgery token implementation in page:
 
 ---
 
-## Use of external resources
+# Use of External Resources
 Thanks to all the different open-source resources that have been used in order to develop NaviSafe, including but not limited to:
 - [Docker Engine](https://www.docker.com/):[Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 - [MariaDB Foundation](https://mariadb.org/):[GPL v2 License](https://mariadb.org/about-us/licensing/)
