@@ -116,7 +116,7 @@ Note that the group did not have any working iPads available, so an iPhone was u
 
 ---
 
-### TS-10: Verify the Administrators ability or quick approve obstacles
+### TS-10: Verify the Administrators ability to quick approve obstacles
 
 - **Input**: Click "View details" on a pending report and then "quick approve"
 - **Expected results**: The report is approved
