@@ -73,7 +73,7 @@ This test scenario assumes the following:
 
 - **Input**: Upload or take a picture with the camera/upload buttons
 - **Expected Result**: The picture is added to the report
-- **Actual Result**: The picture is sucessfully added to the report
+- **Actual Result**: The picture is successfully added to the report
 
 ---
 
