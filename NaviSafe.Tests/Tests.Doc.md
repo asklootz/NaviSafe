@@ -73,7 +73,7 @@ Obstacleheight_more_than_max_is_invalid
 Tests that the altiude cannot exceed the maximum limit of 1000 meters.
 
 Model_has_no_validation_error
-confirms that a valid model - with the correct name and a height within the legal range - should not give any validatoin errors. This ensures that normal, correct submissions are approved without any problems.
+confirms that a valid model - with the correct name and a height within the legal range - should not give any validation errors. This ensures that normal, correct submissions are approved without any problems.
 
 DummyTest_shouldPass
 This is used to confirm that the test environment is running as expected. 
