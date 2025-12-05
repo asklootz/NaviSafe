@@ -1123,17 +1123,19 @@ Performance testing was conducted using Apache JMeter with a focus on realistic 
 ---
 
 #### 1. Login Page Load (GET /Account/Login)
-Simulate multiple users acessing the login page simultaneously.
+Simulate multiple users accessing the login page simultaneously.
 To measure how the system handles concurrent acces to the main entry page.
 
 **Results:**
-Average Response Time: 24 ms
-Minimum Response Time: 15 ms
-Maximum Response Time: 45 ms
-Throughput: 1.1 requests/second
-Error Rate: 0.00%
+| Metric                 | Value               |
+|------------------------|---------------------|
+| Average Response Time  | 24 ms               |
+| Minimum Response Time  | 15 ms               |
+| Maximum Response Time  | 45 ms               |
+| Throughput             | 1.1 requests/second |
+| Error Rate             | 0.00%               |
 
-The results show that the system handles concurrent acess to the login page efficiently. Even under simultaneous access, response times remain low, and no errors were occurred, which indicates stable performance for this entry point of the system.
+The results show that the system handles concurrent acess to the login page efficiently. Even under simultaneous access, response times remain low, and no errors occurred, which indicates stable performance for this entry point of the system.
 
 ---
 
@@ -1142,11 +1144,13 @@ Simulate multiple users logging in simultaneously to test the authentication pro
 To measure backend authentication and session handling performance.
 
 **Results:**
-Average Response Time: 490 ms
-Minimum Response Time: 481 ms
-Maximum Response Time: 513 ms
-Throughput: 1.1 requests/second
-Error Rate: 0.00% 
+| Metric                 | Value               |
+|------------------------|---------------------|
+| Average Response Time  | 490 ms              |
+| Minimum Response Time  | 481 ms              |
+| Maximum Response Time  | 513 ms              |
+| Throughput             | 1.1 requests/second |
+| Error Rate             | 0.00%               |
 
 The login action demonstrates robust performance under concurrent load. The average response time remains acceptable, and the system successfully handles multiple login requests without errors, indicating effective session management and authentication processes.
 
@@ -1157,11 +1161,13 @@ Simulate pilots accessing the obstacle report form simultaneously.
 To measure how the system handles concurrent access to the obstacle reporting page.
 
 **Results:**
-Average Response Time: 6 ms
-Minimum Response Time: 4 ms
-Maximum Response Time: 13 ms
-Throughput: 1.1 requests/second
-Error Rate: 0.00%
+| Metric                 | Value               |
+|------------------------|---------------------|
+| Average Response Time  | 6 ms                |
+| Minimum Response Time  | 4 ms                |
+| Maximum Response Time  | 13 ms               |
+| Throughput             | 1.1 requests/second |
+| Error Rate             | 0.00%               |
 
 The obstacle report form load test indicates excellent performance under concurrent access. The average response time is very low, and the system efficiently serves multiple requests without any errors, demonstrating its capability to handle simultaneous access to this critical functionality.
 
@@ -1172,11 +1178,13 @@ Simulate multiple pilots submitting obstacle reports simultaneously.
 To measure backend processing and data storage performance under load.
 
 **Results:**
-Average Response Time: 14 ms
-Minimum Response Time: 11ms
-Maximum Response Time: 22 ms
-Throughput: 1.1 requests/second
-Error Rate: 0.00%
+| Metric                 | Value               |
+|------------------------|---------------------|
+| Average Response Time  | 14 ms               |
+| Minimum Response Time  | 11 ms               |
+| Maximum Response Time  | 22 ms               |
+| Throughput             | 1.1 requests/second |
+| Error Rate             | 0.00%               |
 
 The obstacle report submission test shows that the system performs well under concurrent load. The average response time is low, and the system successfully processes multiple submissions without errors, indicating efficient backend processing and data storage capabilities.
 
@@ -1187,11 +1195,13 @@ Simulate multiple pilots accessing the obstacle overview page simultaneously.
 To measure how the system handles concurrent access to the obstacle overview page.
 
 **Results:**
-Average Response Time: 9 ms
-Minimum Response Time: 6 ms
-Maximum Response Time: 12 ms
-Throughput: 1.1 requests/second
-Error Rate: 0.00%
+| Metric                 | Value               |
+|------------------------|---------------------|
+| Average Response Time  | 9 ms                |
+| Minimum Response Time  | 6 ms                |
+| Maximum Response Time  | 12 ms               |
+| Throughput             | 1.1 requests/second |
+| Error Rate             | 0.00%               |
 
 The obstacle overview load test indicates strong performance under concurrent access. The average response time remains low, and the system efficiently serves multiple requests without any errors, demonstrating its capability to handle simultaneous access to this important functionality.
 
@@ -1200,12 +1210,14 @@ The obstacle overview load test indicates strong performance under concurrent ac
 #### Overall Performance Summary
 This test plan simulates the complete workflow: loading the login page, performing login, accessing the obstacle report form, submitting an obstacle report and viewing the obstacle overview.
 
-***Overall Results:**
-Average Response Time: 109 ms
-Minimum Response Time: 4 ms
-Maximum Response Time: 513 ms
-Throughput: 5.2 requests/second
-Error Rate: 0.00%
+**Overall Results:**
+| Metric                 | Value               |
+|------------------------|---------------------|
+| Average Response Time  | 109 ms              |
+| Minimum Response Time  | 4 ms                |
+| Maximum Response Time  | 513 ms              |
+| Throughput             | 5.2 requests/second |
+| Error Rate             | 0.00%               |
 
 The overall performance testing indicates that the system is capable of handling concurrent user interactions efficiently. The average response time across all actions remains low, and the system successfully processes multiple requests without any errors, demonstrating its robustness and reliability under load.
 
