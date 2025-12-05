@@ -296,7 +296,7 @@ To determine how intuitive and user friendly the web application is, we conducte
 ### Test 1: Please report an obstacle with a pin
 
 - **User 1**: Located the "Draw a Marker" button and used it to set a pin. He then filled im the Obstacles type, a short description and then a height
-- **User 2**: First attemped to right click on the map like you do with google maps, and when this failed he used the "Draw a Marker button" soon after. This user also submitted a picture
+- **User 2**: First attempted to right click on the map like you do with google maps, and when this failed he used the "Draw a Marker button" soon after. This user also submitted a picture
 
 ---
 
