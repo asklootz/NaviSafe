@@ -130,7 +130,7 @@ Note that the group did not have any working iPads available, so an iPhone was u
 
 - **Input**: Click "View Details" on a pending report and then "Pending Review". Change the status to Rejected, then write a reason for the decision and press Update status.
 - **Expected Result**: The report is rejected
-- **Actual Result**: The report has been succesfully rejected
+- **Actual Result**: The report has been successfully rejected
 
 ---
 
