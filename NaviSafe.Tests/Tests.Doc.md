@@ -61,10 +61,10 @@ In Rider, open the Unit Tests tool window and choose Run All Tests for the NaviS
 All tests should run and show their result there.
 
 ObstacleValidTest
-these test verify the validation rules for the ObstacleDataForm model. The goal is to ensure that submitted obsticals follow the requirements for name and height before they are further proceed in the system. 
+these test verify the validation rules for the ObstacleDataForm model. The goal is to ensure that submitted obstacles follow the requirements for name and height before they are further proceed in the system. 
 
 Obstacle_Name_Reuquired 
-Checks that shortdec is (obstical name) is requried. If this is empty the model should return a validation error message.
+Checks that shortdec is (obstacle name) is requried. If this is empty the model should return a validation error message.
 
 Obstacle_Height_cant_be_Below_Requirements
 test that the altitude cannot be lower than the minimum limit of 0.1 meters, if the value is below the validation should return a error message. 
