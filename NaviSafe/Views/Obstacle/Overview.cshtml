@@ -460,8 +460,8 @@
     <div class="modal fade" id="detailsModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title formLabel">Report Details</h5>
+                <div class="modal-header bg-light border-bottom border-secondary">
+                    <h5 class="modal-title formLabel"><i class="bi bi-info-circle"></i> Report Details</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body" id="detailsContent">
@@ -524,22 +524,22 @@
             
             let html = '<div class="p-3">';
             html += '<dl class="row">';
-            html += '<dt class="col-sm-4 ">Report ID:</dt><dd class="col-sm-8 fs-5">#' + regID + '</dd>';
-            html += '<dt class="col-sm-4 formLabel">Type:</dt><dd class="col-sm-8 fs-5">' + shortDesc + '</dd>';
-            html += '<dt class="col-sm-4 formLabel">Height:</dt><dd class="col-sm-8 fs-5">' + (altitude || 'N/A') + ' feet</dd>';
-            html += '<dt class="col-sm-4 formLabel">Status:</dt><dd class="col-sm-8 fs-5">' + state + '</dd>';
-            html += '<dt class="col-sm-4 formLabel">Comment:</dt><dd class="col-sm-8 fs-5">' + (rejectComment || 'N/A') + '</dd>';           html += '<dt class="col-sm-4 formLabel">Coordinates:</dt><dd class="col-sm-8 fs-5">' + parseFloat(lat).toFixed(6) + ', ' + parseFloat(lon).toFixed(6) + '</dd>';
-            html += '<dt class="col-sm-4 formLabel">Submitted:</dt><dd class="col-sm-8 fs-5">' + new Date(creationDate).toLocaleDateString() + '</dd>';
+            html += '<dt class="col-sm-3">Report ID:</dt><dd class="col-sm-9 fs-5">#' + regID + '</dd>';
+            html += '<dt class="col-sm-3">Type:</dt><dd class="col-sm-9 fs-5">' + shortDesc + '</dd>';
+            html += '<dt class="col-sm-3">Status:</dt><dd class="col-sm-9 fs-5"><span class="badge ' + getStatusBadgeClass(state) + '">' + state + '</span></dd>';
+            html += '<dt class="col-sm-3 ">Comment:</dt><dd class="col-sm-9 fs-5">' + (rejectComment || 'N/A') + '</dd>';
+            html += '<dt class="col-sm-3 ">Coordinates:</dt><dd class="col-sm-9 fs-5">' + parseFloat(lat).toFixed(6) + ', ' + parseFloat(lon).toFixed(6) + '</dd>';
+            html += '<dt class="col-sm-3 ">Submitted:</dt><dd class="col-sm-9 fs-5">' + new Date(creationDate).toLocaleDateString() + '</dd>';
             
             if (longDesc != null) {
-                html += '<dt class="col-sm-4 formLabel">Description:</dt><dd class="col-sm-8 fs-5">' + longDesc + '</dd>';
+                html += '<dt class="col-sm-3 ">Description:</dt><dd class="col-sm-9 fs-5">' + longDesc + '</dd>';
             }
             
             html += '</dl>';
             
             if (img && img.length > 0) {
                 html += '<div class="mt-3">';
-                html += '<h6 class="formLabel">Image</h6>';
+                html += '<h6 class="">Image: </h6>';
                 html += '<img src="/Obstacle/GetImage/' + regID + '" class="img-fluid rounded" style="max-height: 300px; border: 3px solid var(--ns-gray-200);" />';
                 html += '</div>';
             }
@@ -548,6 +548,15 @@
             
             $('#detailsContent').html(html);
             $('#detailsModal').modal('show');
+        }
+
+        function getStatusBadgeClass(state) {
+            switch (state) {
+                case 'PENDING': return 'bg-warning';
+                case 'APPROVED': return 'bg-success';
+                case 'REJECTED': return 'bg-danger';
+                default: return 'bg-secondary';
+            }
         }
 
         function deleteDraft(reportId) {
