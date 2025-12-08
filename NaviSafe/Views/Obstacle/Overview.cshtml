@@ -518,17 +518,17 @@
             const altitude = report.Altitude;
             const state = report.State;
             const creationDate = report.CreationDate;
-            const rejectComment = report.rejectComment;
+            const rejectComment = report.RejectComment;
             
             if (!report) return;
             
             let html = '<div class="p-3">';
             html += '<dl class="row">';
-            html += '<dt class="col-sm-4 formLabel">Report ID:</dt><dd class="col-sm-8 fs-5">#' + regID + '</dd>';
+            html += '<dt class="col-sm-4 ">Report ID:</dt><dd class="col-sm-8 fs-5">#' + regID + '</dd>';
             html += '<dt class="col-sm-4 formLabel">Type:</dt><dd class="col-sm-8 fs-5">' + shortDesc + '</dd>';
             html += '<dt class="col-sm-4 formLabel">Height:</dt><dd class="col-sm-8 fs-5">' + (altitude || 'N/A') + ' feet</dd>';
             html += '<dt class="col-sm-4 formLabel">Status:</dt><dd class="col-sm-8 fs-5">' + state + '</dd>';
-            html += '<dt class="col-sm-4 formLabel">Rejection Comment:</dt><dd class="col-sm-8 fs-5">' + (rejectComment || 'N/A') + '</dd>';           html += '<dt class="col-sm-4 formLabel">Coordinates:</dt><dd class="col-sm-8 fs-5">' + parseFloat(lat).toFixed(6) + ', ' + parseFloat(lon).toFixed(6) + '</dd>';
+            html += '<dt class="col-sm-4 formLabel">Comment:</dt><dd class="col-sm-8 fs-5">' + (rejectComment || 'N/A') + '</dd>';           html += '<dt class="col-sm-4 formLabel">Coordinates:</dt><dd class="col-sm-8 fs-5">' + parseFloat(lat).toFixed(6) + ', ' + parseFloat(lon).toFixed(6) + '</dd>';
             html += '<dt class="col-sm-4 formLabel">Submitted:</dt><dd class="col-sm-8 fs-5">' + new Date(creationDate).toLocaleDateString() + '</dd>';
             
             if (longDesc != null) {
