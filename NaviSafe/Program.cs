@@ -208,7 +208,7 @@ app.Use(async (context, next) =>
     context.Response.Headers.Append("Content-Security-Policy", 
         "default-src 'self'; " +
         "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://*.tile.openstreetmap.org; " +
-        "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;" +
+        "style-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;" +
         "font-src 'self' data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; " +
         "img-src 'self' data: https://*.tile.openstreetmap.org https://www.w3.org https://cdnjs.cloudflare.com; " +
         "connect-src 'self' https://cdn.jsdelivr.net https://*.cloudflare.com https://*.tile.openstreetmap.org");
