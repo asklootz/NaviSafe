@@ -204,14 +204,14 @@ app.Use(async (context, next) =>
 {
     // Content Security Policy - prevents XSS attacks
     // Define allowed sources for scripts, styles, fonts, images, and connections
-    // Alternative sources that can be used: https://unpkg.com, https://cdn.jsdelivr.net
+    // Alternative sources that can be used: https://unpkg.com
     context.Response.Headers.Append("Content-Security-Policy", 
         "default-src 'self'; " +
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://*.tile.openstreetmap.org; " +
-        "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;" +
-        "font-src 'self' data: https://cdnjs.cloudflare.com; " +
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://*.tile.openstreetmap.org; " +
+        "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;" +
+        "font-src 'self' data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; " +
         "img-src 'self' data: https://*.tile.openstreetmap.org https://www.w3.org https://cdnjs.cloudflare.com; " +
-        "connect-src 'self' https://*.tile.openstreetmap.org");
+        "connect-src 'self' https://cdn.jsdelivr.net https://*.cloudflare.com https://*.tile.openstreetmap.org");
     
     // Prevent clickjacking
     context.Response.Headers.Append("X-Frame-Options", "SAMEORIGIN");
