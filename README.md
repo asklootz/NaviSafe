@@ -14,7 +14,7 @@ The system is tailored to tablet users and connects pilots in the field to a cen
 - [Quick Start](#quick-start)
 - [Test Accounts](#test-accounts)
 - [Usage](#usage)
-- [Testing and Load Testing](#testing-and-load-testing)
+- [Testing](#testing)
 - [System Architecture](#system-architecture)
 - [Tech Stack](#tech-stack)
 - [Components](#components)
@@ -38,7 +38,6 @@ The founding members of NaviSafe from Group 9 consists of:
 - [.NET 9.0+ SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 - [Docker](https://www.docker.com/products/docker-desktop/)
 - [Git](https://www.docker.com/products/docker-desktop/)
-- MariaDB client / phpMyAdmin (AppHost.cs will automatically create phpMyAdmin when it runs)
 ---
 
 # Quick Start
@@ -52,6 +51,11 @@ dotnet run
 After you have cloned the repo, run the project via IDE program. You should be redirected to the Aspire Dashboard.
 
 ### 2. Access the application
+Access the `Aspire dashboard` via url from the CLI\
+Should appear as 
+```http request
+http://localhost:17163/login?t=<<idKey>>
+```
 Click on the `naviSafe` link in Aspire dashboard or navigate to:
 ```arduino
 https://localhost:8081/
@@ -61,11 +65,11 @@ If HTTPS certificate warnings appear:
 ```bash
 dotnet dev-certs https --trust
 ```
-Or manually trust the self-signed certificate in your browser.
+After installing self-signed certificate, you might still need to manually trust the self-signed certificate in your browser.
 
 ---
 
-# Test Accounts 
+# Test Accounts
 | Email | Password |
 |-------|----------|
 | admin@kartverket.no | admin123 |
@@ -79,22 +83,25 @@ Or manually trust the self-signed certificate in your browser.
 This section explains the application from a new user's perspective. No technical knowledge required.
 ### 1. Login (Pilot)
 Navigate to:
-```ardunino
+```https request
 https://localhost:8081/Account/Login
 ```
 Enter an admin or pilot account to access the dashboard.
 
 ### 2. Register an Obstacle
+```https request
+https://localhost:8081/Obstacle/DataForm
+```
 From the dashboard, you can:
 - Register new obstacles
 - Navigate through different entities and fill in such as:
-  - *Obstacle Type*
-  - *Obstacle Description*
-  - *Provide Coordinates*
-  - *Latitude*
-  - *Longitude*
-  - *Obstacle Height (in feet)*
-  - *Camera function and ability to upload a picture*
+    - *Obstacle Type*
+    - *Obstacle Description*
+    - *Provide Coordinates*
+    - *Latitude*
+    - *Longitude*
+    - *Obstacle Height (in feet)*
+    - *Camera function and ability to upload a picture*
 
 **Selecting a location**
 1. Allow GPS-location access
@@ -106,9 +113,9 @@ From the dashboard, you can:
 - Clicking on **"My Registrations"** and redirects you to a complete overview of obstacle reporting page
 
 ### 3. View My Registrations
-Navigate to:
-**Obstacle** --> **My Registrations**
-
+```https request
+https://localhost:8081/Obstacle/Overview
+```
 You can view:
 - Stored obstacles
 - Status (Pending, Approved, Rejected)
@@ -128,6 +135,9 @@ https://localhost:8081/Account/Login
 Enter an admin account to access the admin dashboard.
 
 ### 2. Admin Dashboard
+```https request
+https://localhost:8081/Home/AdminDashboard
+```
 From the dashboard, as an admin user, you have access to:
 - Have a complete overview of submitted obstacle reports
 - An unique ID, obstacle type, description, reporter name, status, date, image and action of viewing report details
@@ -144,13 +154,13 @@ After clicking on the **Show Map View** button on the navigation bar, you can:
 Using the same instances as pilot, you can:
 - Register new obstacles
 - Navigate through different entities and fill in such as:
-  - *Obstacle Type*
-  - *Obstacle Description*
-  - *Provide Coordinates*
-  - *Latitude*
-  - *Longitude*
-  - *Obstacle Height (in feet)*
-  - *Camera function and ability to upload a picture*
+    - *Obstacle Type*
+    - *Obstacle Description*
+    - *Provide Coordinates*
+    - *Latitude*
+    - *Longitude*
+    - *Obstacle Height (in feet)*
+    - *Camera function and ability to upload a picture*
 
 **Selecting a location**
 1. Allow GPS-location access
@@ -175,454 +185,11 @@ Use the Logout button in the navigation bar.
 
 ---
 
-# Testing and Load Testing
-The objective of testing was to ensure that the NaviSafe application functions correctly across different user scenarios and performs well under load.
-
-**Functional Testing**
-
-The following user flows were validated:
-- ✔️ Login success and failure
-- ✔️ Obstacle registration with pin
-- ✔️ Dynamic map interaction
-- ✔️ Coordinate tracking
-- ✔️ File upload validation
-- ✔️ Session persistence
-- ✔️ Logout navigation
-
-**Preconditions:**
-
-This test scenario assumes the following:
-
-- The pilot/admin is logged in to their account
-- The pilot/admin has service
-- The pilot is using an iOS Device with Safari or Google Chrome
+# Testing
+Testing details are provided in the [Tests.Doc.md](NaviSafe.Tests/Tests.Doc.md) file, located in:
+`NaviSafe.Tests/Tests.Doc.md`.
 
 ---
-
-## Test Cases
-
-### TS-01: Pilot obstacle report with pin
-
-- **Input**: Click on the "Draw a marker" button on the left of the map and place a pin. Then input type, height and a description
-- **Expected result**: The obstacle is submitted for review and a new report form is shown
-- **Actual result**: The obstacle is sent to the admin for review
-
----
-
-### TS-02: Pilot obstacle report without pin
-
-- **Input**: Submit an Obstacle with Type, Height and Description but do not place a pin
-- **Expected result**: the helicopter’s live location will be used instead of the pin
-- **Actual result**: The helicopters live location is used and a report is successfully sent for review
-
----
-
-### TS-03: Pilot saving obstacle as draft
-
-- **Input**: Select an obstacle type and then save it as a draft
-- **Expected result**: The draft is saved in the my registrations tab
-- **Actual result**: The draft is saved and can be edited at a later point
-
----
-
-### TS-04: Pilot obstacle report with pin - without fields
-
-- **Input**: Click on the "Draw a marker" button on the left of the map and drop a pin, then submit without any fields
-- **Expected result**: Alert notifies you that you must add an obstacle type before saving as draft or submitting the report
-- **Actual result**: Pressing submit takes you to the Obstacle Type section, where you must select a type
-
----
-
-### TS-05: Pilot adding a picture to the obstacle report
-
-- **Input**: Upload or take a picture with the camera/uploade buttons
-- **Expected result**: The picture is added to the report
-- **Actual result**: The picture is sucessfully added to the report
-
----
-
-### TS-06: Check the pilots own reports
-
-- **Input**: Click the "my registrations" button
-- **Expected result**: the my registration page is shown
-- **actual result**: a list of the pilots registrations are shown
-
----
-
-### TS-07: Edit a draft
-
-- **Input**: Find the draft in "my registrations" and click edit draft
-- **Expected result**: you can edit the draft
-- **actual result**: you are sent to the registration form to complete the draft
-
----
-
-### TS-08: Verifying the location trackers' accuracy
-Verify the location trackers' accuracy. Three devices were tested after the group noticed a difference in the accuracy of our devices and browsers.
-
-**Expected results**: Tracker inaccuracy does not exceed 50 meters
-
-**Actual results**:
-- iPhone 14 Plus’s accuracy constantly changed between 5-31 Meters
-- Windows 11 Laptop was tested with Opera GX, giving either 4911 or 22.5 meters and Google Chrome with 128 Meters of inaccuracy
-- MacBook M1 Pro had an accuracy of 35 Meters
-
-The iPhone 14 Plus and MacBook's results are satisfactory, while the laptop's range was too unstable.
-Note that the group did not have any working iPads available, so an iPhone was used as a substitute
-
----
-
-### TS-09: Verify the Administrators ability to approve obstacles
-
-- **Input**: Click "View Details" on a pending report and then "Pending Review". Change the status to Approved/Published, then write a reason for the decision and press Update status.
-- **Expected results**: The obstacle is successfully approved, and becomes green to signify this.
-- **Actual result**: The obstacle's status is changed to approved
-
----
-
-### TS-10: Verify the Administrators ability or quick approve obstacles
-
-- **Input**: Click "View details" on a pending report and then "quick approve"
-- **Expected results**: The report is approved
-- **Actual result**: the report has been approved
-
----
-
-### TS-11: Verify the Administrators ability to reject obstacles
-
-- **Input**: Click "View Details" on a pending report and then "Pending Review". Change the status to Rejected, then write a reason for the decision and press Update status.
-- **Expected result**: The report is rejected
-- **Actual result**: The report has been succesfully rejected
-
----
-
-### TS-12: Verify the Administrators ability to quick reject
-
-- **Input**: Click "View Details" on a pending report and click quick reject
-- **Expected Result**: The report is rejected without needing to input a reason
-- **Actual result**: The report is rejected, and the reason is automatically put as "Quick Reject"
-
----
-
-### TS-13: Verify the Administrator ability to sort reports by the approved status
-
-- **Input**: Click the "Approved" button near the top of the admin dashboard
-- **Expected result**: Only approved reports will show
-- **Actual result**: Approved reports are the only ones displayed
-
----
-
-### TS-14:  Verify the Administrator ability to sort reports by the pending status
-
-- **Input**: Click the "Pending review" button near the top of the admin dashboard
-- **Expected result**: Only pending reports will show
-- **Actual result**: pending reports are the only ones displayed
-
----
-
-### TS-15:  Verify the Administrator ability to sort reports by the rejected status
-
-- **Input**: Click the "Rejected" button near the top of the admin dashboard
-- **Expected result**: Only rejected reports will show
-- **Actual result**: rejected reports are the only ones displayed
-
----
-
-### TS-16:  Verify the Administrator ability to sort reports to total submitted reports
-
-- **Input**: Click the "Total submitted reports" button near the top of the admin dashboard
-- **Expected result**: All reports will show
-- **Actual result**: Every report is shown
-
----
-
-### TS-17: Verify the administrators ability to view the obstacle report's image
-
-- **Input** Click the "View" button under the image tab
-- **Expected result: The image is shown to the administrator
-- **actual result**: The image is opened in a new tab, providig a clear view
-
----
-
-### TS-18: Verify the administrators ability to view reports on the map
-
-- **Input**: Click on the "show map view"
-- **Expected result**: A map with all obstacles is shown
-- **Actual result**: A map is shown with all obstacles color coded by status
-
----
-
-### TS-19: Verify the administrators ability to view obstacle details on the map
-
-- **Input** Click on an obstacle on the map and then details
-- **Expected result** Admin is taken to the report details & review page
-- **Actual result** The admin is taken to the page for changing report status
-
----
-
-### Login Test Case
-These Test Cases are meant to check that the login page functions as intended
-
-### TC-01: Creating an account
-**Steps**
-1. Navigate to 'Account/Login'
-2. Click "Create an account"
-3. Fill in the details
-4. Click Register
-
-**Expected result**: A new account is created
-
-**Actual Result**: Pass
-
----
-
-### TC-02: Successful Login
-**Steps:**
-1. Navigate to `/Account/Login`
-2. Enter email: `admin@kartverket.no `
-3. Enter password: `admin123`
-4. Click "Login"
-
-**Expected Result:** Redirect to Home dashboard with authenticated session
-
-**Actual Result:** Pass
-
----
-
-### TC-03: Invalid Data
-**Steps:**
-1. Navigate to `/Account/Login`
-2. Enter email: `admin@kartverket`
-3. Enter password: `WrongPassword`
-4. Click "Login"
-
-**Expected Result:** Error message "Invalid email or password" displayed
-
-**Actual Result:** Pass
-
----
-
-### TC-04: Empty Form Submission
-**Steps:**
-1. Navigate to `/Account/Login`
-2. Leave email and password fields empty
-3. Click "Login"
-
-**Expected Result:** Validation errors for required fields
-
-**Actual Result:** Pass
-
----
-
-### TC-05: Invalid Email Format
-**Steps:**
-1. Navigate to `/Account/Login`
-2. Enter email: `notanemail`
-3. Enter password: `admin123`
-4. Click "Login"
-
-**Expected Result:** Email format validation error
-
-**Actual Result:** Pass
-
----
-
-### TC-06: Session Consistency
-**Steps:**
-1. Login successfully
-2. Navigate to different pages
-3. Check session data remains intact
-
-**Expected Result:** User remains authenticated across page navigation
-
-**Actual Result:** Pass
-
----
-
-#### TC-07: Logout Functionality
-**Steps:**
-1. Login successfully
-2. Click "Logout" button
-3. Try accessing protected pages
-
-**Expected Result:** Session cleared, redirected to login page
-
-**Actual Result:** Pass
-
----
-
-## User Tests
-
-To determine how intuitive and user friendly the web application is, we conducted a test with two people from outside the group. Several tasks were prepared for the testers to attempt
-
-### Test 1: Please report an obstacle with a pin
-
-- **User 1**: Located the "Draw a Marker" button and used it to set a pin. He then filled im the Obstacles type, a short description and then a height
-- **User 2**: First attemped to right click on the map like you do with google maps, and when this failed he used the "Draw a Marker button" soon after. This user also submitted a picture
-
----
-
-### Test 2: Please report an obstacle without using a pin
-
-- **User 1**: Noticed that the Live marker was active the moment he started the form, he then filled the relevant fields and submitted
-- **User 2**: Also noticed how the Live marker was already in use, filled in only the required information before sending
-
----
-
-### Test 3: Please create a draft, and then complete it
-
-- **User 1**: After creating a draft, this user found their way to the "My registration" page where he saw his own draft. The user then completed his draft
-- **User 2**: The user created their draft and also found their way to the "My registration" Page, as there were not many other places to go. He then completed his draft
-
----
-
-## The users were then redirected to the admin page
-
-### Test 4: Please approve a report
-
-- **User 1**: This user quickly found his wait to the "Reports & Review page" via the "View Details" button and used the "Quick Approve" feature
-- **User 2**: User 2 also found the page easily, but he instead clicked on the "Pending Review" Button and put it on Approved/Published. He then tried to approve the report, but was prompted to write a reason before approving
-
-This showed that the approval process wasnt the most intuitive part of our application
-
----
-
-### Test 5: Please deny a request
-
-- **User 1**: Clicked the "View Details" button again and used the Quick Reject feature
-- **User 2**: He went again to the "Pending Review" Button, changed it to rejected and then wrote a reason before updating
-
----
-
-### Please sort the reports by their different statuses
-
-- **User 1**: Clicked on the "Approved" Button, before moving on to "Rejected" and "Pending Review"
-- **User 2**: This user also found the buttons quite easily, moving from "Rejected" to "Approved into "Pending Review" before finally settling at "Total submitted reports"
-
----
-
-### Please look at the map and find an obstacle to inspect
-
-- **User 1**: The user found his way to the map section and clicked on one of the rejected reports. He viewed the image and then clicked "View details", sending him back to the "Report Details & Overview" page
-- **User 2**: The second user found his way to the map rather quickly, he then zoomed out to see the whole map. The user then selected an obstacle to the north, and since it had no image he clicked on "View details"
-
----
-
-## Load Testing (WebSurge)
-This summarizes the results of load and stress testing performed on the NaviSafe application.
-All tests were executed using **West Wind WebSurge** and focused on application performance, endpoint stability,
-and request handling under concurrent load.
-
-### Test Configuration
-| Setting | Value |
-|-------|----------|
-| Duration | 60 sec |
-| Concurrent Threads | 2 |
-| Total Requests | 4,081 |
-| Successful Requests | 3,919 |
-| Failed Requests | 162 |
-| Environment | Localhost (Docker + Aspire) |
-| Testing Tool | WebSurge 3.0.3 | 
-
-The entire system ran using .NET Aspire, ensuring all dependent services (Web app, MariaDB, phpMyAdmin) were
-orchestrated and healthy throughout the test.
-
-### Performance Summary
-| Metric | Result |
-|--------|----------------------|
-| Avg Response Time | 29.31 ms     |
-| Median Response Time | 7.79 ms     |
-| 95th Percentile | 278.71 ms     |
-| 99th Percentile | 296.29 ms     | 
-| Fastest Request | 1.43 ms     |
-| Slowest Request | 383.78 ms     |
-| Requests per Second | ~68 req/s     |
-| Data Served | 102 MB         | 
-| Data Posted | 599 KB         |
-
-### Endpoint Analysis
-Below is a breakdown of performance for each tested endpoint grouped by expected behaviour.
-
-✔️ **GET Endpoints - Fast and Stable**
-
-| Endpoint                    | Avg (ms)                | Success                | Fail      |
-|-----------------------------|-------------------------|------------------------|-----------|                  
-| `/`                         | 9.62                    | 471                    | 0         |
-| `/Home/AdminDashboard`      | 9.71                    | 471                    | 0         |
-| `/Account/Login` (GET)      | 6.11                    | 471                    | 0         |
-| `/Account/Register`         | 6.72                    | 157                    | 0         |
-| `/Obstacle/Dataform` (GET)  | 6.63                    | 471                    | 0         |
-| `/Obstacle/Overview`        | 8.11                    | 471                    | 0         |
-
-**Verdict**:
-
-All GET requests respond consistently under **10 ms**, with **0 failures** across hundreds of requests.
-This indicates:
-- Stable database reads
-- No bottlenecks in routing
-- Efficient rendering pipeline
-- Minimal server-side overhead
-
-🟡 **POST Endpoints - Mostly Stable**
-
-**POST** `/Account/Logout`
-
-| Avg (ms) | Success | Fail       |
-|----------|---------|------------|
-| 12.68    | 469     | 2          |
-
-Logout is lightweight and performs well.
-
-**POST** `/Home/UpdateReportStatus/`
-
-| Avg (ms) | Success | Fail       |
-|----------|---------|------------|
-| 8.48     | 157     | 0          |
-
-Very rapid - this endpoint is efficient and scales well.
-
-⚠️ **POST** `/Account/Login` - **Expected Complex Behaviour**
-
-| Metric                 | Value               |
-|------------------------|---------------------|
-| Avg Response Time      | 282.67 ms           |
-| Max Response Time      | 383.78 ms           |
-| 95th Percentile        | 307.92 ms           |
-| Success                | 311                 |
-| Fail                   | 2                   |
-
-**Verdict**:
-
-Login requests are intentionally slower due to:
-- Password hashing
-- Database lookups
-- Session initialization
-- Cookie generation
-
-Which is normal and expected under load.
-
-❌**Faultfinding: POST** `/Obstacle/Dataform`
-
-| Metric                 | Value               |
-|------------------------|---------------------|
-| Success                | 0                   |
-| Failed Requests        | 157                 |
-| Avg Response           | 2.07 ms             |
-
-These failures were **not caused by performance issues.**
-
-**Root Cause**
-
-The request contained an invalid image format (APNG), which NaviSafe does not support.
-
-Allowed formats:
-- JPEG
-- PNG
-- GIF
-- WEBP
-
-The server rejects unsupported images immediately, explaining the extremely low response times.
-This failure confirms that **input validation works successfully.**
 
 # System Architecture
 [![Navi-Safe-sysdiagram.png](https://i.postimg.cc/Cxw2mCfT/Navi-Safe-sysdiagram.png)](https://postimg.cc/BXwNvKgM)
@@ -702,8 +269,8 @@ The solution employs a robust data persistence strategy centered around **MariaD
 
 - **ORM & Data Access:** Uses **Entity Framework Core** with the `Pomelo.EntityFrameworkCore.MySql` provider. This allows for strongly-typed queries, efficient change tracking, and LINQ support.
 - **Connection Management:**
-  - **Auto-Detection:** Implements `ServerVersion.AutoDetect` to dynamically configure features based on the specific MariaDB version running in the container.
-  - **Service Integration:** Explicitly registers a named `MySqlDataSource` ("mariaDatabase"). This pattern supports .NET service defaults, enabling automatic health checks and standardized metrics collection.
+    - **Auto-Detection:** Implements `ServerVersion.AutoDetect` to dynamically configure features based on the specific MariaDB version running in the container.
+    - **Service Integration:** Explicitly registers a named `MySqlDataSource` ("mariaDatabase"). This pattern supports .NET service defaults, enabling automatic health checks and standardized metrics collection.
 - **Resilience:** The startup configuration includes fallback logic (prioritizing `mariaDatabase` over `DefaultConnection`) to ensure the application connects reliably whether running locally or within the Docker Compose orchestration.
 
 ## Importing Database
@@ -746,22 +313,23 @@ CREATE TABLE IF NOT EXISTS `organisation` (
 ```sql
 -- Reporting Table
 CREATE TABLE IF NOT EXISTS `reporting` (
-    `regID` int(11) NOT NULL AUTO_INCREMENT,
-    `lat` float NOT NULL,
-    `lon` float NOT NULL,
-    `altitude` float DEFAULT NULL,
-    `accuracy` int(11) DEFAULT NULL,
-    `shortDesc` varchar(50) DEFAULT NULL,
-    `longDesc` varchar(255) DEFAULT NULL,
-    `img` varchar(50) DEFAULT NULL,
-    `isSent` tinyint(1) NOT NULL,
-    `state` enum('APPROVED','PENDING','REJECTED') NOT NULL,
-    `rejectComment` varchar(255) DEFAULT NULL,
-    `userID` int(11) NOT NULL,
-    `creationDate` timestamp NOT NULL DEFAULT current_timestamp(),
-    PRIMARY KEY (`regID`),
-    KEY `userID` (`userID`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+  `regID` int(11) NOT NULL AUTO_INCREMENT,
+  `lat` float NOT NULL,
+  `lon` float NOT NULL,
+  `altitude` float DEFAULT NULL,
+  `accuracy` int(11) DEFAULT NULL,
+  `shortDesc` varchar(50) DEFAULT NULL,
+  `longDesc` varchar(255) DEFAULT NULL,
+  `img` varchar(50) DEFAULT NULL,
+  `isSent` bool NOT NULL,
+  `state` enum('APPROVED','PENDING','REJECTED') NOT NULL,
+  `rejectComment` varchar(255) DEFAULT NULL,
+  `userID` int(11) NOT NULL,
+  `creationDate` timestamp NOT NULL DEFAULT current_timestamp(),
+  `geoJSON` JSON DEFAULT NULL,
+  PRIMARY KEY (`regID`),
+  KEY `userID` (`userID`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 ```
 
 3. **UserAuth**
@@ -854,391 +422,9 @@ INSERT INTO `userRole` (`roleID`, `rolePermissions`, `permissionsDescription`) V
 ('ADM', 'ADMIN', 'Full system access, including management and configuration'),
 ('PIL', 'PILOT', 'Limited access to flight and operational data');
 ```
-
-### Workflow
-1. **Tablet & Admin Clients** send `POST`/`GET` requests.
-2. **Front-End** communicates with the **Aspire.NET orchestration layer**.
-3. **Orchestration** handles:
-   - API services
-   - Metrics
-   - Data processing
-4. **Dockerized Back-End** runs:
-   - ASP.NET 9.0 Web Server
-   - MariaDB 11.8 Database
-   - phpMyAdmin for DB management
-
 ---
 
-## Features
-- RESTful API for front-end requests
-- Metrics and monitoring support
-- MariaDB database for data persistence
-- Dockerized infrastructure for easy deployment
-- Secure connection & administration channel
-
----
-
-## Tech Stack
-| Layer | Technology                                        |
-|------|---------------------------------------------------|
-| **Front-End** | *(Leaflet, JavaScript, CSS, Bootstrap CSS, HTML)* |
-| **API & Orchestration** | ASP.NET Core 9.0                                  |
-| **Database** | MariaDB 11.8                                      |
-| **DB Admin Tool** | phpMyAdmin 5.2                                    |
-| **Containerization** | Docker, Docker File                               |
-
----
-
-## Components
-
-### 1. Controllers (`NaviSafe/Controllers/`)
-Handle incoming HTTP requests, manage application flow, and interact with services.
-- **`AccountController.cs`**: Manages user authentication flows including Login, Logout, and session handling.
-- **`RegistrationController.cs`**: Handles new user sign-ups and validation logic.
-- **`ObstacleController.cs`**: Manages the core domain logic for reporting and retrieving navigation obstacles.
-- **`AuthController.cs`**: Likely handles lower-level authentication mechanisms or API-specific auth tokens.
-- **`HomeController.cs`**: Serves the main landing page and dashboard entry points.
-
-### 2. Models (`NaviSafe/Models/`)
-Define the data structure and business entities used across the application.
-- **Domain Entities**:
-  - `ObstacleData.cs`: Represents navigation hazards reported by pilots.
-  - `UserEntities.cs`: Core user profile data structure.
-  - `RegistrationEntities.cs`: Data structures specific to the registration process.
-- **View Models & DTOs**:
-  - `LoginViewModel.cs` / `LoginUserModel.cs`: Data transfer objects for authentication forms.
-  - `RegisterViewModel.cs`: Captures and validates user input during registration.
-  - `ErrorViewModel.cs`: Standardized structure for displaying errors to the UI.
-
-### 3. Views (`NaviSafe/Views/`)
-Razor views responsible for the server-side rendering of the HTML UI.
-- **`Home/`**: Main dashboard and landing page templates.
-    - **`Account/`**: Login and profile management interfaces.
-    - **`Obstacle/`**: Forms for reporting obstacles and lists for viewing them.
-    - **`Shared/`**: Reusable layout components (headers, footers, navigation bars).
-
-### 4. Services (`NaviSafe/Services/`)
-Encapsulate business logic and data access to keep controllers lightweight.
-- **`UserStorage.cs`**: A singleton or scoped service that acts as an abstraction layer for user data persistence (interacting with the database or in-memory store).
-- **`JwtTokenService.cs`**: Handles the generation and validation of JSON Web Tokens for secure API authentication.
-
----
-
-**Key Responsibilities:**
-- Login/Logout operations
-- User registration
-- Session management
-- Input validation
-- Security token verification
-
----
-
-## Getting Started
-
-### Prerequisites
-Make sure you have:
-- [.NET SDK 9.0+](https://dotnet.microsoft.com/)
-- [Docker](https://www.docker.com/)
-- [Git](https://git-scm.com/)
-
----
-
-## Usage
-
-### 1. Login
-Visit http://localhost:8080 to access the login page. 
-
-#### Admin 
-Use the following credentials to log in as an admin user:
-- **Email**: *admin@kartverket.no*
-- **Password**: *admin123*
-
-#### Pilot users
-Use the following credentials to log in as a pilot user:
-- **Email**:
-    - pilot@nla.no
-    - pilot@politiet.no
-    - pilot@forsvaret.no
-- **Password**: *test123*
-
-From here, after you have logged in, you will arrive to the main dashboard.
-
-### 2. Home Dashboard
-After a successful login, you should now have access the main dashboard. From here, you can navigate to **Register Obstacle**. 
-
-### 3. Obstacle Registration
-1. Fill in **Obstacle Name** and **Obstacle Height**.
-2. Add a **Description** with details about the obstacle.
-3. Select the location of the map (powered by OpenStreetMap + Leaflet). You will receive a pop-up notification whether you will allow to turn on location or not.
-After that, you should be able to draw a marker on the map. Then **Coordinates Preview** will pinpoint your coordinates in terms of longitude and latitude, while 
-**Live coordinates** tracks your location with described coordinates in realtime. 
-4. Click **Submit Data** - the data will be sent via `POST`to the API and stored in the MariaDB database. 
-5. After submitting data, you can select **Back To Home** and thus return to the main dashboard.
-
-### 4. Return to Home Dashboard and Logout
-You can also click on the **NaviSafe** name in order to return to your main dashboard. If you wish to logout, simply click on the **Logout** button.
-
----
-
-## Testing
-The objective of this **Test Scenario** is to verify that users can submit data, interact with the map, and have their location accurately tracked.
-
-Preconditions:
-This test scenario assumes the following:
-•   The pilot is logged in to their account
-•   The pilot has service
-•   The pilot is using an iOS Device with Safari or Google Chrome
-
-### TS-01: Obstacle Registration with pin
-- **Input**: Submit an obstacle with type, height, a description and a pin.
-- **Expected result**: The obstacle is submitted and appears on the map
-- **Actual result**: The obstacle is displayed on the map
-
----
-
-### TS-02: Obstacle Registration without pin
-- **Input**: Submit an Obstacle with Type, Height and Description but without pin
-- **Expected result**: the helicopter’s live location will be used instead of the pin
-- **Actual result**: Feature not available, the registration goes through; however, no marker on the map
-
----
-
-### TS-03: Obstacle Registration with pin - without fields
-- **Input**: Submitting just a pin without any fields
-- **Expected result**: a pin is dropped and the registration can be completed later
-- **Actual result**: Feature not available, you will be asked to fill the fields
-
----
-
-### TS-04: Obstacle Registration - Drag and Drop a pin
-Drag and drop a pin on the map
-- **Expected result**: A pin is dropped on the map
-- **Actual result**: A pin is dropped on the map and the live tracker disappears
-
----
-
-### TS-05: Verifying the location trackers' accuracy
-Verify the location trackers' accuracy. Three devices were tested after the group noticed a difference in the accuracy of our devices and browsers. 
-
-**Expected results**: 
-- Tracker inaccuracy does not exceed 50 meters
-
-**Actual results**: 
-- iPhone 14 Plus’s accuracy constantly changed between 5-31 Meters
-- Windows 11 Laptop was tested with Opera GX, giving either 4911 or 22.5 meters and Google Chrome with 128 Meters of inaccuracy
-- MacBook M1 Pro had an accuracy of 35 Meters
-
-The iPhone 14 Plus and MacBook's results are satisfactory, while the laptop's range was too unstable.
-Note that the group did not have any working iPads available, so an iPhone was used as a substitute
-
----
-
-### TS-01: Successful Login
-**Steps:**
-1. Navigate to `/Account/Login`
-2. Enter email: `admin@navisafe.com`
-3. Enter password: `Admin123`
-4. Click "Login"
-
-**Expected Result:** Redirect to Home dashboard with authenticated session
-
-**Actual Result:** Pass
-
----
-
-### TS-02: Invalid Data
-**Steps:**
-1. Navigate to `/Account/Login`
-2. Enter email: `admin@navisafe.com`
-3. Enter password: `WrongPassword`
-4. Click "Login"
-
-**Expected Result:** Error message "Invalid email or password" displayed
-
-**Actual Result:** Pass
-
----
-
-### TS-03: Empty Form Submission
-**Steps:**
-1. Navigate to `/Account/Login`
-2. Leave email and password fields empty
-3. Click "Login"
-
-**Expected Result:** Validation errors for required fields
-
-**Actual Result:** Pass
-
----
-
-### TS-04: Invalid Email Format
-**Steps:**
-1. Navigate to `/Account/Login`
-2. Enter email: `notanemail`
-3. Enter password: `Admin123`
-4. Click "Login"
-
-**Expected Result:** Email format validation error
-
-**Actual Result:** Pass
-
----
-
-### TS-05: Session Consistency
-**Steps:**
-1. Login successfully
-2. Navigate to different pages
-3. Check session data remains intact
-
-**Expected Result:** User remains authenticated across page navigation
-
-**Actual Result:** Pass
-
----
-
-#### TC-06: Logout Functionality
-**Steps:**
-1. Login successfully
-2. Click "Logout" button
-3. Try accessing protected pages
-
-**Expected Result:** Session cleared, redirected to login page
-
-**Actual Result:** Pass
-
-### TS-05: Sort the obstacle reports by Obstacle type
-
----
-
-### Performance Testing
-Performance testing was conducted using Apache JMeter with a focus on realistic scenarios based on expected system usage.
-
-**Setup:**
-- Tool: Apache JMeter
-- Environment: Local Docker setup
-- Server: https://localhost:8081
-- Concurrent users: 10
-- Ramp-up period: 10 seconds
-
----
-
-#### 1. Login Page Load (GET /Account/Login)
-Simulate multiple users accessing the login page simultaneously.
-To measure how the system handles concurrent acces to the main entry page.
-
-**Results:**
-| Metric                 | Value               |
-|------------------------|---------------------|
-| Average Response Time  | 24 ms               |
-| Minimum Response Time  | 15 ms               |
-| Maximum Response Time  | 45 ms               |
-| Throughput             | 1.1 requests/second |
-| Error Rate             | 0.00%               |
-
-The results show that the system handles concurrent acess to the login page efficiently. Even under simultaneous access, response times remain low, and no errors occurred, which indicates stable performance for this entry point of the system.
-
----
-
-#### 2. Login Action (POST /Account/Login)
-Simulate multiple users logging in simultaneously to test the authentication process under load.
-To measure backend authentication and session handling performance.
-
-**Results:**
-| Metric                 | Value               |
-|------------------------|---------------------|
-| Average Response Time  | 490 ms              |
-| Minimum Response Time  | 481 ms              |
-| Maximum Response Time  | 513 ms              |
-| Throughput             | 1.1 requests/second |
-| Error Rate             | 0.00%               |
-
-The login action demonstrates robust performance under concurrent load. The average response time remains acceptable, and the system successfully handles multiple login requests without errors, indicating effective session management and authentication processes.
-
----
-
-#### 3. Obstacle Report Load (GET /Obstacle/Dataform)
-Simulate pilots accessing the obstacle report form simultaneously.
-To measure how the system handles concurrent access to the obstacle reporting page.
-
-**Results:**
-| Metric                 | Value               |
-|------------------------|---------------------|
-| Average Response Time  | 6 ms                |
-| Minimum Response Time  | 4 ms                |
-| Maximum Response Time  | 13 ms               |
-| Throughput             | 1.1 requests/second |
-| Error Rate             | 0.00%               |
-
-The obstacle report form load test indicates excellent performance under concurrent access. The average response time is very low, and the system efficiently serves multiple requests without any errors, demonstrating its capability to handle simultaneous access to this critical functionality.
-
----
-
-#### 4. Obstacle Report Submission (POST /Obstacle/Dataform)
-Simulate multiple pilots submitting obstacle reports simultaneously.
-To measure backend processing and data storage performance under load.
-
-**Results:**
-| Metric                 | Value               |
-|------------------------|---------------------|
-| Average Response Time  | 14 ms               |
-| Minimum Response Time  | 11 ms               |
-| Maximum Response Time  | 22 ms               |
-| Throughput             | 1.1 requests/second |
-| Error Rate             | 0.00%               |
-
-The obstacle report submission test shows that the system performs well under concurrent load. The average response time is low, and the system successfully processes multiple submissions without errors, indicating efficient backend processing and data storage capabilities.
-
----
-
-#### 5. Obstacle Overview Load (GET /Obstacle/Overview)
-Simulate multiple pilots accessing the obstacle overview page simultaneously.
-To measure how the system handles concurrent access to the obstacle overview page.
-
-**Results:**
-| Metric                 | Value               |
-|------------------------|---------------------|
-| Average Response Time  | 9 ms                |
-| Minimum Response Time  | 6 ms                |
-| Maximum Response Time  | 12 ms               |
-| Throughput             | 1.1 requests/second |
-| Error Rate             | 0.00%               |
-
-The obstacle overview load test indicates strong performance under concurrent access. The average response time remains low, and the system efficiently serves multiple requests without any errors, demonstrating its capability to handle simultaneous access to this important functionality.
-
----
-
-#### Overall Performance Summary
-This test plan simulates the complete workflow: loading the login page, performing login, accessing the obstacle report form, submitting an obstacle report and viewing the obstacle overview.
-
-**Overall Results:**
-| Metric                 | Value               |
-|------------------------|---------------------|
-| Average Response Time  | 109 ms              |
-| Minimum Response Time  | 4 ms                |
-| Maximum Response Time  | 513 ms              |
-| Throughput             | 5.2 requests/second |
-| Error Rate             | 0.00%               |
-
-The overall performance testing indicates that the system is capable of handling concurrent user interactions efficiently. The average response time across all actions remains low, and the system successfully processes multiple requests without any errors, demonstrating its robustness and reliability under load.
-
----
-
-## Installation
-Clone and set up the project:
-
-```bash
-git clone https://github.com/asklootz/NaviSafe.git
-cd NaviSafe
-dotnet restore
-```
-If you want to run it with https, you need to set up a self-signed certificate.
-```bash
-dotnet dev-certs https --trust
-```
-
----
-
-## Security 
+# Security
 Security measures have been taken to ensure the confidentiality and integrity of the data.\
 We have set up a secure connection between the user and application using TLS encryption (selfsigned certificate).
 

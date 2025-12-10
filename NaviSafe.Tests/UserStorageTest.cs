@@ -1,208 +1,181 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using NaviSafe.Data;
 using NaviSafe.Services;
-using Microsoft.EntityFrameworkCore;
 using Xunit;
 
-namespace NaviSafe.Tests;
-
-public class UserStorageTest
+namespace NaviSafe.Tests
 {
-    private DbContextOptions<ApplicationDbContext> CreateNewContextOptions()
+    public class UserStorageTest
     {
-        // Create a new context options instance using an in-memory database
-        return new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid():N}")
-            .Options;
-    }
-
-    [Fact]
-    public void FindsUserIgnoreCase()
-    {
-        var options = CreateNewContextOptions();
-
-        using (var context = new ApplicationDbContext(options))
+        // Lager nye DbContextOptions for hver test, med en egen in-memory database
+        private DbContextOptions<ApplicationDbContext> CreateNewContextOptions()
         {
-            var sut = new UserStorage(context);
-
-            var emailPrefix = "example";
-            var emailDomain = "navisafe.local";
-            var email = $"{emailPrefix}_{Guid.NewGuid():N}@{emailDomain}";
-
-            var password = "password";
-            var fullName = "Lars Mikkel";
-            var phone = "+47 974 35 165";
-            var street = "Gullveien 10";
-            var city = "Oslo";
-            var postal = "4629";
-            var country = "Norway";
-
-            var userId = sut.RegisterUser(
-                email,
-                password,
-                fullName,
-                phone,
-                street,
-                city,
-                postal,
-                country
-            );
-
-            Assert.False(
-                string.IsNullOrWhiteSpace(userId),
-                "Registration returned an empty userId - it expected a valid GUID."
-            );
-
-            Assert.True(
-                sut.UserExists(email.ToUpperInvariant()),
-                "Look-up with UPPER should be finding the user."
-            );
-
-            Assert.True(
-                sut.UserExists(email.ToLowerInvariant()),
-                "Look-up with lower should be finding the user."
-            );
+            return new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: $"UserStorageTests_{Guid.NewGuid():N}")
+                // Viktig: InMemory støtter ikke transaksjoner – vi sier "ikke kast exception, bare logg"
+                .ConfigureWarnings(b => b.Ignore(InMemoryEventId.TransactionIgnoredWarning))
+                .Options;
         }
-    }
 
-    [Fact]
-    public void RegisterUserStoresData()
-    {
-        var options = CreateNewContextOptions();
-
-        using (var context = new ApplicationDbContext(options))
+        [Fact] //tester at Userexisists finenr brukeren selv om e-post er skrevet med store eller små bostaver. 
+        public void FindsUserIgnoreCase()
         {
-            var sut = new UserStorage(context);
+            var options = CreateNewContextOptions();
 
-            var email = $"register_{Guid.NewGuid():N}@example.com";
+            using (var context = new ApplicationDbContext(options))
+            {
+                var sut = new UserStorage(context);
 
-            var password = "Secret123";
-            var fullName = "Maren Bokkeli";
-            var phone = "+47 998 03 403";
-            var street = "Blikksveien 20";
-            var city = "Kristiansand";
-            var postal = "4525";
-            var country = "Norway";
+                var email = $"example_{Guid.NewGuid():N}@navisafe.local";
 
-            var userId = sut.RegisterUser(
-                email,
-                password,
-                fullName,
-                phone,
-                street,
-                city,
-                postal,
-                country
-            );
+                var password    = "password";
+                var firstName   = "Lars";
+                var lastName    = "Mikkel";
+                var phoneNumber = "+47 974 35 165";
+                var orgNr       = 123456789;
+                var roleId      = "Admin";
 
-            Assert.False(
-                string.IsNullOrWhiteSpace(userId),
-                "Expected RegisterUser to return non empty userId."
-            );
+                var userId = sut.RegisterUser(
+                    email,
+                    password,
+                    firstName,
+                    lastName,
+                    phoneNumber,
+                    orgNr,
+                    roleId
+                );
 
-            Assert.True(
-                Guid.TryParse(userId, out _),
-                "Expected userId to be a fully valid GUID string."
-            );
+                Assert.False(string.IsNullOrWhiteSpace(userId)); //sjekker om det faktisk kom en gyldig userID
+                
 
-            var user = sut.GetUserInfo(email);
-
-            Assert.NotNull(user);
-            Assert.Equal(userId, user!.UserId);
-            Assert.Equal(password, user.Password);
-            Assert.Equal(fullName, user.FullName);
-            Assert.Equal(phone, user.PhoneNumber);
-            Assert.Equal(street, user.StreetAddress);
-            Assert.Equal(city, user.City);
-            Assert.Equal(postal, user.PostalCode);
-            Assert.Equal(country, user.Country);
-
-            Assert.Equal(
-                $"{street}, {postal} {city}, {country}",
-                user.FullAddress
-            );
-
-            Assert.NotEqual(
-                default,
-                user.RegisteredDate
-            );
+                Assert.True(sut.UserExists(email.ToUpperInvariant()));//userexists skal være sensitive 
+                Assert.True(sut.UserExists(email.ToLowerInvariant()));
+            }
         }
-    }
 
-    [Fact]
-    public void CannotRegisterTheSameEmailTwice()
-    {
-        var options = CreateNewContextOptions();
-
-        using (var context = new ApplicationDbContext(options))
+        [Fact] //tester om registeruser lagrer relevant informasjon og at getuserinfo kan hente den 
+        public void RegisterUserStoresData()
         {
-            var sut = new UserStorage(context);
+            var options = CreateNewContextOptions();
 
-            var email = $"dup_{Guid.NewGuid():N}@example.com";
+            using (var context = new ApplicationDbContext(options))
+            {
+                var sut = new UserStorage(context);
 
-            var firstId = sut.RegisterUser(
-                email,
-                "blabla",
-                "Lise Barken",
-                "+47 936 83 937",
-                "Bokkelibruseveien 12",
-                "Kristiansund",
-                "4247",
-                "Norway"
-            );
+                var email = $"register_{Guid.NewGuid():N}@example.com";
 
-            var secondId = sut.RegisterUser(
-                email,
-                "blabla",
-                "Lise Barken",
-                "+47 936 83 937",
-                "Bokkelibruseveien 12",
-                "Kristiansund",
-                "4247",
-                "Norway"
-            );
+                var password    = "Secret123";
+                var firstName   = "Maren";
+                var lastName    = "Bokkeli";
+                var phoneNumber = "+47 998 03 403";
+                var orgNr       = 987654321;
+                var roleId      = "User";
 
-            Assert.False(string.IsNullOrWhiteSpace(firstId));
-            Assert.Equal(string.Empty, secondId);
+                var userId = sut.RegisterUser(
+                    email,
+                    password,
+                    firstName,
+                    lastName,
+                    phoneNumber,
+                    orgNr,
+                    roleId
+                );
+
+// Vi sjekker bare at vi fikk en gyldig id, ikke tom/null
+                Assert.False(
+                    string.IsNullOrWhiteSpace(userId),
+                    "Expected RegisterUser to return non empty userId."
+                );
+
+
+                var user = sut.GetUserInfo(email); //henter ut brukeren 
+
+                Assert.NotNull(user);
+                Assert.Equal(userId,     user!.UserId);
+                Assert.Equal(firstName,  user.FirstName);
+                Assert.Equal(lastName,   user.LastName);
+                Assert.Equal(phoneNumber,user.PhoneNumber);
+                Assert.Equal(orgNr,      user.OrgNr);
+                Assert.Equal(roleId,     user.RoleID);
+
+                // RegisteredDate skal være satt til noe annet enn default(DateTime)
+                Assert.NotEqual(default, user.RegisteredDate);
+            }
         }
-    }
 
-    [Fact]
-    public void ValidateUserReturnsTrueOnlyIfPasswordIsCorrect()
-    {
-        var options = CreateNewContextOptions();
-
-        using (var context = new ApplicationDbContext(options))
+        [Fact] //tester at det ikke er mulig å registere samme epost to ganger, andre forsøk skal reutnere tomt 
+        public void CannotRegisterTheSameEmailTwice()
         {
-            var sut = new UserStorage(context);
+            var options = CreateNewContextOptions();
 
-            var email = $"login_{Guid.NewGuid():N}@example.com";
+            using (var context = new ApplicationDbContext(options))
+            {
+                var sut = new UserStorage(context);
 
-            var correctPassword = "correct123";
-            var wrongPassword   = "wrong123";
-            var fullName        = "Markus Lie";
-            var phone           = "+47 993 19 836";
-            var street          = "Blikksveien 1";
-            var city            = "Bergen";
-            var postal          = "4937";
-            var country         = "Norway";
+                var email = $"dup_{Guid.NewGuid():N}@example.com";
 
-            sut.RegisterUser(
-                email,
-                correctPassword,
-                fullName,
-                phone,
-                street,
-                city,
-                postal,
-                country
-            );
+                var firstId = sut.RegisterUser(
+                    email,
+                    "blabla",
+                    "Lise",
+                    "Barken",
+                    "+47 936 83 937",
+                    555555555,
+                    "User"
+                );
 
-            var resultCorrect = sut.ValidateUser(email, correctPassword);
-            var resultWrong   = sut.ValidateUser(email, wrongPassword);
+                var secondId = sut.RegisterUser(
+                    email,
+                    "blabla",
+                    "Lise",
+                    "Barken",
+                    "+47 936 83 937",
+                    555555555,
+                    "User"
+                );
 
-            Assert.True(resultCorrect);
-            Assert.False(resultWrong);
+                Assert.False(string.IsNullOrWhiteSpace(firstId));// første registering skal lykkes 
+                Assert.Equal(string.Empty, secondId); //andre skal feil og retunere tom id
+            }
+        }
+
+        [Fact] //tester at validateusr bare returnere true når passrod er skrevet rikitg, feil passors skal gi false 
+        public void ValidateUserReturnsTrueOnlyIfPasswordIsCorrect()
+        {
+            var options = CreateNewContextOptions();
+
+            using (var context = new ApplicationDbContext(options))
+            {
+                var sut = new UserStorage(context);
+
+                var email = $"login_{Guid.NewGuid():N}@example.com";
+
+                var correctPassword = "correct123";
+                var wrongPassword   = "wrong123";
+                var firstName       = "Markus";
+                var lastName        = "Lie";
+                var phoneNumber     = "+47 993 19 836";
+                var orgNr           = 111222333;
+                var roleId          = "User";
+
+                sut.RegisterUser(
+                    email,
+                    correctPassword,
+                    firstName,
+                    lastName,
+                    phoneNumber,
+                    orgNr,
+                    roleId
+                );
+
+                var resultCorrect = sut.ValidateUser(email, correctPassword);
+                var resultWrong   = sut.ValidateUser(email, wrongPassword);
+
+                Assert.True(resultCorrect);
+                Assert.False(resultWrong);
+            }
         }
     }
 }

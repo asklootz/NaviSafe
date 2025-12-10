@@ -6,20 +6,31 @@ namespace NaviSafe.Tests;
 
 public class HomeControllerTests
 {
-    [Fact]
-    public void Index_Return_ViewResult()
-    {
-        var controller = new HomeController(logger: null!, config: null!);
-        var result = controller.Index();
-        Assert.IsType<ViewResult>(result);
+    [Fact] //tester at homecontroller index returnerer et view result. 
+    public void Index_Returns_ViewResult()
+    { //arrange - oppretter controller med null avhengigheter 
+        var controller = new HomeController(
+            logger: null!,
+            config: null!,
+            context: null!
+        );
+
+        var result = controller.Index(); //act - kaller index()
+
+        Assert.IsType<ViewResult>(result); //forventer viewResultat 
     }
 
-    [Fact]
-    public void Privacy_Return_ViewResult()
-    {
-        var controller = new HomeController(logger: null!, config: null!);
-        var result = controller.Privacy();
-        Assert.IsType<ViewResult>(result);
+    [Fact] // tester at homecontroller privacy() retunerer et view resultat. 
+    public void Privacy_Returns_ViewResult()
+    { //arrange 
+        var controller = new HomeController(
+            logger: null!,
+            config: null!,
+            context: null!
+        );
+
+        var result = controller.Privacy(); //act
+
+        Assert.IsType<ViewResult>(result); //assert 
     }
-    
 }
