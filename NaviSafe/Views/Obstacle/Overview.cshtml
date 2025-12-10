@@ -246,8 +246,12 @@
     referrerpolicy="no-referrer"
     asp-fallback-src="~/lib/leaflet/dist/leaflet.js"></script>
 
+    @{
+        // Get the automatically generated nonce dynamically
+        string CSPNonce = Context.Items["CSPNonce"] as string;
+    }
     <!-- Expose the server-side reports to client-side JS -->
-    <script>
+    <script nonce=@CSPNonce>
         window.reportsData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
     </script>
 
