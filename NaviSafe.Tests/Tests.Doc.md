@@ -6,11 +6,11 @@ The main goal has been to test the parts of the system where we actually have lo
 ---
 
 # Table of Contents
-- [Functional Testing](#Functional-Testing)
-- [Test Cases](#Test-Cases)
-- [Login Test Cases](#Login-Test-Cases)
-- [User Tests](#User-Tests)
-- [Load Testing](#Load-Testing)
+- [Functional Testing](#functional-testing)
+- [Test Cases](#test-cases)
+- [Login Test Cases](#login-test-cases)
+- [User Tests](#user-tests)
+- [Load Testing](#load-testing)
 - [Unit Tests](#unit-tests)
 - [How to Run the Tests](#how-to-run-the-tests)
 
@@ -40,65 +40,67 @@ This test scenario assumes the following:
 ### TS-01: Pilot obstacle report with pin
 
 - **Input**: Click on the "Draw a marker" button on the left of the map and place a pin. Then input type, height and a description
-- **Expected result**: The obstacle is submitted for review and a new report form is shown
-- **Actual result**: The obstacle is sent to the admin for review
+- **Expected Result**: The obstacle is submitted for review and a new report form is shown
+- **Actual Result**: The obstacle is sent to the admin for review
 
 ---
 
 ### TS-02: Pilot obstacle report without pin
 
 - **Input**: Submit an Obstacle with Type, Height and Description but do not place a pin
-- **Expected result**: the helicopter’s live location will be used instead of the pin
-- **Actual result**: The helicopters live location is used and a report is successfully sent for review
+- **Expected Result**: the helicopter’s live location will be used instead of the pin
+- **Actual Result**: The helicopters live location is used and a report is successfully sent for review
 
 ---
 
 ### TS-03: Pilot saving obstacle as draft
 
 - **Input**: Select an obstacle type and then save it as a draft
-- **Expected result**: The draft is saved in the my registrations tab
-- **Actual result**: The draft is saved and can be edited at a later point
+- **Expected Result**: The draft is saved in the my registrations tab
+- **Actual Result**: The draft is saved and can be edited at a later point
 
 ---
 
 ### TS-04: Pilot obstacle report with pin - without fields
 
 - **Input**: Click on the "Draw a marker" button on the left of the map and drop a pin, then submit without any fields
-- **Expected result**: Alert notifies you that you must add an obstacle type before saving as draft or submitting the report
-- **Actual result**: Pressing submit takes you to the Obstacle Type section, where you must select a type
+- **Expected Result**: Alert notifies you that you must add an obstacle type before saving as draft or submitting the report
+- **Actual Result**: Pressing submit takes you to the Obstacle Type section, where you must select a type
 
 ---
 
 ### TS-05: Pilot adding a picture to the obstacle report
 
 - **Input**: Upload or take a picture with the camera/uploade buttons
-- **Expected result**: The picture is added to the report
-- **Actual result**: The picture is sucessfully added to the report
+- **Expected Result**: The picture is added to the report
+- **Actual Result**: The picture is sucessfully added to the report
 
 ---
 
 ### TS-06: Check the pilots own reports
 
 - **Input**: Click the "my registrations" button
-- **Expected result**: the my registration page is shown
-- **actual result**: a list of the pilots registrations are shown
+- **Expected Result**: My registration page is shown
+- **Actual Result**: A list of the pilots registrations are shown
 
 ---
 
 ### TS-07: Edit a draft
 
 - **Input**: Find the draft in "my registrations" and click edit draft
-- **Expected result**: you can edit the draft
-- **actual result**: you are sent to the registration form to complete the draft
+- **Expected Result**: You can edit the draft
+- **Actual Result**: You are sent to the registration form to complete the draft
 
 ---
 
 ### TS-08: Verifying the location trackers' accuracy
 Verify the location trackers' accuracy. Three devices were tested after the group noticed a difference in the accuracy of our devices and browsers.
 
-**Expected results**: Tracker inaccuracy does not exceed 50 meters
+**Expected Results**:
 
-**Actual results**:
+- Tracker inaccuracy does not exceed 50 meters
+
+**Actual Results**:
 - iPhone 14 Plus’s accuracy constantly changed between 5-31 Meters
 - Windows 11 Laptop was tested with Opera GX, giving either 4911 or 22.5 meters and Google Chrome with 128 Meters of inaccuracy
 - MacBook M1 Pro had an accuracy of 35 Meters
@@ -111,24 +113,24 @@ Note that the group did not have any working iPads available, so an iPhone was u
 ### TS-09: Verify the Administrators ability to approve obstacles
 
 - **Input**: Click "View Details" on a pending report and then "Pending Review". Change the status to Approved/Published, then write a reason for the decision and press Update status.
-- **Expected results**: The obstacle is successfully approved, and becomes green to signify this.
-- **Actual result**: The obstacle's status is changed to approved
+- **Expected Results**: The obstacle is successfully approved, and becomes green to signify this.
+- **Actual Results**: The obstacle's status is changed to approved
 
 ---
 
 ### TS-10: Verify the Administrators ability or quick approve obstacles
 
 - **Input**: Click "View details" on a pending report and then "quick approve"
-- **Expected results**: The report is approved
-- **Actual result**: the report has been approved
+- **Expected Results**: The report is approved
+- **Actual Results**: the report has been approved
 
 ---
 
 ### TS-11: Verify the Administrators ability to reject obstacles
 
 - **Input**: Click "View Details" on a pending report and then "Pending Review". Change the status to Rejected, then write a reason for the decision and press Update status.
-- **Expected result**: The report is rejected
-- **Actual result**: The report has been succesfully rejected
+- **Expected Result**: The report is rejected
+- **Actual Result**: The report has been succesfully rejected
 
 ---
 
@@ -136,63 +138,63 @@ Note that the group did not have any working iPads available, so an iPhone was u
 
 - **Input**: Click "View Details" on a pending report and click quick reject
 - **Expected Result**: The report is rejected without needing to input a reason
-- **Actual result**: The report is rejected, and the reason is automatically put as "Quick Reject"
+- **Actual Result**: The report is rejected, and the reason is automatically put as "Quick Reject"
 
 ---
 
 ### TS-13: Verify the Administrator ability to sort reports by the approved status
 
 - **Input**: Click the "Approved" button near the top of the admin dashboard
-- **Expected result**: Only approved reports will show
-- **Actual result**: Approved reports are the only ones displayed
+- **Expected Result**: Only approved reports will show
+- **Actual Result**: Approved reports are the only ones displayed
 
 ---
 
 ### TS-14:  Verify the Administrator ability to sort reports by the pending status
 
 - **Input**: Click the "Pending review" button near the top of the admin dashboard
-- **Expected result**: Only pending reports will show
-- **Actual result**: pending reports are the only ones displayed
+- **Expected Result**: Only pending reports will show
+- **Actual Result**: pending reports are the only ones displayed
 
 ---
 
 ### TS-15:  Verify the Administrator ability to sort reports by the rejected status
 
 - **Input**: Click the "Rejected" button near the top of the admin dashboard
-- **Expected result**: Only rejected reports will show
-- **Actual result**: rejected reports are the only ones displayed
+- **Expected Result**: Only rejected reports will show
+- **Actual Result**: rejected reports are the only ones displayed
 
 ---
 
 ### TS-16:  Verify the Administrator ability to sort reports to total submitted reports
 
 - **Input**: Click the "Total submitted reports" button near the top of the admin dashboard
-- **Expected result**: All reports will show
-- **Actual result**: Every report is shown
+- **Expected Result**: All reports will show
+- **Actual Result**: Every report is shown
 
 ---
 
 ### TS-17: Verify the administrators ability to view the obstacle report's image
 
 - **Input** Click the "View" button under the image tab
-- **Expected result: The image is shown to the administrator
-- **actual result**: The image is opened in a new tab, providig a clear view
+- **Expected Result**: The image is shown to the administrator
+- **Actual Result**: The image is opened in a new tab, providig a clear view
 
 ---
 
 ### TS-18: Verify the administrators ability to view reports on the map
 
 - **Input**: Click on the "show map view"
-- **Expected result**: A map with all obstacles is shown
-- **Actual result**: A map is shown with all obstacles color coded by status
+- **Expected Result**: A map with all obstacles is shown
+- **Actual Result**: A map is shown with all obstacles color coded by status
 
 ---
 
 ### TS-19: Verify the administrators ability to view obstacle details on the map
 
 - **Input** Click on an obstacle on the map and then details
-- **Expected result** Admin is taken to the report details & review page
-- **Actual result** The admin is taken to the page for changing report status
+- **Expected Result** Admin is taken to the report details & review page
+- **Actual Result** The admin is taken to the page for changing report status
 
 ---
 
@@ -206,7 +208,7 @@ These Test Cases are meant to check that the login page functions as intended
 3. Fill in the details
 4. Click Register
 
-**Expected result**: A new account is created
+**Expected Result**: A new account is created
 
 **Actual Result**: Pass
 
@@ -344,8 +346,8 @@ This showed that the approval process wasnt the most intuitive part of our appli
 
 ---
 
-# Load Testing (WebSurge)
-This summarizes the results of load and stress testing performed on the NaviSafe application.
+# Load Testing
+This summarizes the results of load testing performed on the NaviSafe application.
 All tests were executed using **West Wind WebSurge** and focused on application performance, endpoint stability,
 and request handling under concurrent load.
 
@@ -462,6 +464,94 @@ This failure confirms that **input validation works successfully.**
 
 ---
 
+# Stress Testing
+
+Stress testing was performed to evaluate how NaviSafe handles extreme load conditions. For this purpose, we conducted two tests: **Spike Load** and **Max Load**,
+using **Joe Dog Siege** as the testing tool. Both tests were performed on the MacBook M1 Pro, using the terminal for execution.
+
+### Spike Load
+Spike load was generated by sending a single request from 30 to 300 concurrent users to the application at a time.
+The tests ran for 30 seconds and produced the following results:
+
+### `spike.siege` **Test 1** - 30 concurrent users
+| Metric       | Value            |
+|--------------|------------------|
+| Transactions | 24343 hits       |
+| Availability | 100.00%          |
+| Elapsed Time | 30.72 secs       |
+| Data Transferred | 389.34 MB        |
+| Response Time | 37.66 ms         
+| Transaction Rate | 792.42 trans/sec |
+| Throughput | 12.67 MB/sec     |
+| Concurrency  | 29.84            |
+| Successful Transactions | 24345            |
+| Failed Transactions | 0                |
+| Longest Transaction | 260.00 ms        |
+| Shortest Transaction | 0.00 ms          |
+
+### `spike.siege` **Test 2** - 300 concurrent users
+| Metric       | Value            |
+|--------------|------------------|
+| Transactions | 22939 hits       |
+| Availability | 100.00%          |
+| Elapsed Time | 30.03 secs       |
+| Data Transferred | 365.41 MB        |
+| Response Time | 256.02 ms        
+| Transaction Rate | 763.87 trans/sec |
+| Throughput | 12.17 MB/sec     |
+| Concurrency  | 195.56           |
+| Successful Transactions | 22972            |
+| Failed Transactions | 0                |
+| Longest Transaction | 1180.00 ms       |
+| Shortest Transaction | 0.00 ms          |
+
+While **Max Load** differs from **Spike Load**, it is a more realistic scenario, testing the application under extreme load is important to ensure it can handle the expected load.
+
+To start off safely, we recommend running tests with a **Max Load** of 200 concurrent users. Later, this can be increased based on observed performance.
+
+### `maxload.siege` **Test 1** - 200 concurrent users
+
+| Metric       | Value           |
+|--------------|-----------------|
+| Transactions | 89049 hits      |
+| Availability | 100.00%         |
+| Elapsed Time | 120.72 secs     |
+| Data Transferred | 1423.34 MB      |
+| Response Time | 266.90 ms       
+| Transaction Rate | 737.65 trans/sec |
+| Throughput | 11.79 MB/sec    |
+| Concurrency  | 196.88          |
+| Successful Transactions | 89076           |
+| Failed Transactions | 0               |
+| Longest Transaction | 2720.00 ms      |
+| Shortest Transaction | 0.00 ms         |
+
+
+### `maxload.siege` **Test 2** - 300 concurrent users (Breakpoint)
+| Metric       | Value            |
+|--------------|------------------|
+| Transactions | 2241 hits        |
+| Availability | 68.53%           |
+| Elapsed Time | 4.14 secs        |
+| Data Transferred | 35.86 MB         |
+| Response Time | 355.86 ms        
+| Transaction Rate | 541.30 trans/sec |
+| Throughput | 8.66 MB/sec      |
+| Concurrency  | 192.63           |
+| Successful Transactions | 2243             |
+| Failed Transactions | 1029             |
+| Longest Transaction | 1360.00 ms       |
+| Shortest Transaction | 30.00 ms         |
+
+After conducting these tests, we observed that the application was able to handle **300 concurrent users** without any issues via the **Spike Test**. 
+This is a good indication that the application is able to handle **higher loads** than expected. 
+
+For the **Max Load Test**, we observed that the application was able to handle **200 concurrent users** without any issues, but the **Breakpoint Test** showed that the application was not able to handle **300 concurrent users** due to a high number of failed requests, hence the requests started to fail.
+
+Despite the overload, this shows a clear capacity level, but also that the system is robust: it fails in a controlled manner and does not crash entirely.
+
+---
+
 # Unit Tests
 
 ### `HomeControllerTests.cs`
@@ -515,6 +605,8 @@ These tests cover the main login and register flows in AccountController.
 - **LoginPostAddsModelErrorWhenCredentialsAreInvalid** – If the email or password is wrong, the login action should add a model error with the message “Invalid email or password.” and return the login view with the same model.
 
 - **RegisterPostAddsModelErrorWhenEmailAlreadyExists** – If the user tries to register with an email that already exists (for example admin@navisafe.com), the action should add a model error with the message “An account with this email already exists.” and return the register view with the same model.
+
+---
 
 # How to Run The Tests
 
