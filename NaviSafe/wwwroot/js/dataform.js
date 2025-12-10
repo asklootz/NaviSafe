@@ -1,4 +1,5 @@
 ﻿let selectedFile = null;
+let currentObstacleGeometry = null; // store restored or newly drawn geometry for submission
 
 // If editing, show existing image preview provided by server
 (function initExistingPreview() {
@@ -238,7 +239,7 @@ map.addLayer(drawnItems);
 let drawControl = new L.Control.Draw({
     draw: {
         polygon: false,
-        polyline: false,
+        polyline: true, // enable polyline drawing
         marker: true,
         circle: false,
         circlemarker: false,
@@ -248,7 +249,51 @@ let drawControl = new L.Control.Draw({
 });
 map.addControl(drawControl);
 
+// Drawing mode state and helpers
+let drawingMode = 'point'; // 'point' or 'line'
+let activeDrawer = null;
 
+function setDrawingMode(mode) {
+    drawingMode = mode;
+    // clear any existing temporary layers
+    drawnItems.clearLayers();
+    markerPlaced = false;
+    manualOverride = false;
+
+    // stop any active drawer
+    try {
+        if (activeDrawer && typeof activeDrawer.disable === 'function') activeDrawer.disable();
+    } catch (ex) { /* ignore */ }
+
+    if (mode === 'line') {
+        // programmatically start polyline drawing
+        const polylineOptions = drawControl.options.draw.polyline || {};
+        activeDrawer = new L.Draw.Polyline(map, polylineOptions);
+        activeDrawer.enable();
+        // give visual feedback to buttons if present
+        const btnLine = document.getElementById('pointModeBtn');
+        if (btnLine) btnLine.classList.remove('active');
+        const btnPoint = document.getElementById('lineModeBtn');
+        if (btnPoint) btnPoint.classList.add('active');
+    } else {
+        // programmatically start marker placement so user can click map to place point
+        const markerOptions = drawControl.options.draw.marker || {};
+        activeDrawer = new L.Draw.Marker(map, markerOptions);
+        activeDrawer.enable();
+        const btnLine = document.getElementById('pointModeBtn');
+        if (btnLine) btnLine.classList.add('active');
+        const btnPoint = document.getElementById('lineModeBtn');
+        if (btnPoint) btnPoint.classList.remove('active');
+    }
+}
+
+// Wire up optional buttons if present in the page
+(function wireModeButtons() {
+    const pBtn = document.getElementById('pointModeBtn');
+    const lBtn = document.getElementById('lineModeBtn');
+    if (pBtn) pBtn.addEventListener('click', function () { setDrawingMode('point'); });
+    if (lBtn) lBtn.addEventListener('click', function () { setDrawingMode('line'); });
+})();
 
 
 map.on(L.Draw.Event.CREATED, function (e) {
@@ -270,7 +315,7 @@ map.on(L.Draw.Event.CREATED, function (e) {
     if (previewEl) previewEl.value = geoJsonString;
 
     // update lat/lng inputs using central helper so marker visuals and inputs stay in sync
-    if (typeof layer.getLatLng === 'function') {
+    if (e.layerType === 'marker' && typeof layer.getLatLng === 'function') {
         const latlng = layer.getLatLng();
         updateFromLatLng(latlng.lat, latlng.lng, null, 'marker');
 
@@ -279,6 +324,26 @@ map.on(L.Draw.Event.CREATED, function (e) {
         var lngInputEl = document.getElementById('Longitude');
         if (latInputEl) latInputEl.value = (latlng.lat).toFixed(6);
         if (lngInputEl) lngInputEl.value = (latlng.lng).toFixed(6);
+    } else if (e.layerType === 'polyline') {
+        // For polylines, save the LineString geojson and update lat/lon fields with first->last
+        try {
+            const geom = geoJsonData.geometry;
+            if (geom && geom.type === 'LineString' && Array.isArray(geom.coordinates) && geom.coordinates.length > 0) {
+                const first = geom.coordinates[0];
+                const last = geom.coordinates[geom.coordinates.length - 1];
+                // first/last are [lng, lat]
+                const latInputEl = document.getElementById('Latitude');
+                const lngInputEl = document.getElementById('Longitude');
+                if (latInputEl) latInputEl.value = (first[1]).toFixed(6) + ' → ' + (last[1]).toFixed(6);
+                if (lngInputEl) lngInputEl.value = (first[0]).toFixed(6) + ' → ' + (last[0]).toFixed(6);
+
+                // set hidden geometry
+                if (geoEl) geoEl.value = geoJsonString;
+                if (previewEl) previewEl.value = geoJsonString;
+            }
+        } catch (ex) {
+            console.warn('Error handling polyline creation', ex);
+        }
     }
 });
 
@@ -418,3 +483,53 @@ function setupObstacleNameAutocomplete() {
 }
 
 setupObstacleNameAutocomplete(); // Initialize autocomplete on page load
+
+// Restore drawn geometry when editing a draft
+(function restoreExistingGeometry() {
+    try {
+        const model = window.formData || {};
+        if (!model.geoJSON) return;
+
+        const raw = typeof model.geoJSON === 'string' ? JSON.parse(model.geoJSON) : model.geoJSON;
+        // Add to map
+        const previewLayer = L.geoJSON(raw, {
+            style: function () {
+                return { color: '#0d6efd', weight: 4 };
+            },
+            pointToLayer: function (feature, latlng) {
+                return L.marker(latlng);
+            }
+        }).addTo(drawnItems);
+
+        // store geometry for submission
+        currentObstacleGeometry = (raw.type && raw.type === 'Feature') ? raw : { type: 'Feature', geometry: raw, properties: {} };
+
+        // Populate hidden geoJSON field
+        const geoEl = document.getElementById('GeometryGeoJson');
+        if (geoEl) geoEl.value = JSON.stringify(currentObstacleGeometry);
+
+        // Update lat/lon inputs and view
+        const geom = currentObstacleGeometry.geometry;
+        if (geom && geom.type === 'Point' && Array.isArray(geom.coordinates)) {
+            const lon = parseFloat(geom.coordinates[0]);
+            const lat = parseFloat(geom.coordinates[1]);
+            const latEl = document.getElementById('Latitude');
+            const lonEl = document.getElementById('Longitude');
+            if (latEl) latEl.value = lat.toFixed(6);
+            if (lonEl) lonEl.value = lon.toFixed(6);
+            try { map.setView([lat, lon], Math.max(map.getZoom(), 14)); } catch (e) { }
+        } else if (geom && geom.type === 'LineString' && Array.isArray(geom.coordinates) && geom.coordinates.length > 0) {
+            // set first->last in inputs
+            const first = geom.coordinates[0];
+            const last = geom.coordinates[geom.coordinates.length - 1];
+            const latEl = document.getElementById('Latitude');
+            const lonEl = document.getElementById('Longitude');
+            if (latEl) latEl.value = parseFloat(first[1]).toFixed(6) + ' → ' + parseFloat(last[1]).toFixed(6);
+            if (lonEl) lonEl.value = parseFloat(first[0]).toFixed(6) + ' → ' + parseFloat(last[0]).toFixed(6);
+            try { map.fitBounds(previewLayer.getBounds()); } catch (e) { }
+        }
+
+    } catch (ex) {
+        console.warn('Failed to restore existing geometry:', ex);
+    }
+})();

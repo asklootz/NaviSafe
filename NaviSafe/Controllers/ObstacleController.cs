@@ -5,6 +5,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json.Linq;
 
 namespace NaviSafe.Controllers;
 
@@ -68,6 +69,86 @@ public class ObstacleController : Controller
         return false;
     }
 
+    // Validate GeoJSON and extract a representative coordinate (lat, lon)
+    // Returns null when valid; otherwise returns an error message
+    private static string? ValidateAndExtractGeoJson(string? geoJson, out double? repLat, out double? repLon)
+    {
+        repLat = null;
+        repLon = null;
+        if (string.IsNullOrWhiteSpace(geoJson)) return null;
+
+        try
+        {
+            var token = JToken.Parse(geoJson);
+            // Accept either a Feature or a Geometry object
+            JToken geometryToken = null;
+
+            if (token.Type == JTokenType.Object)
+            {
+                var obj = (JObject)token;
+                var t = obj["type"]?.ToString();
+                if (string.Equals(t, "Feature", StringComparison.OrdinalIgnoreCase))
+                {
+                    geometryToken = obj["geometry"];
+                }
+                else if (obj["coordinates"] != null && !string.IsNullOrEmpty(t))
+                {
+                    // geometry object
+                    geometryToken = obj;
+                }
+                else
+                {
+                    return "Invalid GeoJSON: expected a Feature or Geometry object.";
+                }
+            }
+            else
+            {
+                return "Invalid GeoJSON: unexpected JSON token.";
+            }
+
+            if (geometryToken == null || geometryToken["type"] == null) return "Invalid GeoJSON: missing geometry.";
+
+            var geomType = geometryToken["type"]!.ToString();
+            if (geomType.Equals("Point", StringComparison.OrdinalIgnoreCase))
+            {
+                var coords = geometryToken["coordinates"] as JArray;
+                if (coords == null || coords.Count < 2) return "Invalid GeoJSON Point: coordinates missing or malformed.";
+                if (!double.TryParse(coords[0].ToString(), out var lon) || !double.TryParse(coords[1].ToString(), out var lat))
+                    return "Invalid GeoJSON Point: coordinates are not numbers.";
+
+                if (lat < -90 || lat > 90 || lon < -180 || lon > 180) return "Point coordinates out of valid range.";
+
+                repLat = lat;
+                repLon = lon;
+                return null;
+            }
+            else if (geomType.Equals("LineString", StringComparison.OrdinalIgnoreCase))
+            {
+                var coords = geometryToken["coordinates"] as JArray;
+                if (coords == null || coords.Count == 0) return "Invalid GeoJSON LineString: coordinates missing or empty.";
+
+                var first = coords[0] as JArray;
+                if (first == null || first.Count < 2) return "Invalid GeoJSON LineString: first coordinate malformed.";
+                if (!double.TryParse(first[0].ToString(), out var lon) || !double.TryParse(first[1].ToString(), out var lat))
+                    return "Invalid GeoJSON LineString: coordinates are not numbers.";
+
+                if (lat < -90 || lat > 90 || lon < -180 || lon > 180) return "LineString coordinates out of valid range.";
+
+                repLat = lat;
+                repLon = lon;
+                return null;
+            }
+            else
+            {
+                return "Unsupported GeoJSON geometry type. Only Point and LineString are accepted.";
+            }
+        }
+        catch (Exception ex)
+        {
+            return "Invalid GeoJSON: " + ex.Message;
+        }
+    }
+
     [HttpGet]
     [Authorize]
     public ActionResult DataForm()
@@ -85,6 +166,25 @@ public class ObstacleController : Controller
             _logger.LogWarning("DataForm modelstate invalid: {Errors}", string.Join("; ",
                 ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
             return View(model);
+        }
+
+        // If geoJSON provided, validate and extract representative coordinates early
+        if (!string.IsNullOrWhiteSpace(model.geoJSON))
+        {
+            var geoError = ValidateAndExtractGeoJson(model.geoJSON, out var repLat, out var repLon);
+            if (geoError != null)
+            {
+                ModelState.AddModelError(string.Empty, geoError);
+                _logger.LogWarning("GeoJSON validation failed: {Error}", geoError);
+                return View(model);
+            }
+
+            // If lat/lon are missing, fill them from representative coordinate
+            if ((!model.lat.HasValue || !model.lon.HasValue) && repLat.HasValue && repLon.HasValue)
+            {
+                model.lat = (float)repLat.Value;
+                model.lon = (float)repLon.Value;
+            }
         }
 
         // Resolve current user id (session or claim). Must be a valid user Id present in userInfo.
@@ -162,7 +262,7 @@ public class ObstacleController : Controller
             UserID = userId,
             Accuracy = model.accuracy,
             Img = savedRelativePath, // store relative path (or null)
-            GeoJSON = model.geoJSON
+            GeoJSON = string.IsNullOrWhiteSpace(model.geoJSON) ? null : model.geoJSON
         };
 
         _db.Obstacles.Add(entity);
@@ -271,6 +371,26 @@ public class ObstacleController : Controller
         if (obstacle == null || obstacle.UserID != userId || obstacle.IsSent)
         {
             return NotFound();
+        }
+
+        // If geoJSON provided, validate and extract representative coordinates
+        if (!string.IsNullOrWhiteSpace(model.geoJSON))
+        {
+            var geoError = ValidateAndExtractGeoJson(model.geoJSON, out var repLat, out var repLon);
+            if (geoError != null)
+            {
+                ModelState.AddModelError(string.Empty, geoError);
+                _logger.LogWarning("GeoJSON validation failed while updating draft {Id}: {Error}", id, geoError);
+                ViewBag.EditingId = id;
+                return View("DataForm", model);
+            }
+
+            // If lat/lon are missing, fill them from representative coordinate
+            if ((!model.lat.HasValue || !model.lon.HasValue) && repLat.HasValue && repLon.HasValue)
+            {
+                model.lat = (float)repLat.Value;
+                model.lon = (float)repLon.Value;
+            }
         }
 
         obstacle.ShortDesc = model.shortDesc;

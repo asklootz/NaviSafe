@@ -33,7 +33,104 @@ function viewOnMap(lat, lon) {
     }, 300);
 }
 
+function viewOnMapReport(regId) {
+    var reports = window.reportsData || [];
+    const report = reports.find(r => String(r.regID) === String(regId));
+    if (!report) return;
 
+    const mapModalEl = document.getElementById('mapModal');
+    if (mapModalEl) {
+        const bsMapModal = new bootstrap.Modal(mapModalEl);
+        bsMapModal.show();
+    }
+
+    setTimeout(() => {
+        if (!map) {
+            map = L.map('reportMap').setView([65.0, 13.0], 5);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+        }
+
+        // remove non-tile layers
+        map.eachLayer((layer) => {
+            if (!(layer instanceof L.TileLayer)) {
+                try { map.removeLayer(layer); } catch (e) { }
+            }
+        });
+
+        // Try to obtain GeoJSON object from report.GeoJSON (may be string)
+        let raw = null;
+        try {
+            if (report.GeoJSON) {
+                if (typeof report.GeoJSON === 'string') {
+                    // Sometimes stored as JSON string; attempt parse repeatedly until object
+                    let parsed = report.GeoJSON;
+                    let attempts = 0;
+                    while (typeof parsed === 'string' && attempts < 5) {
+                        parsed = JSON.parse(parsed);
+                        attempts++;
+                    }
+                    raw = parsed;
+                } else {
+                    raw = report.GeoJSON;
+                }
+            } else if (report.geometry) {
+                raw = report.geometry;
+            }
+        } catch (ex) {
+            console.warn('Failed to parse GeoJSON for report', regId, ex);
+            raw = null;
+        }
+
+        if (raw) {
+            // If raw is a geometry object (has 'type' and 'coordinates') wrap into a Feature
+            let feature = raw;
+            if (raw.type && raw.coordinates) {
+                feature = { type: 'Feature', geometry: raw, properties: {} };
+            }
+
+            // If it's a FeatureCollection, keep as-is
+            try {
+                const geoLayer = L.geoJSON(feature, {
+                    style: function() { return { color: '#0d6efd', weight: 4 }; },
+                    pointToLayer: function(feature, latlng) { return L.marker(latlng); }
+                }).addTo(map);
+
+                // Fit bounds for non-point geometries
+                try {
+                    const bounds = geoLayer.getBounds();
+                    if (bounds.isValid && !bounds.isEmpty && !bounds.getSouthWest().equals(bounds.getNorthEast())) {
+                        map.fitBounds(bounds, { padding: [20, 20] });
+                    } else {
+                        // single point - center on it
+                        const geom = (feature.type === 'Feature') ? feature.geometry : feature;
+                        if (geom && geom.type === 'Point' && Array.isArray(geom.coordinates)) {
+                            const coords = geom.coordinates; // [lon, lat]
+                            map.setView([coords[1], coords[0]], 15);
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Could not fit bounds for geo layer', e);
+                }
+
+                return;
+            } catch (e) {
+                console.warn('Failed to render GeoJSON on map', e);
+            }
+        }
+
+        // Fallback to Lat/Lon
+        const lat = report.Lat ?? report.lat;
+        const lon = report.Lon ?? report.lon;
+        if (lat && lon) {
+            map.setView([lat, lon], 15);
+            L.marker([lat, lon]).addTo(map);
+        }
+
+        map.invalidateSize();
+    }, 300);
+}
 
 function viewDetails(reportId) {
     // Use reports exposed by the server-side Razor view via window.reportsData

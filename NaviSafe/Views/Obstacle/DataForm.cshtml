@@ -168,9 +168,19 @@
                                     </label>
                              </div>
 
+                            <!-- Map controls: choose between Point (single coord) or Line (polyline) -->
+                            <div class="mb-2 d-flex gap-2 align-items-center">
+                                <div class="btn-group" role="group" aria-label="Drawing mode">
+                                    <button type="button" id="pointModeBtn" class="btn btn-outline-primary active">Point</button>
+                                    <button type="button" id="lineModeBtn" class="btn btn-outline-secondary">Line</button>
+                                </div>
+                                <small class="text-muted ms-2">Select <strong>Point</strong> to pick single coordinates or <strong>Line</strong> to draw a polyline on the map.</small>
+                            </div>
+
                             <div id="map" class="map-container col-12"></div>
                             <input type="hidden" asp-for="geoJSON" id="GeometryGeoJson"/>
                             <input type="hidden" asp-for="accuracy" id="Accuracy"/>
+                            <input type="hidden" id="MarkerCoordinatesJSON" />
 
                             <div class="mt-3">
 
