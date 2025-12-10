@@ -36,6 +36,19 @@ body, html {
     animation: fadeInUp 0.8s ease;
 }
 
+.login-card-register {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    padding: 40px;
+    width: 100%;
+    max-width: 800px;
+    animation: fadeInUp 0.8s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -133,3 +146,23 @@ body, html {
 .form-check-label {
     color: #2c3e50;
 }
+
+.choose-role{
+    display: none;
+}
+
+.form-row { 
+         display: flex; 
+         gap: 15px; 
+     } 
+      
+     .form-row .form-group { 
+         flex: 1; 
+     } 
+      
+     @media (max-width: 768px) { 
+             .form-row { 
+                 flex-direction: column; 
+                 gap: 0; 
+             } 
+         } 
