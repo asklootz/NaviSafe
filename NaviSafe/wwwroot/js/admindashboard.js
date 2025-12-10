@@ -133,7 +133,7 @@
             html += '<div class="card mb-3">';
             html += '<div class="card-header"><h6><i class="bi bi-image"></i> Attached Image</h6></div>';
             html += '<div class="card-body text-center">';
-            html += '<img src="/Obstacle/GetImage/' + reportId + '" class="img-fluid rounded" style="max-height: 300px; cursor: pointer;" onclick="window.open(\'/Obstacle/GetImage/' + reportId + '\', \'_blank\')" />';
+            html += '<img src="/Obstacle/GetImage/' + reportId + '" class="img-fluid rounded full-report-img" onclick="window.open(\'/Obstacle/GetImage/' + reportId + '\', \'_blank\')" />';
             html += '<br><small class="text-muted mt-2 d-block">Click to view full size</small>';
             html += '</div></div>';
         } else {
@@ -165,7 +165,7 @@
         if (lat && lon) {
             html += '<div class="card mb-3">';
             html += '<div class="card-header"><h6><i class="bi bi-geo-alt"></i> Location Map</h6></div>';
-            html += '<div class="card-body"><div id="detailMap" style="height: 350px;"></div></div>';
+            html += '<div class="card-body"><div id="detailMap" class="detail-map"></div></div>';
             html += '</div>';
         } else {
             html += '<div class="card mb-3">';
@@ -217,7 +217,7 @@
                 const markerColor = getMarkerColor(state);
                 const customIcon = L.divIcon({
                     className: 'custom-marker',
-                    html: '<div style="background-color: ' + markerColor + '; width: 15px; height: 15px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>',
+                    html: '<div class="custom-marker-html"></div>',
                     iconSize: [19, 19],
                     iconAnchor: [9, 9]
                 });
@@ -276,14 +276,14 @@
                         const markerColor = getMarkerColor(state);
                         const customIcon = L.divIcon({
                             className: 'custom-marker',
-                            html: '<div style="background-color: ' + markerColor + '; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>',
+                            html: '<div class="custom-marker-html"></div>',
                             iconSize: [24, 24],
                             iconAnchor: [12, 12]
                         });
 
                         const marker = L.marker([parseFloat(lat), parseFloat(lon)], { icon: customIcon }).addTo(mapInstance);
 
-                        let popup = '<div style="min-width: 200px;">';
+                        let popup = '<div class="map-pin-info">';
                         popup += '<h6>' + shortDesc + '</h6>';
                         popup += '<p><small>' + (longDesc || 'No description') + '</small></p>';
                         popup += '<p><small><strong>Status:</strong> <span class="badge ' + getStatusBadgeClass(state) + '">' + state + '</span></small></p>';

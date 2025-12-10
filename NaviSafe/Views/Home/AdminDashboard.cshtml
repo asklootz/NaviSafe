@@ -125,7 +125,7 @@
                                         }
                                     </td>
                                     <td>
-                                        <button class="btn btn-sm btn-primary view-report" data-id="@report.regID" data-userid="@report.UserID" data-user-firstname="@(reporter?.FirstName ?? "Unknown")" data-user-lastname="@(reporter?.LastName ?? "User")" data-user-email="@(reporter?.Email ?? "")" data-user-phone="@(reporter?.Phone ?? "Not available")" data-user-org="@item.OrganizationName">
+                                        <button type="button" class="btn btn-sm btn-primary view-report" data-id="@report.regID" data-userid="@report.UserID" data-user-firstname="@(reporter?.FirstName ?? "Unknown")" data-user-lastname="@(reporter?.LastName ?? "User")" data-user-email="@(reporter?.Email ?? "")" data-user-phone="@(reporter?.Phone ?? "Not available")" data-user-org="@item.OrganizationName">
                                             <i class="bi bi-eye"></i> View Details
                                         </button>
                                     </td>
@@ -207,7 +207,7 @@
     }
     <!-- Expose the server-side reports to client-side JS -->
     <script nonce=@CSPNonce>
-        window.reportsData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        window.reportsData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(m => m.Report)));
     </script>
 
     <script src="~/js/admindashboard.js" crossorigin="anonymous"></script>
