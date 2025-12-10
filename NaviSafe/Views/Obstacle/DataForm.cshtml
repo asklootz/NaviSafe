@@ -49,7 +49,7 @@
           integrity="sha512-1YUiegEw1SnXq1p5cYdA0xM/vWK7emp+lF97mPsDpgFdGHdyO2KFVdd500CLaO6izPopTNYGky01iAGTnuGcWA==" 
           crossorigin="anonymous" 
           referrerpolicy="no-referrer" 
-          asp-fallback-href="~/lib/leaflet-locatecontrol-0.85.0/leaflet-locatecontrol-0.85.0/dist/L.Control.Locate.mapbox.min.css"/>"/>
+          asp-fallback-href="~/lib/leaflet-locatecontrol-0.85.0/leaflet-locatecontrol-0.85.0/dist/L.Control.Locate.mapbox.min.css"/>
     
     <link rel="stylesheet" href="~/css/obstacle-form.css" />
 </head>
@@ -78,7 +78,7 @@
                 @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("ADM"))
                 {
                     <div >
-                        <form action="/Home/AdminDashboard" method="post" style="display: inline;">
+                        <form action="/Home/AdminDashboard" method="post"">
                             @Html.AntiForgeryToken()
                             <a type="button" asp-area="" asp-controller="Home" asp-action="AdminDashboard" class="btn btn-admin btn-success fs-3 me-2">
                                 <i class="bi align-content-center bi-person-workspace fs-2 me-3"></i> Admin Dashboard
@@ -129,7 +129,7 @@
 
                   
                                 <!-- Custom Autocomplete Dropdown -->
-                                <div id="ObstacleNameDropdown" class="autocomplete-dropdown" style="display: none;">
+                                <div id="ObstacleNameDropdown" class="autocomplete-dropdown">
                                     <div class="autocomplete-item" data-value="Building">
                                         <i class="bi bi-building-fill fs-2 me-3"></i>
                                         <span class="fs-5 fw-bold">Building</span>
@@ -208,20 +208,20 @@
                                         <button type="button" class="btn btn-primary btn-img w-100" id="openCameraButton">
                                             <i class="bi bi-camera-fill"></i> Camera
                                         </button>
-                                        <input type="file" id="cameraInput" name="ImageFile" accept="image/*" capture="camera" style="display: none;" />
+                                        <input type="file" id="cameraInput" name="ImageFile" accept="image/*" capture="camera" class="image-upload" />
                                     </div>
                                     <div class="col-3 text-center">
                                         <button type="button" class="btn btn-secondary btn-img w-100" id="uploadImageButton">
                                             <i class="bi bi-upload"></i> Upload
                                         </button>
-                                        <input type="file" id="uploadImageInput" name="ImageFile" accept="image/*" style="display: none;" />
+                                        <input type="file" id="uploadImageInput" name="ImageFile" accept="image/*" class="image-upload" />
                                     </div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="col-12 text-center">
-                                        <img id="imagePreview" src="#" alt="Image Preview" style="display: none; max-width: 100%; max-height: 300px; border: 1px solid #ccc; border-radius: 10px;" />
-                                        <p id="imageInfo" style="display: none; color: #6c757d; font-size: 0.9em; margin-top: 0.5rem;"></p>
-                                        <div id="imageError" class="text-danger small mt-2" style="display: none;"></div>
+                                        <img id="imagePreview" src="#" alt="Image Preview" class="image-upload-preview" />
+                                        <p id="imageInfo" class="image-upload-info"></p>
+                                        <div id="imageError" class="text-danger small mt-2" class="image-upload"></div>
                                     </div>
                                 </div>
                             </div>
