@@ -331,7 +331,7 @@ public class ObstacleController : Controller
             {
                 _logger.LogWarning(ex, "Failed to save uploaded image while updating");
             }
-         }
+        }
 
         await _db.SaveChangesAsync();
         return RedirectToAction("Overview");
@@ -379,9 +379,8 @@ public class ObstacleController : Controller
         return Json(new { success = true });
     }
 
-    /// <summary>
-    /// Serve image by redirecting to its stored relative path so static file middleware handles delivery
-    /// </summary>
+
+    // Serve image by redirecting to its stored relative path so static file middleware handles delivery
     [HttpGet]
     public async Task<IActionResult> GetImage(int id)
     {
