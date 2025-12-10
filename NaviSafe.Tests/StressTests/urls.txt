@@ -1,0 +1,55 @@
+# -----------------------------------
+# GET Endpoints (Both roles)
+# -----------------------------------
+https://localhost:8081/
+https://localhost:8081/Account/Login
+https://localhost:8081/Account/Register
+https://localhost:8081/Obstacle/DataForm
+https://localhost:8081/Obstacle/Overview
+https://localhost:8081/Home/AdminDashboard
+
+# -----------------------------------
+# POST Login (Pilot)
+# -----------------------------------
+POST https://localhost:8081/Account/Login
+Content-Type: application/x-www-form-urlencoded
+
+Email=pilot@nla.no&Password=test123
+
+# Pilot dashboard
+https://localhost:8081/
+
+# -----------------------------------
+# POST Login (Admin)
+# -----------------------------------
+POST https://localhost:8081/Account/Login
+Content-Type: application/x-www-form-urlencoded
+
+Email=admin@kartverket.no&Password=admin123
+
+# Admin dashboard
+https://localhost:8081/Home/AdminDashboard
+
+# -----------------------------------
+# Admin Report Status Update
+# -----------------------------------
+POST https://localhost:8081/Home/UpdateReportStatus
+Content-Type: application/x-www-form-urlencoded
+
+ReportId=1&Status=Approved
+
+# -----------------------------------
+# Pilot Logout
+# -----------------------------------
+POST https://localhost:8081/Account/Logout
+Content-Type: application/x-www-form-urlencoded
+
+Confirm=true
+
+# -----------------------------------
+# Admin Logout
+# -----------------------------------
+POST https://localhost:8081/Account/Logout
+Content-Type: application/x-www-form-urlencoded
+
+Confirm=true
