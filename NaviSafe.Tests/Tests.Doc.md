@@ -11,6 +11,7 @@ The main goal has been to test the parts of the system where we actually have lo
 - [Login Test Cases](#login-test-cases)
 - [User Tests](#user-tests)
 - [Load Testing](#load-testing)
+- [Stress Testing](#stress-testing)
 - [Unit Tests](#unit-tests)
 - [How to Run the Tests](#how-to-run-the-tests)
 
@@ -489,8 +490,9 @@ After you have created these files, open them in your favorite text editor and r
 # Spike Load Test
 https://localhost:8081/
 https://localhost:8081/Obstacle/Overview
+```
 
-**Note**: The first URL in the file is the URL of the application.
+**Note:** The first URL in the file is the URL of the application.
 
 ```bash
 # Max Load Test
