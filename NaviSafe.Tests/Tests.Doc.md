@@ -489,7 +489,6 @@ After you have created these files, open them in your favorite text editor and r
 # Spike Load Test
 https://localhost:8081/
 https://localhost:8081/Obstacle/Overview
-````
 
 **Note**: The first URL in the file is the URL of the application.
 
