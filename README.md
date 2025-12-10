@@ -217,7 +217,6 @@ NaviSafe is built on modern containerized infrastructure with clear seperation o
 |                | MVC + Razor                                | Views, routing, UI rendering |
 |                | EF Core (Pomelo provider)                  | ORM for MariaDB |
 |                | OpenTelemetry                              | Logging, metrics, tracing |
-|                | JWT                                        | Token-based authentication (API) |
 | Database       | MariaDB 11.8                               | Relational database |
 |                | phpMyAdmin                                 | Database management UI |
 | Infrastructure | .NET Aspire                                | Orchestration & service hosting |
@@ -524,28 +523,38 @@ Image files uploaded by users are also protected against XSS attacks. Filenames 
 
 Controlling the data sources with Content Security Policy (CSP):
 ```csharp
+// Generate a random nonce for Content Security Policy to act as a dynamic token to approve certain inline scripts
+string nonce;
+using (var rng = RandomNumberGenerator.Create()) {
+var nonceBytes = new byte[32];
+rng.GetBytes(nonceBytes);
+nonce = Convert.ToBase64String(nonceBytes);
+} 
+context.Items["CSPNonce"] = nonce;
+
 // Content Security Policy - prevents XSS attacks
-    // Define allowed sources for scripts, styles, fonts, images, and connections
-    // Alternative sources that can be used: https://unpkg.com, https://cdn.jsdelivr.net
-    context.Response.Headers.Append("Content-Security-Policy", 
-        "default-src 'self'; " +
-        "script-src 'self' 'unsafe-inline' ''unsafe-eval' https://cdnjs.cloudflare.com https://*.tile.openstreetmap.org; " +
-        "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;" +
-        "font-src 'self' data: https://cdnjs.cloudflare.com; " +
-        "img-src 'self' data: https://*.tile.openstreetmap.org https://www.w3.org https://cdnjs.cloudflare.com; " +
-        "connect-src 'self' https://*.tile.openstreetmap.org");
-    
-    // Prevent clickjacking
-    context.Response.Headers.Append("X-Frame-Options", "SAMEORIGIN");
-    
-    // Prevent MIME type sniffing
-    context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
-    
-    // XSS Protection (legacy browsers)
-    context.Response.Headers.Append("X-XSS-Protection", "1; mode=block");
-    
-    // Referrer Policy
-    context.Response.Headers.Append("Referrer-Policy", "strict-origin-when-cross-origin");
+// Define allowed sources for scripts, styles, fonts, images, and connections
+// Alternative sources that can be used: https://unpkg.com
+context.Response.Headers.Append("Content-Security-Policy", 
+"default-src 'self'; " +
+$"script-src 'self' 'nonce-{nonce}' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://*.tile.openstreetmap.org; " +
+"style-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;" +
+"font-src 'self' data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; " +
+"img-src 'self' data: https://*.tile.openstreetmap.org https://cdn.jsdelivr.net https://www.w3.org https://cdnjs.cloudflare.com; " +
+"connect-src 'self' https://*.cloudflare.com https://cdn.jsdelivr.net https://*.tile.openstreetmap.org");
+
+
+// Prevent clickjacking
+context.Response.Headers.Append("X-Frame-Options", "SAMEORIGIN");
+
+// Prevent MIME type sniffing
+context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
+
+// XSS Protection (legacy browsers)
+context.Response.Headers.Append("X-XSS-Protection", "1; mode=block");
+
+// Referrer Policy
+context.Response.Headers.Append("Referrer-Policy", "strict-origin-when-cross-origin");
 ```
 
 Checking the sha-hash integrity of CDN resources or SRI (sub
@@ -579,3 +588,4 @@ Thanks to all the different open-source resources that have been used in order t
 - Live GPS location services [Leaflet Locate Control v0.85.0](https://github.com/domoritz/leaflet-locatecontrol):[MIT License](https://github.com/domoritz/leaflet-locatecontrol/blob/gh-pages/LICENSE)
 - Interactive map [Leaflet v1.9.4](https://leafletjs.com/):[BSD 2-Clause "Simplified" License](https://github.com/Leaflet/Leaflet/blob/main/LICENSE)
 - Map service provider [OpenStreetMap](https://www.openstreetmap.org/):[Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1.0/)
+- Styles and icons [Bootstrap](https:/www.getbootstrap.com/):[MIT License](https://github.com/twbs/bootstrap/blob/main/LICENSE)
