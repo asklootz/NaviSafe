@@ -62,9 +62,11 @@
     $('.view-report').on('click', function () {
         const $btn = $(this);
         const reportId = $btn.data('id');
+        console.debug('[table] view-report clicked, reportId =', reportId);
         currentReportId = reportId;
 
-        const selectedReport = reports.find(r => r.regID === reportId);
+        // Find the report in the client-side array; handle case differences (regID vs RegID) and type differences
+        const selectedReport = reports.find(r => String(r.regID || r.RegID) === String(reportId));
 
         // Build userInfo object from data attributes (server-side provided)
         const userInfo = {
@@ -90,6 +92,7 @@
     }
 
     function showReportDetailsFull(selectedReport, userInfo) {
+        console.debug('[details] showReportDetailsFull called for', selectedReport && (selectedReport.regID || selectedReport.RegID));
         // Handle case sensitivity for JSON properties
         const reportId = selectedReport.regID || selectedReport.RegID;
         const creationDate = selectedReport.creationDate || selectedReport.CreationDate;
@@ -133,7 +136,7 @@
             html += '<div class="card mb-3">';
             html += '<div class="card-header"><h6><i class="bi bi-image"></i> Attached Image</h6></div>';
             html += '<div class="card-body text-center">';
-            html += '<img src="/Obstacle/GetImage/' + reportId + '" class="img-fluid rounded full-report-img" onclick="window.open(\'/Obstacle/GetImage/' + reportId + '\', \'_blank\')" />';
+            html += '<img src="/Obstacle/GetImage/' + reportId + '" alt="Report image" class="img-fluid rounded full-report-img" onclick="window.open(\'/Obstacle/GetImage/' + reportId + '\', \'_blank\')" />';
             html += '<br><small class="text-muted mt-2 d-block">Click to view full size</small>';
             html += '</div></div>';
         } else {
@@ -215,17 +218,17 @@
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(detailMap);
 
                 const markerColor = getMarkerColor(state);
-                const customIcon = L.divIcon({
-                    className: 'custom-marker',
-                    html: '<div class="custom-marker-html"></div>',
-                    iconSize: [19, 19],
-                    iconAnchor: [9, 9]
-                });
+                // Use a circleMarker so we can set fillColor inline (SVG) and avoid CSS override issues
+                const detailMarker = L.circleMarker([parseFloat(lat), parseFloat(lon)], {
+                    radius: 9,
+                    fillColor: markerColor,
+                    color: '#ffffff',
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 1
+                }).addTo(detailMap);
 
-                L.marker([parseFloat(lat), parseFloat(lon)], { icon: customIcon })
-                    .addTo(detailMap)
-                    .bindPopup('<b>' + shortDesc + '</b>')
-                    .openPopup();
+                detailMarker.bindPopup('<b>' + shortDesc + '</b>').openPopup();
             }, 300);
         }
     }
@@ -274,14 +277,14 @@
 
                     if (lat && lon && !isNaN(lat) && !isNaN(lon)) {
                         const markerColor = getMarkerColor(state);
-                        const customIcon = L.divIcon({
-                            className: 'custom-marker',
-                            html: '<div class="custom-marker-html"></div>',
-                            iconSize: [24, 24],
-                            iconAnchor: [12, 12]
-                        });
-
-                        const marker = L.marker([parseFloat(lat), parseFloat(lon)], { icon: customIcon }).addTo(mapInstance);
+                        const marker = L.circleMarker([parseFloat(lat), parseFloat(lon)], {
+                            radius: 8,
+                            fillColor: markerColor,
+                            color: '#ffffff',
+                            weight: 2,
+                            opacity: 1,
+                            fillOpacity: 1
+                        }).addTo(mapInstance);
 
                         let popup = '<div class="map-pin-info">';
                         popup += '<h6>' + shortDesc + '</h6>';
@@ -290,7 +293,8 @@
                         if (img && img.length > 0) {
                             popup += '<a href="/Obstacle/GetImage/' + reportId + '" target="_blank" class="btn btn-sm btn-outline-primary mb-2">View Image</a><br>';
                         }
-                        popup += '<button class="btn btn-sm btn-primary" onclick="viewReportFromMap(' + reportId + ')">View Details</button>';
+                        // Use a delegated handler (avoid inline onclick which CSP may block)
+                        popup += '<button class="btn btn-sm btn-primary view-map-btn" data-reportid="' + reportId + '">View Details</button>';
                         popup += '</div>';
 
                         marker.bindPopup(popup);
@@ -300,12 +304,82 @@
 
                 // Fit map to show all markers if there are any valid reports
                 if (validReports.length > 0) {
-                    const group = new L.featureGroup(validReports.map(coord => L.marker(coord)));
+                    const group = L.featureGroup(validReports.map(coord => L.marker(coord)));
                     mapInstance.fitBounds(group.getBounds().pad(0.1));
                 }
             }
         }, 300);
     });
+
+    // Add delegated handler for view buttons inside map popups (avoids inline onclick/CSP issues)
+    $(document).on('click', '.view-map-btn', function (e) {
+        e.preventDefault();
+        const reportId = $(this).data('reportid');
+        console.debug('[map popup] view-map-btn clicked, reportId =', reportId);
+        // Close the map modal then open the report details
+        $('#mapModal').modal('hide');
+        setTimeout(() => {
+            // Always open details directly to avoid dependency on triggering the table button
+            const selectedReport = reports.find(r => String(r.regID || r.RegID) === String(reportId));
+            console.debug('[map popup] selectedReport found:', !!selectedReport);
+            if (!selectedReport) {
+                console.warn('Report not found for id', reportId);
+                return;
+            }
+
+            // Prefer userInfo from the table button if present
+            const $btn = $('.view-report[data-id="' + reportId + '"]').first();
+            let userInfo = { UserID: null, FirstName: 'Unknown', LastName: '', Email: '', Phone: '', OrganizationName: '' };
+            if ($btn.length) {
+                userInfo = {
+                    UserID: $btn.data('userid'),
+                    FirstName: $btn.data('user-firstname'),
+                    LastName: $btn.data('user-lastname'),
+                    Email: $btn.data('user-email'),
+                    Phone: $btn.data('user-phone'),
+                    OrganizationName: $btn.data('user-org')
+                };
+            } else {
+                // try row fallback
+                const $row = $('#reportsTable').find('[data-id="' + reportId + '"]').first();
+                const $rowBtn = $row.find('.view-report').first();
+                if ($rowBtn.length) {
+                    userInfo = {
+                        UserID: $rowBtn.data('userid'),
+                        FirstName: $rowBtn.data('user-firstname'),
+                        LastName: $rowBtn.data('user-lastname'),
+                        Email: $rowBtn.data('user-email'),
+                        Phone: $rowBtn.data('user-phone'),
+                        OrganizationName: $rowBtn.data('user-org')
+                    };
+                }
+            }
+
+            // Record the current report id so status updates work when opened from the map
+            currentReportId = String(reportId);
+            showReportDetailsLoading();
+            showReportDetailsFull(selectedReport, userInfo);
+        }, 350);
+    });
+
+    // Backwards-compatible global function (in case other code calls it)
+    window.viewReportFromMap = function(reportId) {
+        console.debug('viewReportFromMap called for', reportId);
+        // mimic the delegated button click behavior
+        const $btn = $('.view-report[data-id="' + reportId + '"]').first();
+        if ($btn.length) {
+            $('#mapModal').modal('hide');
+            setTimeout(() => $btn.trigger('click'), 350);
+            return;
+        }
+
+        const selectedReport = reports.find(r => String(r.regID || r.RegID) === String(reportId));
+        if (!selectedReport) { console.warn('viewReportFromMap: report not found', reportId); return; }
+        // Ensure currentReportId is set when opening details via this helper
+        currentReportId = String(reportId);
+        showReportDetailsLoading();
+        showReportDetailsFull(selectedReport, { UserID: null, FirstName: 'Unknown', LastName: '', Email: '', Phone: '', OrganizationName: '' });
+    };
 
     // Helper functions
     function getMarkerColor(state) {
@@ -350,11 +424,4 @@
             }
         });
     }
-
-    window.viewReportFromMap = function(reportId) {
-        $('#mapModal').modal('hide');
-        setTimeout(() => {
-            $('.view-report[data-id="' + reportId + '"]').click();
-        }, 500);
-    };
 });

@@ -218,11 +218,11 @@ app.Use(async (context, next) =>
     // Alternative sources that can be used: https://unpkg.com
     context.Response.Headers.Append("Content-Security-Policy", 
         "default-src 'self'; " +
-        $"script-src 'self' 'nonce-{nonce}' https://cdnjs.cloudflare.com  https://*.tile.openstreetmap.org; " +
-        "style-src 'self' https://cdnjs.cloudflare.com ;" +
-        "font-src 'self' data: https://cdnjs.cloudflare.com ; " +
-        "img-src 'self' data: https://*.tile.openstreetmap.org https://www.w3.org https://cdnjs.cloudflare.com; " +
-        "connect-src 'self' https://*.cloudflare.com https://*.tile.openstreetmap.org");
+        $"script-src 'self' 'nonce-{nonce}' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://*.tile.openstreetmap.org; " +
+        "style-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;" +
+        "font-src 'self' data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; " +
+        "img-src 'self' data: https://*.tile.openstreetmap.org https://cdn.jsdelivr.net https://www.w3.org https://cdnjs.cloudflare.com; " +
+        "connect-src 'self' https://*.cloudflare.com https://cdn.jsdelivr.net https://*.tile.openstreetmap.org");
     
     // Prevent clickjacking
     context.Response.Headers.Append("X-Frame-Options", "SAMEORIGIN");

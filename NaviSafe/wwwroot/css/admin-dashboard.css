@@ -20,7 +20,6 @@
 
 .page-bg { background: #f8f9fa; }
 
-/* New styles for clickable statistic cards */
 .stat-card { 
     cursor: pointer; 
     transition: transform 0.12s ease, box-shadow 0.12s ease; 
@@ -35,7 +34,6 @@
     box-shadow: 0 8px 22px rgba(13,110,253,0.12); 
 }
 
-/* sortable header styles */
 th.sortable { 
     cursor: pointer; 
     user-select: none; 
@@ -55,7 +53,6 @@ th.sortable.desc .sort-indicator::after {
     content: '▼'; 
 }
 
-/* small input in header */
 th .header-search { 
     margin-top: 6px; 
 }
@@ -78,12 +75,17 @@ th .header-search {
 }
 
 .custom-marker-html{
-    background-color: ' + markerColor + '; 
-    width: 15px; 
-    height: 15px; 
-    border-radius: 50%; 
-    border: 2px solid white; 
+    background-color: #6c757d;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 2px solid white;
     box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.leaflet-container svg {
+    fill: initial !important;
+    stroke: initial !important;
 }
 
 .map-pin-info{
