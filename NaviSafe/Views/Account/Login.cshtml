@@ -10,9 +10,30 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - NaviSafe</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.13.1/font/bootstrap-icons.min.css" integrity="sha512-t7Few9xlddEmgd3oKZQahkNI4dS6l80+eGEzFQiqtyVYdvcSG2D3Iub77R20BdotfRPA9caaRkg1tyaJiPmO0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="~/lib/leaflet/dist/leaflet.css" />
+    @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> *@
+    @* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.13.1/font/bootstrap-icons.min.css" integrity="sha512-t7Few9xlddEmgd3oKZQahkNI4dS6l80+eGEzFQiqtyVYdvcSG2D3Iub77R20BdotfRPA9caaRkg1tyaJiPmO0g==" crossorigin="anonymous" referrerpolicy="no-referrer" /> *@
+    @* <link rel="stylesheet" href="~/lib/leaflet/dist/leaflet.css" /> *@
+    <link rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css" 
+          integrity="sha512-2bBQCjcnw658Lho4nlXJcc6WkV/UxpE/sAokbXPxQNGqmNdQrWqtw26Ns9kFF/yG792pKR1Sx8/Y1Lf1XN4GKA==" 
+          crossorigin="anonymous" 
+          referrerpolicy="no-referrer" 
+          asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.13.1/font/bootstrap-icons.min.css" 
+          integrity="sha512-t7Few9xlddEmgd3oKZQahkNI4dS6l80+eGEzFQiqtyVYdvcSG2D3Iub77R20BdotfRPA9caaRkg1tyaJiPmO0g==" 
+          crossorigin="anonymous" 
+          referrerpolicy="no-referrer" 
+          asp-fallback-href="~/lib/bootstrap/font/bootstrap-icons.min.css" />
+
+    <link rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" 
+          integrity="sha512-Zcn6bjR/8RZbLEpLIeOwNtzREBAJnUKESxces60Mpoj+2okopSAcSUIUOseddDm0cxnGQzxIR7vJgsLZbdLE3w==" 
+          crossorigin="anonymous" 
+          referrerpolicy="no-referrer" 
+          asp-fallback-href="~/lib/leaflet/dist/leaflet.css" />
+    
     <link rel="stylesheet" href="~/css/login.css" />
 </head>
 <body>
@@ -25,7 +46,7 @@
             <p class="login-subtitle">Welcome back! Please login to your account.</p>
         </div>
 
-        <form asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="login-form">
+        <form asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="login-form">@Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
             <div class="form-group">
@@ -58,58 +79,30 @@
     </div>
 </div>
 
-<script src="~/lib/leaflet/dist/leaflet.js"></script>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+@* <script src="~/lib/leaflet/dist/leaflet.js"></script> *@
+@* <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
+@* <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@
 
-<script>
-    var map = L.map('map-background', {
-        center: [59.9139, 10.7522],
-        zoom: 13,
-        zoomControl: false,
-        attributionControl: false,
-        dragging: false,
-        scrollWheelZoom: false,
-        doubleClickZoom: false,
-        boxZoom: false,
-        keyboard: false,
-        touchZoom: false
-    });
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" 
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" 
+        crossorigin="anonymous" 
+        referrerpolicy="no-referrer"
+        asp-fallback-src="~/lib/jquery/dist/jquery.min.js"></script>
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19
-    }).addTo(map);
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.bundle.min.js" 
+        integrity="sha512-HvOjJrdwNpDbkGJIG2ZNqDlVqMo77qbs4Me4cah0HoDrfhrbA+8SBlZn1KrvAQw7cILLPFJvdwIgphzQmMm+Pw==" 
+        crossorigin="anonymous" 
+        referrerpolicy="no-referrer"
+        asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
-    var angle = 0;
-    var radius = 0.008;
-    var center = map.getCenter();
-    var zoomDirection = 1;
-    var currentZoom = 13;
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js" 
+        integrity="sha512-BwHfrr4c9kmRkLw6iXFdzcdWV/PGkVgiIyIWLLlTSXzWQzxuSg4DiQUCpauz/EWjgk5TYQqX/kvn9pG1NpYfqg==" 
+        crossorigin="anonymous" 
+        referrerpolicy="no-referrer"
+        asp-fallback-src="~/lib/leaflet/dist/leaflet.js"></script>
 
-    function animateMap() {
-        angle += 0.003;
-        var newLat = center.lat + Math.sin(angle) * radius;
-        var newLng = center.lng + Math.cos(angle) * radius;
+<script src="~/js/account.js"></script>
 
-        if (Math.random() < 0.01) {
-            if (currentZoom >= 14) zoomDirection = -1;
-            if (currentZoom <= 12) zoomDirection = 1;
-            currentZoom += zoomDirection * 0.02;
-            map.setZoom(currentZoom, { animate: true });
-        }
-
-        map.panTo([newLat, newLng], {
-            animate: true,
-            duration: 1,
-            easeLinearity: 0.1
-        });
-
-        requestAnimationFrame(animateMap);
-    }
-
-    setTimeout(function() {
-        animateMap();
-    }, 1000);
-</script>
+@Html.AntiForgeryToken()
 </body>
 </html>

@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using NaviSafe.Data;
 using System.Linq;
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.StaticFiles;
 
-var builder = WebApplication.CreateBuilder(args);
-var enUs = new CultureInfo("en-US");
+var builder = WebApplication.CreateBuilder(args); // Builder to configure the web host and services
+
+var enUs = new CultureInfo("en-US"); // Set default culture to English
 CultureInfo.DefaultThreadCurrentCulture = enUs;
 CultureInfo.DefaultThreadCurrentUICulture = enUs;
 var supportedCultures = new[] { enUs };
@@ -92,7 +94,6 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-builder.Services.AddAuthorization();
 
 
 var app = builder.Build();
@@ -202,16 +203,26 @@ app.MapControllerRoute(
 
 app.Use(async (context, next) => 
 {
+    
+    // Generate a random nonce for Content Security Policy to act as a dynamic token to approve certain inline scripts
+    string nonce;
+    using (var rng = RandomNumberGenerator.Create()) {
+        var nonceBytes = new byte[32];
+        rng.GetBytes(nonceBytes);
+        nonce = Convert.ToBase64String(nonceBytes);
+    } 
+    context.Items["CSPNonce"] = nonce;
+    
     // Content Security Policy - prevents XSS attacks
     // Define allowed sources for scripts, styles, fonts, images, and connections
-    // Alternative sources that can be used: https://unpkg.com, https://cdn.jsdelivr.net
+    // Alternative sources that can be used: https://unpkg.com
     context.Response.Headers.Append("Content-Security-Policy", 
         "default-src 'self'; " +
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://*.tile.openstreetmap.org; " +
-        "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;" +
-        "font-src 'self' data: https://cdnjs.cloudflare.com; " +
-        "img-src 'self' data: https://*.tile.openstreetmap.org https://www.w3.org https://cdnjs.cloudflare.com; " +
-        "connect-src 'self' https://*.tile.openstreetmap.org");
+        $"script-src 'self' 'nonce-{nonce}' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://*.tile.openstreetmap.org; " +
+        "style-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;" +
+        "font-src 'self' data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; " +
+        "img-src 'self' data: https://*.tile.openstreetmap.org https://cdn.jsdelivr.net https://www.w3.org https://cdnjs.cloudflare.com; " +
+        "connect-src 'self' https://*.cloudflare.com https://cdn.jsdelivr.net https://*.tile.openstreetmap.org");
     
     // Prevent clickjacking
     context.Response.Headers.Append("X-Frame-Options", "SAMEORIGIN");

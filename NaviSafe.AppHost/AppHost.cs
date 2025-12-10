@@ -4,7 +4,7 @@ using Aspire.Hosting.ApplicationModel;
 var builder = DistributedApplication.CreateBuilder(args);
 
 // Initial SQL script to create the database schema and seed data based on "mariaDatabase.sql"
-var testScript = System.IO.File.ReadAllText("../NaviSafe/mariaDatabase.sql");
+var initSqlScript = System.IO.File.ReadAllText("../NaviSafe/mariaDatabase.sql");
 
 
 var mariaContainer = builder.AddMySql("mariaContainer", null, 3307)
@@ -17,7 +17,7 @@ var mariaContainer = builder.AddMySql("mariaContainer", null, 3307)
     .WithOtlpExporter(); 
 
 var mariaDatabase = mariaContainer.AddDatabase("mariaDatabase")
-    .WithCreationScript(testScript); //Path to the initial SQL script to create the database schema and mock data
+    .WithCreationScript(initSqlScript); //Path to the initial SQL script to create the database schema and mock data
 
 
 //2 choices of how to run the web-server - ONLY CHOOSE ONE:
