@@ -23,6 +23,7 @@ document.getElementById('openCameraButton').addEventListener('click', function (
     document.getElementById('cameraInput').click();
 });
 
+// Image upload validation based on allowed extensions and size, client-side only
 const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
 const maxFileBytes = 5 * 1024 * 1024; // 5 MB
 
@@ -32,6 +33,7 @@ function getFileExtension(name) {
     return i >= 0 ? name.substring(i).toLowerCase() : '';
 }
 
+// Validate image file based on allowed extensions and size, client-side only
 function validateImageFile(file) {
     if (!file) return 'No file selected.';
     if (file.size === 0) return 'File is empty.';
@@ -111,6 +113,7 @@ document.getElementById('cameraInput').addEventListener('change', function (even
     handleFileSelection(this, file);
 });
 
+// Initialize map with starting location
 let map = L.map('map').setView([58.163137,8.002106], 13);
 
 let osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -118,6 +121,7 @@ let osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 });
 osm.addTo(map);
 
+// Add locate control button to the map
 let lc = L.control
     .locate({
         position: 'topleft', flyTo: true, setView: 'always', cacheLocation: true,
@@ -340,7 +344,7 @@ function setupObstacleNameAutocomplete() {
         $('#obstacleHeight').focus();
     });
 
-    // Handle keyboard navigation
+    // Handle keyboard navigation,  initiate the function
     let highlightedIndex = -1;
 
     $input.on('keydown', function(e) {
@@ -364,6 +368,7 @@ function setupObstacleNameAutocomplete() {
         }
     });
 
+    // Filter items based on search text
     function filterAutocompleteItems(searchText) {
         let visibleCount = 0;
 
@@ -389,7 +394,8 @@ function setupObstacleNameAutocomplete() {
         highlightedIndex = -1;
         $items.removeClass('highlighted');
     }
-
+    
+    // Highlight currently selected item, used with keyboard navigation
     function updateHighlight($visibleItems) {
         $items.removeClass('highlighted');
         if (highlightedIndex >= 0 && highlightedIndex < $visibleItems.length) {
@@ -411,4 +417,4 @@ function setupObstacleNameAutocomplete() {
     }
 }
 
-setupObstacleNameAutocomplete();
+setupObstacleNameAutocomplete(); // Initialize autocomplete on page load
