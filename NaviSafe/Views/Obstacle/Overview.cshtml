@@ -176,7 +176,7 @@
                                     <a href="@Url.Action("EditDraft", "Obstacle", new { id = report.regID })" class="btn-action btn-edit">
                                         <i class="bi bi-pencil"></i> Edit Draft
                                     </a>
-                                    <button type="button" class="btn-action btn-delete" onclick="deleteDraft(@report.regID)">
+                                    <button type="button" class="btn-action btn-delete btn-delete-draft" data-regid="@report.regID" @* onclick="deleteDraft(@report.regID)" *@>
                                         <i class="bi bi-trash"></i> Delete
                                     </button>
                                 }
@@ -186,7 +186,7 @@
                                         <i class="bi bi-eye"></i> View Details
                                     </button>
                                 }
-                                <button type="button" class="btn-action btn-view" onclick="viewOnMap(@report.Lat, @report.Lon)">
+                                <button type="button" class="btn-action btn-view btn-view-map" data-regid="@report.regID">
                                     <i class="bi bi-geo-alt"></i> View on Map
                                 </button>
                             </div>

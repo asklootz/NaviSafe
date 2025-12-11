@@ -166,6 +166,7 @@ Using the same instances as pilot, you can:
 1. Allow GPS-location access
 2. Drop a marker on the Leaflet map
 3. Coordinates appear automatically (can also fill in manually)
+4. Polyline to show a longer object or tall cable (e.g. powerlines)
 
 - Save as a draft
 - Submit data
