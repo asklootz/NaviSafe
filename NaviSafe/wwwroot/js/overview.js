@@ -266,3 +266,14 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+// Attach click handlers for each "Delete Draft" button
+document.addEventListener('DOMContentLoaded', function () {
+    const deleteButtons = document.querySelectorAll('.btn-delete-draft');
+    deleteButtons.forEach(btn => {
+        btn.addEventListener('click', function () {
+            const id = this.getAttribute('data-regid');
+            deleteDraft(id)
+        });
+    });
+});
