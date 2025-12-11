@@ -253,3 +253,16 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+// Attach click handlers for each "View on Map" button
+// Buttons use data-regid attribute; ensure selector targets the correct class
+document.addEventListener('DOMContentLoaded', function () {
+    const mapButtons = document.querySelectorAll('.btn-view-map');
+    mapButtons.forEach(btn => {
+        btn.addEventListener('click', function () {
+            const id = this.getAttribute('data-regid');
+            if (!id) return;
+            viewOnMapReport(id);
+        });
+    });
+});
